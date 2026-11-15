@@ -591,11 +591,15 @@
       white-space: nowrap;
     }
     .table-stack,
+    .table-stack caption,
     .table-stack tbody,
     .table-stack tr,
     .table-stack td,
     .table-stack th[scope="row"] {
       display: block;
+    }
+    .table-stack caption {
+      padding-inline: 0;
     }
     .table-stack tr {
       padding: 0.75rem 1rem;

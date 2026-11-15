@@ -1,0 +1,22 @@
+{
+  "slug": "canva",
+  "name": "Canva",
+  "vendorDomain": "canva.com",
+  "officialUrl": "https://www.canva.com/",
+  "allowedUrlPrefixes": [
+    "https://www.canva.com/",
+    "https://canva.com/"
+  ],
+  "cost": {
+    "freeTier": null,
+    "paidNote": null
+  },
+  "minAge": null,
+  "consentRule": null,
+  "under18Policy": null,
+  "notes": "Seed entry. Terms, age rules and prices are not verified: a human must check the vendor's live pages before this tool is approved.",
+  "seedStatus": "pending_verification",
+  "lastCheckedAt": null,
+  "evidence": [],
+  "toVerify": true
+}

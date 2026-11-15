@@ -16,6 +16,8 @@ Chris delegated the open spec items to the build lead on 15 November 2026. Each 
 | D10 | Breached-password check (3.1) would call a third party | A bundled list of common passwords is the default. The Have I Been Pwned range API (sends only a five-character hash prefix, no personal data) is behind `PASSWORD_BREACH_CHECK=hibp`, off until the owner approves it. | `src/server/auth/password-policy.ts` |
 | D11 | The Section 6.1 example tagline was 134 characters; the model's limit is 120 | The limit stands. Tagline shortened in the course and the spec example. | `content/courses/build-your-own-snapchat-style-app.json` |
 | D12 | `order` quiz questions have no position field in the spec model | Authored option order is the correct order; the learner payload is shuffled server-side. | `src/content/schema.ts` (`toLearnerCourse`) |
+| D13 | Age is known only by birth month and year | A birthday counts once the birth month has fully passed in UK time, so nobody is ever treated as older than they are. A child may be blocked or held in a stricter band for up to a month after their real birthday. | `src/server/services/age.ts` |
+| D14 | Parallel build needs fixed seams | Cross-slice service and component contracts are fixed by the lead in `src/server/services/*` (files marked CONTRACT) and `src/components/{course,coach,submissions,safety}`. | `src/server/services/_contract.ts` |
 
 ## Enhancements added by the lead
 

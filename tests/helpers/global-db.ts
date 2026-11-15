@@ -1,6 +1,7 @@
 import { config } from "dotenv";
 import { getEnv, resetEnvCache } from "@/env";
 import { databaseName, dropEverything, runMigrations } from "@/server/db/migrate";
+import { applyTestDbName } from "./test-db-name";
 
 /**
  * Vitest global setup for the integration project: runs once, before any integration test file.
@@ -9,6 +10,7 @@ import { databaseName, dropEverything, runMigrations } from "@/server/db/migrate
  */
 export default async function setup(): Promise<void> {
   config({ path: ".env.test", override: true, quiet: true });
+  applyTestDbName();
   resetEnvCache();
   const env = getEnv();
   const url = env.DATABASE_URL_UNPOOLED ?? env.DATABASE_URL;

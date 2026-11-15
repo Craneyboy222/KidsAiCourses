@@ -37,6 +37,11 @@ const eslintConfig = defineConfig([
       ],
     },
   },
+  {
+    // The one place a model provider may be imported (spec Section 8).
+    files: ["src/server/ai/**"],
+    rules: { "no-restricted-imports": "off" },
+  },
   globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**", "playwright-report/**", "test-results/**", "coverage/**"]),
 ]);
 
