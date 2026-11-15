@@ -1,0 +1,19 @@
+{
+  "slug": "replit",
+  "name": "Replit",
+  "vendorDomain": "replit.com",
+  "officialUrl": "https://replit.com/",
+  "allowedUrlPrefixes": ["https://replit.com/"],
+  "cost": {
+    "freeTier": null,
+    "paidNote": null
+  },
+  "minAge": null,
+  "consentRule": null,
+  "under18Policy": null,
+  "notes": "To verify before publish. Nobody has yet checked the vendor's live terms, age rules, pricing or official links for this tool. A reviewer must read the vendor's own pages, record what they find in `evidence` with the page address, and set the minimum age, consent rule, under-18 policy and cost (spec Section 17, question 4). Nothing here is to be filled in from memory.",
+  "seedStatus": "pending_verification",
+  "lastCheckedAt": null,
+  "evidence": [],
+  "toVerify": true
+}

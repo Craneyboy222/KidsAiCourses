@@ -1,26 +1,729 @@
 @import "tailwindcss";
 
+/*
+ * "Bright workshop" tokens (docs/DESIGN.md).
+ *
+ * Every colour is a CSS variable redefined per theme, then exposed to Tailwind
+ * through `@theme inline`, so `bg-paper`, `text-ink`, `border-ink`, `shadow-raised`
+ * and friends follow the active theme with no extra classes.
+ *
+ * The contrast of every pair used by the kit is asserted in
+ * tests/unit/ui/contrast.test.ts. Change a value here and that test tells you
+ * whether it still meets 4.5:1 (text) and 3:1 (component boundaries).
+ */
+
+/* ------------------------------------------------------- type defaults -- */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-body:
+    "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --leading-body: 1.55;
+  --leading-heading: 1.2;
+  --tracking-body: 0em;
+  --tracking-heading: -0.01em;
+  --word-spacing-body: 0em;
+  --measure: 72ch;
+  /* Depth of the flat offset shadow, and how far a raised control travels when pressed. */
+  --press: 3px;
 }
+
+/* ---------------------------------------------------------------- themes -- */
+
+:root,
+[data-theme="light"] {
+  color-scheme: light;
+
+  --paper: #fbfaf7;
+  --surface: #ffffff;
+  --tint: #f0eee6;
+  --ink: #14141f;
+  --ink-muted: #53536a;
+  --line: #d9d7cf;
+
+  --primary: #4b32d4;
+  --primary-hover: #3a24b0;
+  --on-primary: #ffffff;
+  --link: #4b32d4;
+
+  --accent: #c6f432;
+  --on-accent: #14141f;
+
+  --success: #0b6b43;
+  --success-soft: #ddf3e7;
+  --warning: #8a5300;
+  --warning-soft: #ffe9b0;
+  --danger: #b3261e;
+  --danger-hover: #8f1c16;
+  --danger-soft: #fce4e1;
+  --on-danger: #ffffff;
+  --info: #1d4f91;
+  --info-soft: #e2eeff;
+
+  /* Six fixed category hues: always a block behind `--on-cat` text, with the name and an icon. */
+  --cat-1: #cfc6ff;
+  --cat-2: #a8dcff;
+  --cat-3: #a6efc9;
+  --cat-4: #ffd95a;
+  --cat-5: #ffb3a1;
+  --cat-6: #ffb8e0;
+  --on-cat: #14141f;
+
+  --focus: #14141f;
+  --focus-gap: #fbfaf7;
+  --overlay: rgb(20 20 31 / 0.62);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #12121c;
+  --surface: #1c1c2b;
+  --tint: #2a2a3e;
+  --ink: #f5f4ef;
+  --ink-muted: #b8b7cc;
+  --line: #3a3a52;
+
+  --primary: #b3a6ff;
+  --primary-hover: #cbc2ff;
+  --on-primary: #14141f;
+  --link: #b3a6ff;
+
+  --accent: #c6f432;
+  --on-accent: #14141f;
+
+  --success: #6ee0a8;
+  --success-soft: #0f3324;
+  --warning: #ffd071;
+  --warning-soft: #3d2c00;
+  --danger: #ff9e96;
+  --danger-hover: #ffbdb7;
+  --danger-soft: #45100c;
+  --on-danger: #14141f;
+  --info: #9ccbff;
+  --info-soft: #10304f;
+
+  --on-cat: #14141f;
+
+  --focus: #f5f4ef;
+  --focus-gap: #12121c;
+  --overlay: rgb(0 0 0 / 0.7);
+}
+
+[data-theme="contrast"] {
+  color-scheme: light;
+
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --tint: #ebebeb;
+  --ink: #000000;
+  --ink-muted: #2b2b2b;
+  --line: #000000;
+
+  --primary: #2a0fa8;
+  --primary-hover: #1b0080;
+  --on-primary: #ffffff;
+  --link: #2a0fa8;
+
+  --accent: #c6f432;
+  --on-accent: #000000;
+
+  --success: #00522f;
+  --success-soft: #e6f6ee;
+  --warning: #5a3500;
+  --warning-soft: #fff0c2;
+  --danger: #8f0f08;
+  --danger-hover: #6b0803;
+  --danger-soft: #fde8e6;
+  --on-danger: #ffffff;
+  --info: #003e7a;
+  --info-soft: #e3f0ff;
+
+  --on-cat: #000000;
+
+  --focus: #000000;
+  --focus-gap: #ffffff;
+  --overlay: rgb(0 0 0 / 0.8);
+
+  /* Flat in high contrast: outlines carry the shape, not shadows. */
+  --press: 0px;
+}
+
+/* Dyslexia-friendly reading mode: cream paper in the light theme (dark and contrast keep their own). */
+[data-reading="dyslexia"]:not([data-theme="dark"], [data-theme="contrast"]) {
+  --paper: #faf3dd;
+  --surface: #fffbee;
+  --tint: #efe6c8;
+  --line: #d6cba6;
+  --focus-gap: #faf3dd;
+}
+
+/* ------------------------------------------------- dyslexia-friendly reading mode -- */
+
+[data-reading="dyslexia"] {
+  --font-body: "Lexend Variable", "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --leading-body: 1.8;
+  --leading-heading: 1.4;
+  --tracking-body: 0.03em;
+  --tracking-heading: 0.02em;
+  --word-spacing-body: 0.14em;
+  --measure: 60ch;
+}
+
+/* ---------------------------------------------------------- reduced motion -- */
+
+/* Token overrides sit outside any layer so they beat the theme blocks above. The rules that switch
+   animation and transitions off are in the base layer below. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --press: 0px;
+  }
+}
+[data-motion="reduce"] {
+  --press: 0px;
+}
+
+/* ------------------------------------------------------ Tailwind tokens -- */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Only token colours exist: `bg-red-500` and friends are deliberately unavailable. */
+  --color-*: initial;
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-tint: var(--tint);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-link: var(--link);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
+  --color-danger-soft: var(--danger-soft);
+  --color-on-danger: var(--on-danger);
+  --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-cat-1: var(--cat-1);
+  --color-cat-2: var(--cat-2);
+  --color-cat-3: var(--cat-3);
+  --color-cat-4: var(--cat-4);
+  --color-cat-5: var(--cat-5);
+  --color-cat-6: var(--cat-6);
+  --color-on-cat: var(--on-cat);
+  --color-focus: var(--focus);
+  --color-overlay: var(--overlay);
+
+  --font-sans: var(--font-body);
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+
+  /* Type scale in rem, so it follows the text-size preference. Base is 17 px. */
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: var(--leading-body);
+  --text-sm: 0.9rem;
+  --text-sm--line-height: var(--leading-body);
+  --text-base: 1rem;
+  --text-base--line-height: var(--leading-body);
+  --text-lg: 1.15rem;
+  --text-lg--line-height: var(--leading-body);
+  --text-xl: 1.35rem;
+  --text-xl--line-height: var(--leading-heading);
+  --text-2xl: 1.65rem;
+  --text-2xl--line-height: var(--leading-heading);
+  --text-3xl: 2.1rem;
+  --text-3xl--line-height: var(--leading-heading);
+  --text-4xl: 2.75rem;
+  --text-4xl--line-height: var(--leading-heading);
+
+  /* Radius: 14 px cards, 10 px controls, full for badges (`rounded-full`). */
+  --radius-card: 0.875rem;
+  --radius-control: 0.625rem;
+
+  /* Flat offset shadow on raised buttons and cards. Removed in reduced-motion and contrast modes. */
+  --shadow-raised: 0 var(--press) 0 0 var(--ink);
+
+  /* Reading measure: 72ch, or 60ch in dyslexia-friendly mode. Use `max-w-measure`. */
+  --container-measure: var(--measure);
+
+  /* The learner rail and the player step list appear from 900 px. Use `rail:`. */
+  --breakpoint-rail: 56.25rem;
+
+  --animate-fade-in: fade-in 150ms ease-out;
+  --animate-pop-in: pop-in 160ms ease-out;
+  --animate-slide-up: slide-up 180ms ease-out;
+  --animate-slide-in-right: slide-in-right 180ms ease-out;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Spacing uses Tailwind's default 0.25rem (4 px) scale. */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    scale: 0.97;
+  }
+}
+@keyframes slide-up {
+  from {
+    translate: 0 1.5rem;
+    opacity: 0;
+  }
+}
+@keyframes slide-in-right {
+  from {
+    translate: 1.5rem 0;
+    opacity: 0;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ base -- */
+
+@layer base {
+  /*
+   * Flex and grid children may shrink below their content width. Without this, one long word or a
+   * native select can push a whole layout sideways at 150% text on a phone. Tailwind's `min-w-*`
+   * utilities still win where a minimum is wanted.
+   */
+  *,
+  ::before,
+  ::after {
+    min-width: 0;
+  }
+
+  html {
+    /* 17 px at the browser default, and still honours the user's own browser setting. */
+    font-size: 106.25%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    /* Keeps focused controls clear of sticky headers, tab bars and the player controls (WCAG 2.4.11). */
+    scroll-padding-top: 5rem;
+    scroll-padding-bottom: 6.5rem;
+  }
+  html[data-text="112"] {
+    font-size: 119%;
+  }
+  html[data-text="125"] {
+    font-size: 132.8125%;
+  }
+  html[data-text="150"] {
+    font-size: 159.375%;
+  }
+
+  body {
+    min-height: 100dvh;
+    font-family: var(--font-body);
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    word-spacing: var(--word-spacing-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Long words may break rather than push a layout sideways at 150% text on a phone (WCAG 1.4.10 reflow). */
+    overflow-wrap: anywhere;
+  }
+  table {
+    overflow-wrap: break-word;
+  }
+
+  /* Any element carrying a theme (the <html>, or a scoped sample in the kit showcase) paints itself. */
+  [data-theme],
+  [data-reading] {
+    background-color: var(--paper);
+    color: var(--ink);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 700;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    text-wrap: balance;
+  }
+  h1 {
+    font-size: var(--text-3xl);
+  }
+  h2 {
+    font-size: var(--text-2xl);
+  }
+  h3 {
+    font-size: var(--text-xl);
+  }
+  h4 {
+    font-size: var(--text-lg);
+  }
+
+  b,
+  strong {
+    font-weight: 700;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  ::placeholder {
+    color: var(--ink-muted);
+    opacity: 1;
+  }
+
+  button,
+  [role="button"],
+  summary,
+  select,
+  label[for] {
+    cursor: pointer;
+  }
+  :disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+
+  /*
+   * One focus style for every interactive element: a 3 px ink ring with a 2 px
+   * paper gap. The two-tone ring stays visible on any background. Raised
+   * controls keep their offset shadow because the gap is also fed through
+   * Tailwind's ring-offset slot.
+   */
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    --tw-ring-offset-shadow: 0 0 0 2px var(--focus-gap);
+    box-shadow: 0 0 0 2px var(--focus-gap);
+  }
+  /* Surfaces painted in ink (for example the "Staff area" marker) flip the ring. */
+  [data-surface="ink"] {
+    --focus: var(--paper);
+    --focus-gap: var(--ink);
+  }
+
+  /* ---- Dyslexia-friendly reading mode: a real reading mode, not a colour swap. ---- */
+  [data-reading="dyslexia"] * {
+    /* No italics and no all-caps anywhere; emphasis is carried by weight instead. */
+    font-style: normal !important;
+    text-transform: none !important;
+    /* Left-aligned, ragged right, never justified or centred. */
+    text-align: start !important;
+    hyphens: manual;
+  }
+  [data-reading="dyslexia"] :is(em, i, cite, dfn) {
+    font-weight: 600;
+  }
+  /* Running text keeps to a 60ch measure everywhere, not only inside .prose. */
+  [data-reading="dyslexia"] :is(p, dd, blockquote, figcaption, .prose li) {
+    max-width: 60ch;
+  }
+  [data-reading="dyslexia"] :is(p, ul, ol, dl, blockquote) + :is(p, ul, ol, dl, blockquote) {
+    margin-top: 1.25em;
+  }
+  [data-reading="dyslexia"] a:not([data-button]) {
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.22em;
+  }
+
+  /* ---- High contrast: links are always underlined and hairlines become solid. ---- */
+  [data-theme="contrast"] a:not([data-button]) {
+    text-decoration-line: underline;
+    text-underline-offset: 0.18em;
+  }
+
+  /* ---- Reduced motion: the OS setting and the stored preference do the same thing. ---- */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  [data-motion="reduce"],
+  [data-motion="reduce"] *,
+  [data-motion="reduce"] *::before,
+  [data-motion="reduce"] *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------ components -- */
+
+@layer components {
+  /* Inline text link: colour plus underline, so colour is never the only cue. */
+  .link {
+    color: var(--link);
+    font-weight: 700;
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.18em;
+    border-radius: 0.2em;
+  }
+  .link:hover {
+    text-decoration-thickness: 0.16em;
+  }
+
+  /* Native checkbox and radio, restyled. The tick and dot are shapes, not colour. */
+  .check {
+    appearance: none;
+    flex: none;
+    display: inline-grid;
+    place-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 0;
+    border: 2px solid var(--ink);
+    border-radius: 0.375rem;
+    background-color: var(--surface);
+    cursor: pointer;
+  }
+  .check::before {
+    content: "";
+    width: 0.875rem;
+    height: 0.875rem;
+    scale: 0;
+    background-color: var(--on-primary);
+    clip-path: polygon(14% 44%, 0 65%, 43% 100%, 100% 18%, 82% 4%, 40% 66%);
+  }
+  .check:checked {
+    background-color: var(--primary);
+  }
+  .check:checked::before {
+    scale: 1;
+  }
+  .check[type="radio"] {
+    border-radius: 9999px;
+  }
+  .check[type="radio"]::before {
+    width: 0.625rem;
+    height: 0.625rem;
+    clip-path: circle(50%);
+  }
+  .check[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+  .check:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* Native checkbox with role="switch": the thumb moves and the track fills. */
+  .switch {
+    appearance: none;
+    flex: none;
+    position: relative;
+    width: 3rem;
+    height: 1.75rem;
+    margin: 0;
+    border: 2px solid var(--ink);
+    border-radius: 9999px;
+    background-color: var(--surface);
+    cursor: pointer;
+    transition: background-color 120ms ease-out;
+  }
+  .switch::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0.1875rem;
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 9999px;
+    background-color: var(--ink);
+    translate: 0 -50%;
+    transition: translate 120ms ease-out;
+  }
+  .switch:checked {
+    background-color: var(--primary);
+  }
+  .switch:checked::before {
+    translate: 1.25rem -50%;
+    background-color: var(--on-primary);
+  }
+  .switch:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  /* Native <progress>, so no inline styles are needed for the fill. */
+  .progress {
+    appearance: none;
+    display: block;
+    width: 100%;
+    height: 1rem;
+    overflow: hidden;
+    border: 2px solid var(--ink);
+    border-radius: 9999px;
+    background-color: var(--surface);
+    color: var(--primary);
+  }
+  .progress::-webkit-progress-bar {
+    background-color: var(--surface);
+  }
+  .progress::-webkit-progress-value {
+    background-color: var(--primary);
+  }
+  .progress::-moz-progress-bar {
+    background-color: var(--primary);
+  }
+
+  /* Stacked table on phones: each row becomes a card, each cell shows its own header. */
+  @media (max-width: 39.99rem) {
+    .table-stack thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+    .table-stack,
+    .table-stack tbody,
+    .table-stack tr,
+    .table-stack td,
+    .table-stack th[scope="row"] {
+      display: block;
+    }
+    .table-stack tr {
+      padding: 0.75rem 1rem;
+      border: 2px solid var(--ink);
+      border-radius: var(--radius-card);
+      background-color: var(--surface);
+    }
+    .table-stack tr + tr {
+      margin-top: 0.75rem;
+    }
+    .table-stack td,
+    .table-stack th[scope="row"] {
+      display: grid;
+      grid-template-columns: minmax(6rem, 38%) 1fr;
+      gap: 0.75rem;
+      padding: 0.375rem 0;
+      border: 0;
+      text-align: start;
+    }
+  }
+
+  /* Long-form content rendered by <Markdown> and legal or help pages. */
+  .prose {
+    max-width: var(--measure);
+    font-size: var(--text-base);
+    line-height: var(--leading-body);
+  }
+  .prose > * + * {
+    margin-top: 1em;
+  }
+  .prose :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 1.6em;
+  }
+  .prose > :first-child {
+    margin-top: 0;
+  }
+  .prose :is(ul, ol) {
+    padding-inline-start: 1.5em;
+  }
+  .prose ul {
+    list-style: disc;
+  }
+  .prose ol {
+    list-style: decimal;
+  }
+  .prose li + li {
+    margin-top: 0.35em;
+  }
+  .prose li > :is(ul, ol) {
+    margin-top: 0.35em;
+  }
+  .prose .contains-task-list {
+    list-style: none;
+    padding-inline-start: 0;
+  }
+  .prose a {
+    color: var(--link);
+    font-weight: 700;
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.09em;
+    text-underline-offset: 0.18em;
+  }
+  .prose a:hover {
+    text-decoration-thickness: 0.16em;
+  }
+  .prose blockquote {
+    padding: 0.25em 0 0.25em 1em;
+    border-inline-start: 4px solid var(--ink);
+  }
+  .prose code {
+    padding: 0.1em 0.35em;
+    border: 1px solid var(--line);
+    border-radius: 0.375rem;
+    background-color: var(--tint);
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+  }
+  .prose pre {
+    overflow-x: auto;
+    padding: 1em;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-control);
+    background-color: var(--tint);
+  }
+  .prose pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+  }
+  .prose hr {
+    border: 0;
+    border-top: 2px solid var(--line);
+  }
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid var(--ink);
+    border-radius: var(--radius-control);
+  }
+  .prose table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+  .prose :is(th, td) {
+    padding: 0.5em 0.75em;
+    border: 1px solid var(--ink);
+    text-align: start;
+    vertical-align: top;
+  }
+  .prose th {
+    background-color: var(--tint);
+    font-weight: 700;
+  }
+}
+
+/* Windows High Contrast and other forced-colour modes: keep state visible without our colours. */
+@media (forced-colors: active) {
+  .check:checked::before,
+  .switch::before {
+    background-color: CanvasText;
+  }
+  .check:checked,
+  .switch:checked {
+    background-color: Canvas;
+  }
+  .switch:checked::before {
+    background-color: Highlight;
+  }
 }

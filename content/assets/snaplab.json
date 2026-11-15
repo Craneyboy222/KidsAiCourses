@@ -1,0 +1,40 @@
+[
+  {
+    "id": "vid-snaplab-trailer",
+    "kind": "video",
+    "storageKey": "courses/snaplab/trailer.mp4",
+    "licence": "owned",
+    "durationSec": 90,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-snaplab-trailer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/snaplab/trailer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-snaplab-trailer",
+    "kind": "transcript_md",
+    "storageKey": "courses/snaplab/trailer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "img-snaplab-trailer-poster",
+    "kind": "image",
+    "storageKey": "courses/snaplab/trailer-poster.png",
+    "licence": "owned",
+    "altText": "Title card for the course: Build Your Own Snapchat-Style App.",
+    "placeholder": true
+  },
+  {
+    "id": "img-snaplab-sample",
+    "kind": "image",
+    "storageKey": "courses/snaplab/sample-image.png",
+    "licence": "owned",
+    "altText": "The SnapLab sample image for testing filters. It is an illustration made for this course, not a photo of a real person.",
+    "placeholder": true
+  }
+]

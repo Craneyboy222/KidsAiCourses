@@ -14,6 +14,8 @@ Chris delegated the open spec items to the build lead on 15 November 2026. Each 
 | D8 | Snapchat example could not produce its required evidence | The course now has a "Use sample image" deliverable and step, and a downloadable sample image asset. Spec example corrected. | `content/courses/build-your-own-snapchat-style-app.json` |
 | D9 | Next.js 16.4 scaffolds with Cache Components on | Turned off. Every signed-in route renders per request, so learner data cannot be cached by mistake, and the code stays on the simpler, long-documented model. Revisit when Next makes it mandatory. | `next.config.ts` |
 | D10 | Breached-password check (3.1) would call a third party | A bundled list of common passwords is the default. The Have I Been Pwned range API (sends only a five-character hash prefix, no personal data) is behind `PASSWORD_BREACH_CHECK=hibp`, off until the owner approves it. | `src/server/auth/password-policy.ts` |
+| D11 | The Section 6.1 example tagline was 134 characters; the model's limit is 120 | The limit stands. Tagline shortened in the course and the spec example. | `content/courses/build-your-own-snapchat-style-app.json` |
+| D12 | `order` quiz questions have no position field in the spec model | Authored option order is the correct order; the learner payload is shuffled server-side. | `src/content/schema.ts` (`toLearnerCourse`) |
 
 ## Enhancements added by the lead
 

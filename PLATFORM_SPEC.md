@@ -310,7 +310,7 @@ Safeguarding: **no real messaging between users**. The "chat" is with simulated 
 {
   "slug": "build-your-own-snapchat-style-app",
   "title": "Build Your Own Snapchat-Style App",
-  "tagline": "Build a camera app with your own filters and disappearing messages — in a real coding tool, with AI as a helper you stay in charge of.",
+  "tagline": "Build a camera app with your own filters and disappearing messages in a real coding tool. AI helps — you stay in charge.",
   "category": "apps-websites",
   "interests": ["coding", "apps", "social", "design"],
   "difficulty": "builder",
@@ -370,7 +370,7 @@ Safeguarding: **no real messaging between users**. The "chat" is with simulated 
           { "id": "s4", "type": "checkpoint", "title": "Camera's live!", "order": 2, "estimatedMinutes": 1, "completion": { "rule": "view" }, "hints": [] }
         ]},
         { "id": "m2l2", "title": "Design a filter", "order": 2, "estimatedMinutes": 40, "steps": [
-          { "id": "s5", "type": "external_task", "title": "Three built-in filters plus your signature filter", "order": 1, "estimatedMinutes": 40, "config": { "toolSlug": "replit", "task": "Add at least three filters, including one you designed. Add a 'Use sample image' button that loads the provided sample image (download it from this step) in place of the camera. Test your filters on the sample image, a cartoon avatar or an object — that is what you will screenshot later." }, "completion": { "rule": "self_tick" }, "hints": ["CSS filters like grayscale() are a quick start.", "Store filters in an array and loop through them.", "Canvas lets you change pixel colours directly."] }
+          { "id": "s5", "type": "external_task", "title": "Three built-in filters plus your signature filter", "order": 1, "estimatedMinutes": 40, "config": { "toolSlug": "replit", "task": "Add at least three filters, including one you designed. Add a 'Use sample image' button that loads the provided sample image (you downloaded it in the previous step) in place of the camera. Test your filters on the sample image, a cartoon avatar or an object — that is what you will screenshot later." }, "completion": { "rule": "self_tick" }, "hints": ["CSS filters like grayscale() are a quick start.", "Store filters in an array and loop through them.", "Canvas lets you change pixel colours directly."] }
         ]}
       ]
     },
