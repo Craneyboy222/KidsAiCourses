@@ -1,0 +1,8 @@
+.next
+node_modules
+drizzle
+pnpm-lock.yaml
+PLATFORM_SPEC.md
+content/course-ideas.json
+playwright-report
+test-results

@@ -1,0 +1,2823 @@
+{
+  "source": "Course ideas Page: AI projects for UK teens (13+), prepared 15 November 2026 (Europe/London).",
+  "sourceUrl": "https://cursor.com/canvas/store-bc086de2-6440-405c-a1c3-d18a38c2c5c2/245729df-bf6e-45e6-95fd-83436392ce34",
+  "count": 175,
+  "counts": {
+    "starter": 52,
+    "builder": 92,
+    "pro": 31,
+    "age18Tools": 36,
+    "safeguarding": 20,
+    "categories": 24,
+    "suggestedForLaunch": 15
+  },
+  "notes": [
+    "The source inventory did not include a structured tools list per idea (tools were described as types or occasional examples because apps change). The tools array is therefore empty; tools are chosen when a course is drafted, against the Tool Register.",
+    "The source inventory did not include a per-idea minimum age. The catalogue is for ages 13–18, so minAge is 13 for every idea.",
+    "flags.age18Tools maps from the source watch-out 'age18' (common tools typically 18+). flags.safeguarding maps from the source watch-out 'safe' (a safeguarding or data note). watchNote is the original note text, or null if there was none.",
+    "suggestedForLaunch marks the 15 ideas recommended as a first set on that Page.",
+    "careers is copied from the source and is not a required brief field."
+  ],
+  "ideas": [
+    {
+      "id": "IDEA-001",
+      "title": "Build Your Own Snapchat-Style App",
+      "category": "Apps & websites",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Make a web app with photo capture, playful filters and short messages, using AI coding tools as your pair programmer.",
+      "careers": "Software development, product design",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-002",
+      "title": "Your First AI-Built Portfolio Website",
+      "category": "Apps & websites",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design and ship a personal site that showcases your work, generated and refined with an AI coding assistant.",
+      "careers": "Web development, digital design, personal branding",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-003",
+      "title": "The Club App: Fixtures, Chat and Shout-outs",
+      "category": "Apps & websites",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a mobile-friendly app for a school club or sports team, with schedules, announcements and a simple member list.",
+      "careers": "App development, community management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-004",
+      "title": "AI Menu and Ordering Site for a Pop-up Café",
+      "category": "Apps & websites",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Create a stylish ordering website with AI-generated menu copy and images. Keep checkout fictional unless an adult handles real payments.",
+      "careers": "Web development, hospitality, UX design",
+      "watchNote": "Payment tools typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-005",
+      "title": "Homework Hub: A Study Dashboard You Code with AI",
+      "category": "Apps & websites",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Code a personal study dashboard with timers, subject trackers and AI-suggested revision plans you can edit.",
+      "careers": "Software development, edtech, product design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-006",
+      "title": "Build a Mini Social Feed (Without the Toxicity)",
+      "category": "Apps & websites",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Make a small, private social app with posts, reactions and an AI moderator you configure yourself.",
+      "careers": "Social product design, trust and safety, full-stack development",
+      "watchNote": "Safeguarding note",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-007",
+      "title": "School Event Ticketing Site",
+      "category": "Apps & websites",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a ticket and RSVP site for a concert, play or charity night, with AI-written copy and QR-style codes.",
+      "careers": "Event tech, web development, operations",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-008",
+      "title": "The Local Guide: A Neighbourhood Website",
+      "category": "Apps & websites",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a guide to your town with maps, tips and AI-assisted research and design.",
+      "careers": "Web design, journalism, tourism, civic tech",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-009",
+      "title": "Voice-Controlled Web App",
+      "category": "Apps & websites",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a browser app that takes voice commands for notes, timers or playlists, using speech APIs and AI.",
+      "careers": "Voice UI, accessibility, software engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-010",
+      "title": "From Sketch to App in a Weekend",
+      "category": "Apps & websites",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Turn a paper sketch into a working web app using image-to-code and vibe-coding tools.",
+      "careers": "Product design, rapid prototyping, start-ups",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-011",
+      "title": "Design a Text Adventure with an AI Dungeon Master",
+      "category": "Games",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a browser text adventure where an AI character runs the story and reacts to player choices.",
+      "careers": "Game writing, narrative design, game development",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-012",
+      "title": "Make a Platformer with AI as Your Coding Partner",
+      "category": "Games",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a simple 2D platformer with levels, coins and a boss, written with an AI coding assistant.",
+      "careers": "Game development, programming",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-013",
+      "title": "AI Opponent: Train a Bot to Play Your Game",
+      "category": "Games",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a small game and give it an AI opponent that gets harder as you play.",
+      "careers": "Game AI, machine learning, programming",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-014",
+      "title": "Generate a Whole Game World",
+      "category": "Games",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Use AI to invent maps, characters, item lore and quests, then package them as a world bible plus a short playable demo.",
+      "careers": "Game design, world-building, writing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-015",
+      "title": "Remix a Classic: Pong, Snake or Tetris with a Twist",
+      "category": "Games",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Recreate a classic game with an AI-coded twist, such as a new theme, power-ups or a story mode.",
+      "careers": "Game development, creative coding",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-016",
+      "title": "Party Game Generator",
+      "category": "Games",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a web app that invents custom party or classroom games on demand, complete with rules and scorecards.",
+      "careers": "Game design, product, entertainment",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-017",
+      "title": "Make a Visual Novel",
+      "category": "Games",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Write and build a branching visual novel with AI-generated art, dialogue and choices.",
+      "careers": "Narrative design, illustration, indie games",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-018",
+      "title": "Homework Helper Chatbot (The Honest Kind)",
+      "category": "Chatbots & agents",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Build a study chatbot that explains topics, quizzes you, and refuses to write the whole assignment for you.",
+      "careers": "Edtech, conversational AI, teaching",
+      "watchNote": "Exam integrity",
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-019",
+      "title": "The Club Secretary Bot",
+      "category": "Chatbots & agents",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a chatbot that answers FAQs for a school club, team or charity and logs sign-ups.",
+      "careers": "Customer support, operations, conversational AI",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-020",
+      "title": "Build a Customer Service Agent for a Fake Brand",
+      "category": "Chatbots & agents",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a helpful, on-brand support agent with a knowledge base and clear escalation rules.",
+      "careers": "Customer experience, AI product, retail",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-021",
+      "title": "Your Personal Revision Coach",
+      "category": "Chatbots & agents",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Make an agent that plans a revision timetable, tests you, and adapts when you get things wrong.",
+      "careers": "Edtech, coaching, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-022",
+      "title": "Multi-Tool Research Agent",
+      "category": "Chatbots & agents",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build an agent that can search, summarise sources, and produce a short brief with citations it can actually show.",
+      "careers": "Research, analysis, AI engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-023",
+      "title": "In-Character Tutor: Learn from a Historical Figure",
+      "category": "Chatbots & agents",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a chatbot that stays in character as a scientist, author or historical figure while teaching a real topic.",
+      "careers": "Education, museum education, writing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-024",
+      "title": "Team of Agents: Planner, Maker, Checker",
+      "category": "Chatbots & agents",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a three-agent workflow: one plans, one drafts, and one fact-checks and critiques.",
+      "careers": "AI engineering, operations, product management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-025",
+      "title": "Wellbeing Check-in Bot (Safely Scoped)",
+      "category": "Chatbots & agents",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Build a mood check-in bot that suggests healthy habits and always signposts real help, never acting as a therapist.",
+      "careers": "Digital health, product ethics, youth work",
+      "watchNote": "Safeguarding note",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-026",
+      "title": "Voice Agent: Book a Table or Answer the Phone",
+      "category": "Chatbots & agents",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Create a voice agent that can take a restaurant booking or answer common questions out loud.",
+      "careers": "Voice AI, hospitality tech, conversational design",
+      "watchNote": "Common voice tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-027",
+      "title": "Homework Deadline Automator",
+      "category": "Automations",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Set up a workflow that turns homework lists into calendar reminders and a weekly recap. Use youth-safe or spreadsheet tools if Zapier or Make are off limits.",
+      "careers": "Operations, productivity, business analysis",
+      "watchNote": "Zapier/Make typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-028",
+      "title": "Auto-Save Your Inspiration",
+      "category": "Automations",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a pipeline that saves links, screenshots or voice notes into a tidy library with AI tags.",
+      "careers": "Knowledge management, operations",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-029",
+      "title": "Family Admin Assistant",
+      "category": "Automations",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Automate a household routine such as shopping lists, chore rotas or birthday reminders, with human approval before anything sends.",
+      "careers": "Operations, product, family tech",
+      "watchNote": "Automation tools typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-030",
+      "title": "Social Scheduler with a Human Publish Button",
+      "category": "Automations",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Create a workflow that drafts posts, waits for approval, then queues them. Nothing goes live without a person pressing send.",
+      "careers": "Social media management, marketing ops",
+      "watchNote": "Some schedulers 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-031",
+      "title": "Inbox Triage Practice Lab",
+      "category": "Automations",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Build a mock inbox sorter that labels, summarises and drafts replies, without connecting a real personal inbox.",
+      "careers": "Executive assistant work, operations, customer support",
+      "watchNote": "Use dummy data only",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-032",
+      "title": "From Form to Follow-up",
+      "category": "Automations",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Connect a sign-up form to automatic thank-yous, a spreadsheet and a weekly digest.",
+      "careers": "Marketing ops, CRM, administration",
+      "watchNote": "Zapier/Make typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-033",
+      "title": "Watch the News, Get a Briefing",
+      "category": "Automations",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Automate a daily digest of a topic you care about, with AI summaries and source links.",
+      "careers": "Journalism, research, analysis",
+      "watchNote": "Some tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-034",
+      "title": "Build an Automation Mini-Factory",
+      "category": "Automations",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a multi-step automation in n8n or a similar tool, with branches, error handling and a simple dashboard.",
+      "careers": "Automation engineering, systems, start-ups",
+      "watchNote": "Hosted tools may be 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-035",
+      "title": "Football or F1 Stats Detective",
+      "category": "Data & analysis",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Analyse a season's data and build a dashboard that finds stories in the numbers.",
+      "careers": "Data analysis, sports science, journalism",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-036",
+      "title": "Survey Your Year Group (Properly)",
+      "category": "Data & analysis",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Design an anonymous survey, clean the data and present findings with AI-assisted charts. Do not paste personal data into public AI tools.",
+      "careers": "Market research, social research, data analysis",
+      "watchNote": "UK GDPR: no personal data in public tools",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-037",
+      "title": "Predict the Playlist",
+      "category": "Data & analysis",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Use a music dataset to explore patterns and build a simple 'what you might like next' model.",
+      "careers": "Data science, music industry, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-038",
+      "title": "School Canteen or Bus-Queue Data Story",
+      "category": "Data & analysis",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Collect or simulate operational data and turn it into a clear recommendation report.",
+      "careers": "Operations research, data journalism",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-039",
+      "title": "Weather, Mood and You: Correlation Caution",
+      "category": "Data & analysis",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Analyse open weather and lifestyle data, then learn why correlation is not causation.",
+      "careers": "Data science, research, science communication",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-040",
+      "title": "Build a Live-Looking Dashboard",
+      "category": "Data & analysis",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create an interactive dashboard from open data (sport, transport or the environment) with AI help on the queries and design.",
+      "careers": "Business intelligence, data visualisation, analytics",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-041",
+      "title": "Fact-Check a Viral Stat",
+      "category": "Data & analysis",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Trace a popular statistic back to its source, rebuild the numbers, and publish a short explainer.",
+      "careers": "Data journalism, fact-checking, research",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-042",
+      "title": "Prompt Gym: From Vague to Laser-Sharp",
+      "category": "Prompt engineering",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a personal prompt library and a before-and-after gallery that proves better prompts get better work.",
+      "careers": "AI operations, writing, product",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-043",
+      "title": "The Brief Writer",
+      "category": "Prompt engineering",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Practise turning messy ideas into crystal-clear creative briefs that an AI, or a human teammate, can actually use.",
+      "careers": "Creative direction, account management, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-044",
+      "title": "Chain of Thought, On Purpose",
+      "category": "Prompt engineering",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design step-by-step prompts for hard tasks such as maths, planning or critique, and test when they help or hinder.",
+      "careers": "AI research-adjacent work, teaching, consulting",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-045",
+      "title": "Role, Rules and Rubrics",
+      "category": "Prompt engineering",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a prompt system with roles, constraints and a marking rubric so outputs come back consistent.",
+      "careers": "Prompt engineering, quality assurance, education",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-046",
+      "title": "Image Prompt Workshop",
+      "category": "Prompt engineering",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Master style, lighting, composition and negative prompts to get the picture you actually meant.",
+      "careers": "Art direction, design, advertising",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-047",
+      "title": "Eval Lab: Score Your Own Prompts",
+      "category": "Prompt engineering",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Set up a simple test set and score rival prompts so you can improve them like an engineer, not by vibes alone.",
+      "careers": "AI evaluation, product, research",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-048",
+      "title": "Jailbreak Defence (Ethical Edition)",
+      "category": "Prompt engineering",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Learn how people try to trick models, then write safer system prompts and refusal rules. Defence only: no offensive exploits.",
+      "careers": "AI safety, trust and safety, security",
+      "watchNote": "Defence only, on course examples",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-049",
+      "title": "Design Your Dream Streetwear Drop",
+      "category": "Image & design",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Create a mini clothing collection: logo, colourway, mock-ups and a lookbook, using AI image and design tools.",
+      "careers": "Fashion design, branding, e-commerce",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-050",
+      "title": "Poster Lab: Gig, Protest, Play",
+      "category": "Image & design",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a set of bold posters for a fictional gig, school play or campaign, iterating with AI and your own edits.",
+      "careers": "Graphic design, advertising, campaigning",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-051",
+      "title": "Brand Kit in a Day",
+      "category": "Image & design",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a full brand kit (logo options, type, colour, do's and don'ts) for a made-up or real youth project.",
+      "careers": "Brand design, marketing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-052",
+      "title": "Comic Studio",
+      "category": "Image & design",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Write and illustrate a short comic with AI art, lettering and a consistent character sheet.",
+      "careers": "Comics, illustration, storytelling",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-053",
+      "title": "Product Shot Studio",
+      "category": "Image & design",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Create professional-looking product photos and lifestyle scenes for an object you already own.",
+      "careers": "Product photography, e-commerce, marketing",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-054",
+      "title": "Restore, Remix, Respect",
+      "category": "Image & design",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Restore a family or archive-style photo and learn the ethics of editing images of real people.",
+      "careers": "Photo restoration, archives, photography",
+      "watchNote": "Ethics: consent for real people",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-055",
+      "title": "UI Look-and-Feel Generator",
+      "category": "Image & design",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Invent a visual design system for an app (screens, icons, components) and export a tidy style guide.",
+      "careers": "UI design, product design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-056",
+      "title": "Album Cover and Merch Pack",
+      "category": "Image & design",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a matching album cover, typography and merch mock-ups for a real or invented artist.",
+      "careers": "Music industry design, art direction",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-057",
+      "title": "Make Your Own AI Music Video",
+      "category": "Video & film",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Plan, generate and edit a short music video for an original or rights-cleared track.",
+      "careers": "Music video direction, editing, content creation",
+      "watchNote": "Some video tools 18+",
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-058",
+      "title": "Shoot a Promo Advert in an Afternoon",
+      "category": "Video & film",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write, storyboard and produce a 30-second advert for a product, club or cause.",
+      "careers": "Advertising, film, marketing",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-059",
+      "title": "Documentary in Five Minutes",
+      "category": "Video & film",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Make a short documentary with AI help on research, voiceover script, B-roll and edit, and clearly label what is generated.",
+      "careers": "Documentary, journalism, film",
+      "watchNote": "Some video or voice tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-060",
+      "title": "Trailer Cut",
+      "category": "Video & film",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Turn a short story or game idea into a cinematic trailer with AI visuals, captions and sound design.",
+      "careers": "Film marketing, editing, game trailer production",
+      "watchNote": "Some video tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-061",
+      "title": "Green-Screen-Free Explainer",
+      "category": "Video & film",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Make a polished explainer video with illustrated scenes or an AI presenter, honestly disclosed.",
+      "careers": "Corporate video, education media, online video",
+      "watchNote": "Avatar tools often 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-062",
+      "title": "Stop-Motion plus AI Hybrid Film",
+      "category": "Video & film",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Combine handmade or phone-shot footage with AI effects, and keep a making-of log of what is real.",
+      "careers": "Animation, VFX, independent film",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-063",
+      "title": "Social-Native Vertical Film",
+      "category": "Video & film",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write and edit a short vertical film designed for phone screens, with AI help on hooks and pacing.",
+      "careers": "Social video, content creation, advertising",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-064",
+      "title": "From Script to Storyboard to Rough Cut",
+      "category": "Video & film",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Take one idea all the way through script, storyboard, animatic and a first cut, using AI at each stage.",
+      "careers": "Directing, producing, screenwriting",
+      "watchNote": "Some video tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-065",
+      "title": "Make a Track with an AI Bandmate",
+      "category": "Music & audio",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Compose, arrange and mix an original song using AI music tools, plus your own performance if you want.",
+      "careers": "Music production, songwriting, artist development",
+      "watchNote": "Some music tools 18+ or need consent",
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-066",
+      "title": "Podcast Studio: Show, Trailer and Cover",
+      "category": "Music & audio",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Plan a podcast episode, generate a trailer, write show notes and design the cover art.",
+      "careers": "Podcasting, radio, audio production",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-067",
+      "title": "Voiceover Booth",
+      "category": "Music & audio",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Script and produce a voiceover for an advert, game or explainer. Do not clone a real person's voice without clear permission.",
+      "careers": "Voice acting, advertising, game audio",
+      "watchNote": "Voice-cloning tools typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-068",
+      "title": "Remix Responsibly",
+      "category": "Music & audio",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a remix or sound-design piece and learn what is a sample, what needs a licence, and what you can honestly call original.",
+      "careers": "Music production, music business, DJing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-069",
+      "title": "Game Soundtrack and SFX Pack",
+      "category": "Music & audio",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Compose a short game soundtrack and a pack of sound effects, then drop them into a tiny demo.",
+      "careers": "Game audio, composition, sound design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-070",
+      "title": "Choir, Loops and Layers",
+      "category": "Music & audio",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a multi-layer piece with harmonies, percussion and atmosphere, and document your arrangement choices.",
+      "careers": "Composition, music production",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-071",
+      "title": "Audio Brand: Sonic Logo and Hold Music",
+      "category": "Music & audio",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Invent a sonic logo, notification sounds and short hold music for a brand.",
+      "careers": "Sonic branding, advertising, audio design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-072",
+      "title": "Live-Style Setlist with AI",
+      "category": "Music & audio",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Produce a short DJ- or live-style set, with transitions, plus notes on performance rights.",
+      "careers": "DJ work, music supervision, live production",
+      "watchNote": "Some music tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-073",
+      "title": "Write a Short Story with an AI Writing Partner",
+      "category": "Writing & storytelling",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Co-write a complete short story, keeping your voice in charge and learning when to ignore the model.",
+      "careers": "Fiction writing, editing, publishing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-074",
+      "title": "Script a Pilot Episode",
+      "category": "Writing & storytelling",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Outline and write the first episode of a series, plus a season bible, with AI as a writers'-room assistant.",
+      "careers": "Screenwriting, television, games writing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-075",
+      "title": "Choose-Your-Own-Adventure Book",
+      "category": "Writing & storytelling",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write and format an interactive story with branching paths, inventory-style choices and a satisfying set of endings.",
+      "careers": "Interactive fiction, game writing, publishing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-076",
+      "title": "Journalism Bootcamp: One Story, Three Angles",
+      "category": "Writing & storytelling",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Research and write a news piece, a feature and an opinion piece on the same topic, with proper sources.",
+      "careers": "Journalism, communications, policy",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-077",
+      "title": "Poetry and Lyrics Lab",
+      "category": "Writing & storytelling",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write a small collection of poems or lyrics, using AI for constraint games (forms, rhyme, image prompts), not generic filler.",
+      "careers": "Songwriting, poetry, creative writing",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-078",
+      "title": "World Bible for a Novel or Game",
+      "category": "Writing & storytelling",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a world guide: maps, cultures, rules of magic or tech, and character dossiers.",
+      "careers": "Fantasy writing, game writing, intellectual property development",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-079",
+      "title": "Edit Like a Pro",
+      "category": "Writing & storytelling",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Take a rough draft and run a structured edit covering structure, line, copy and sensitivity.",
+      "careers": "Editing, publishing, communications",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-080",
+      "title": "Launch a Brand in 48 Hours (On Paper)",
+      "category": "Marketing & social",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Invent a brand and produce its name, positioning, visual identity and first campaign. No need to go live.",
+      "careers": "Branding, marketing, entrepreneurship",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-081",
+      "title": "Content Calendar for a Cause",
+      "category": "Marketing & social",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Plan a month of posts for a charity, club or campaign, with captions, visuals and a clear call to action.",
+      "careers": "Social media management, campaigning, communications",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-082",
+      "title": "Hook, Story, Offer: Short-Form Adverts",
+      "category": "Marketing & social",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Write and storyboard a set of short-form video ads and test which hook is strongest with classmates, not ad managers.",
+      "careers": "Performance marketing, copywriting, social video",
+      "watchNote": "Ad platforms typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-083",
+      "title": "Influencer Brief and Media Kit",
+      "category": "Marketing & social",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a media kit and a campaign brief as if you were both the creator and the brand.",
+      "careers": "Influencer marketing, talent, PR",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-084",
+      "title": "Meme Marketing (Without Being Cringe)",
+      "category": "Marketing & social",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Study why memes spread, then design an on-brand meme set and a clear do-not-post list.",
+      "careers": "Social marketing, copy, community",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-085",
+      "title": "Landing Page that Actually Converts",
+      "category": "Marketing & social",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a one-page site with headline tests, social proof and a clear sign-up, using AI for copy and layout.",
+      "careers": "Conversion copy, growth, web design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-086",
+      "title": "Crisis Comms Drill",
+      "category": "Marketing & social",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write a response plan and draft posts for a made-up brand crisis, including what not to say.",
+      "careers": "PR, communications, reputation management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-087",
+      "title": "Analytics Without the Creepy Stuff",
+      "category": "Marketing & social",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Read or simulate basic channel metrics and write a 'what to do next' report, with no scraping of private accounts.",
+      "careers": "Social analytics, marketing strategy",
+      "watchNote": "Official analytics may be 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-088",
+      "title": "Validate a Side-Hustle Idea in a Week",
+      "category": "Entrepreneurship",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Use AI to research a small idea, talk safely to potential customers, and write a go or no-go memo.",
+      "careers": "Entrepreneurship, product, market research",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-089",
+      "title": "Digital Product Shop (Mock Checkout)",
+      "category": "Entrepreneurship",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design and mock a shop for a digital product you made, such as an e-book, printables, beats or templates.",
+      "careers": "E-commerce, product, creative business",
+      "watchNote": "Shop and payment tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-090",
+      "title": "Price It, Pitch It, Protect It",
+      "category": "Entrepreneurship",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write a simple offer, pricing logic, and a short primer on copyright, trade marks and not ripping off other people's work.",
+      "careers": "Small business, law-adjacent work, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-091",
+      "title": "Client Project Simulator",
+      "category": "Entrepreneurship",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Run a mock freelance job: brief, timeline, drafts, invoice template and a lessons-learned note.",
+      "careers": "Freelancing, account management, design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-092",
+      "title": "Build a Micro-SaaS Mock-up",
+      "category": "Entrepreneurship",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Invent a tiny software product, vibe-code a working demo, and write a one-page business case.",
+      "careers": "Start-ups, product management, software",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-093",
+      "title": "Market Stall to Online: A Youth Business Plan",
+      "category": "Entrepreneurship",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Turn a bake sale, tutoring offer or craft stall into a simple business plan and brand.",
+      "careers": "Small business, retail, entrepreneurship",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-094",
+      "title": "Crowdfunder Story and Rewards",
+      "category": "Entrepreneurship",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Write a campaign page, reward tiers and an update plan for a creative or community project. It can stay unpublished.",
+      "careers": "Fundraising, marketing, producing",
+      "watchNote": "Crowdfunding platforms typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-095",
+      "title": "The Citation Machine (You Still Have to Think)",
+      "category": "Research & study",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a research workflow that finds sources, takes notes, and formats citations, and never invents them.",
+      "careers": "Academia, research, librarianship",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-096",
+      "title": "Exam Revision OS",
+      "category": "Research & study",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a personal revision system: topic maps, spaced-repetition cards, and a weekly plan generated with AI then edited by you.",
+      "careers": "Education, productivity, coaching",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-097",
+      "title": "Literature Review Lite",
+      "category": "Research & study",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Research a question, compare at least five sources, and write a short review with a bias check.",
+      "careers": "Research, policy, journalism",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-098",
+      "title": "Interview a Topic: Oral History Kit",
+      "category": "Research & study",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Plan, optionally record, transcribe and edit an interview, with consent forms and careful use of transcription AI.",
+      "careers": "Journalism, history, documentary",
+      "watchNote": "Consent needed from interviewees",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-099",
+      "title": "GCSE and A-Level Coursework Companion",
+      "category": "Research & study",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Use AI as a planning and feedback coach for a practice coursework-style project, staying inside exam-board honesty rules.",
+      "careers": "Education, academic skills",
+      "watchNote": "Exam integrity",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-100",
+      "title": "Source or Soup? A Research Quality Lab",
+      "category": "Research & study",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a checklist and a short guide that spots weak sources, hallucinated citations and junk studies.",
+      "careers": "Information literacy, fact-checking, research",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-101",
+      "title": "Language Lab: Practise a Language with AI",
+      "category": "Research & study",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a speaking and writing practice routine in a language you are learning, with error logs and cultural notes you verify.",
+      "careers": "Languages, teaching, translation",
+      "watchNote": "Some conversation tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-102",
+      "title": "Visualise the Invisible",
+      "category": "Maths & science",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Turn a tough maths or science idea, such as waves, atoms or algebra, into an animation or interactive explainer.",
+      "careers": "Science communication, teaching, animation",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-103",
+      "title": "Lab Notebook of the Future",
+      "category": "Maths & science",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a digital lab notebook that uses AI to check units, flag anomalies and help write a methods section. You still do the thinking.",
+      "careers": "Scientific research, lab work, data",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-104",
+      "title": "Model a Real-World System",
+      "category": "Maths & science",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a simple model of an epidemic, climate, population or queue, and test what-if questions.",
+      "careers": "Scientific modelling, data science, public health",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-105",
+      "title": "Maths Coach that Shows Its Working",
+      "category": "Maths & science",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a tutor bot that walks through problems step by step and catches common mistakes, including its own.",
+      "careers": "Edtech, teaching, mathematics",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-106",
+      "title": "Citizen Science Data Dive",
+      "category": "Maths & science",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Use an open citizen-science dataset, such as birds, stars or air quality, to ask a question and present findings.",
+      "careers": "Environmental science, research, data",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-107",
+      "title": "Design a Fair Experiment",
+      "category": "Maths & science",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Plan a proper experiment with controls, sample-size thinking and an honest write-up, using AI as a methods critic.",
+      "careers": "Science, psychology, research methods",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-108",
+      "title": "Teach a Computer to See (Kind Of)",
+      "category": "Coding & ML",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Train a simple image classifier, such as recycling versus rubbish, and test where it fails. Youth-friendly tools such as Teachable Machine work well here.",
+      "careers": "Machine learning, computer vision",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-109",
+      "title": "Sentiment, Sarcasm and Slip-ups",
+      "category": "Coding & ML",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a tiny text classifier and learn why language models miss jokes, slang and context.",
+      "careers": "Natural language processing, data science, trust and safety",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-110",
+      "title": "Python with an AI Pair Programmer",
+      "category": "Coding & ML",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write a useful Python project with an AI pair programmer, and learn to read every line it suggests.",
+      "careers": "Software engineering, data",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-111",
+      "title": "What's Inside an LLM? (No PhD Required)",
+      "category": "Coding & ML",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a visual explainer of tokens, training data and next-word guessing, plus a tiny demo.",
+      "careers": "AI literacy, teaching, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-112",
+      "title": "Customise a Model Safely",
+      "category": "Coding & ML",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Customise a small open model or a custom assistant on a dataset you have the right to use.",
+      "careers": "Machine learning engineering, AI product",
+      "watchNote": "Some model platforms 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-113",
+      "title": "Bias Hunt",
+      "category": "Coding & ML",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Test a model or dataset for biased outputs, document the harm, and propose fixes.",
+      "careers": "Responsible AI, research, policy",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-114",
+      "title": "From Spreadsheet to App with Code",
+      "category": "Coding & ML",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Turn a spreadsheet workflow into a small coded tool, with tests and a README.",
+      "careers": "Software engineering, operations, data",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-115",
+      "title": "Build and Benchmark a Mini Model",
+      "category": "Coding & ML",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Train a very small model, measure accuracy, and write up what good enough means.",
+      "careers": "Machine learning, research, data science",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-116",
+      "title": "Smart Bedroom (On a Budget)",
+      "category": "Robotics & IoT",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Design a safe bedroom automation for lights, reminders or plant watering, with a microcontroller or a simulated one. No mains wiring without an adult.",
+      "careers": "Internet of things, electrical engineering, product design",
+      "watchNote": "Adult help for any mains electrics",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-117",
+      "title": "Robot with Manners",
+      "category": "Robotics & IoT",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Programme a robot, physical or simulated, to complete a task and communicate clearly with humans.",
+      "careers": "Robotics, human-robot interaction, engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-118",
+      "title": "Computer Vision on the Move",
+      "category": "Robotics & IoT",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Give a robot or webcam a vision task, such as following a line, sorting objects or detecting a gesture, and log failures.",
+      "careers": "Robotics, computer vision, embedded systems",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-119",
+      "title": "Sensor Story: Data from the Real World",
+      "category": "Robotics & IoT",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Collect data from a temperature, motion or air-quality sensor and turn it into a live display.",
+      "careers": "Internet of things, environmental monitoring, engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-120",
+      "title": "Accessibility Button",
+      "category": "Robotics & IoT",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a big-button or voice-triggered helper for a simple everyday task, designed with a real user in mind, even if that user is you.",
+      "careers": "Assistive tech, product design, occupational therapy-adjacent work",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-121",
+      "title": "Drone Flight Plan (Sim First)",
+      "category": "Robotics & IoT",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Plan and simulate a drone survey or film shot list, including UK rules and no-fly thinking. Keep it in a simulator unless a qualified adult supervises.",
+      "careers": "Drone operations, film, surveying",
+      "watchNote": "UK drone rules; simulate first",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-122",
+      "title": "Design a 3D Character",
+      "category": "AR, VR & 3D",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Model or generate a 3D character, rig a simple pose, and present a turnaround.",
+      "careers": "3D art, game art, animation",
+      "watchNote": "Some 3D tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-123",
+      "title": "Build a Tiny VR Gallery",
+      "category": "AR, VR & 3D",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a simple VR or browser 3D gallery of your work, or a museum-style exhibit.",
+      "careers": "VR design, museums, game development",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-124",
+      "title": "AR Filter Fun (and Taste)",
+      "category": "AR, VR & 3D",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a face or world AR effect for a club, brand or public-service message.",
+      "careers": "AR design, social media, advertising",
+      "watchNote": "Effect platforms may be 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-125",
+      "title": "From Bedroom to 3D Set",
+      "category": "AR, VR & 3D",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Recreate a real room or invent a film set in 3D, with lighting and a short camera move.",
+      "careers": "Production design, architectural visualisation, game environments",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-126",
+      "title": "3D Print-Ready Object",
+      "category": "AR, VR & 3D",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a small object for 3D printing, or a print-ready file, checking strength, scale and safety.",
+      "careers": "Product design, additive manufacturing, engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-127",
+      "title": "Interactive World in the Browser",
+      "category": "AR, VR & 3D",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a clickable 3D scene, such as a tour, game or product viewer, that runs in a web browser.",
+      "careers": "Web 3D, e-commerce, games",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-128",
+      "title": "Spot the Deepfake",
+      "category": "Cybersecurity",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a checklist and a short training quiz that helps people spot visual and audio fakes.",
+      "careers": "Trust and safety, journalism, cybersecurity",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-129",
+      "title": "Phishing Lab (Defensive Only)",
+      "category": "Cybersecurity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Create educational examples of phishing and a how-to-check guide. No real attacks, and nothing is ever sent to real inboxes.",
+      "careers": "Cybersecurity, awareness training, IT",
+      "watchNote": "Defence only; no real-world attacks",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-130",
+      "title": "Password and Privacy Tune-up",
+      "category": "Cybersecurity",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a personal security plan covering password managers, two-factor authentication, app permissions, and what not to paste into AI tools.",
+      "careers": "Cybersecurity, IT support, privacy",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-131",
+      "title": "Deepfake Audio Detective",
+      "category": "Cybersecurity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Run a structured test on real versus synthetic speech and write up the clues, including what you still cannot tell.",
+      "careers": "Audio forensics-adjacent work, journalism, security",
+      "watchNote": "Synthesis tools typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-132",
+      "title": "Threat Model Your Favourite App",
+      "category": "Cybersecurity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Pick an app teens use and map what data it has, who might want it, and how to stay safer.",
+      "careers": "Security engineering, privacy, product",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-133",
+      "title": "Red Team the Bot (Safely)",
+      "category": "Cybersecurity",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Probe your own course chatbot for prompt injection and data leaks, then patch it. Only on systems you built for the course.",
+      "careers": "AI security, cybersecurity, responsible AI",
+      "watchNote": "Own systems only; defensive",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-134",
+      "title": "Who Taught the Machine?",
+      "category": "Ethics & safety",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Investigate the training data and labour behind AI tools, and present a fair-use, fair-pay argument.",
+      "careers": "Policy, ethics, journalism",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-135",
+      "title": "Misinformation Emergency Drill",
+      "category": "Ethics & safety",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Track a made-up or historic rumour, map how it spreads, and produce a correction pack.",
+      "careers": "Fact-checking, media literacy, communications",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-136",
+      "title": "The Consent Project",
+      "category": "Ethics & safety",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Draft a teen-friendly consent and data policy for a fictional app, in the spirit of UK GDPR and the Children's code.",
+      "careers": "Privacy law-adjacent work, product, policy",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-137",
+      "title": "Algorithmic Fairness Court",
+      "category": "Ethics & safety",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Run a mock case about a biased system in hiring, grading or moderation, and write a judgment with remedies.",
+      "careers": "Law, public policy, responsible AI",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-138",
+      "title": "Environmental Cost of a Prompt",
+      "category": "Ethics & safety",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Research and explain the energy and water costs of AI, then propose a lighter-prompt code of practice.",
+      "careers": "Sustainability, science communication, policy",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-139",
+      "title": "When Not to Use AI",
+      "category": "Ethics & safety",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a decision tree and a set of case studies for tasks where AI is lazy, risky, or simply wrong.",
+      "careers": "Professional ethics, teaching, management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-140",
+      "title": "AI in the NHS: Design a Patient-Safe Helper",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Prototype an AI helper for a hospital or GP setting that never replaces clinical judgement and never uses real patient data.",
+      "careers": "Healthcare, clinical informatics, digital health",
+      "watchNote": "No real patient data",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-141",
+      "title": "Junior Barrister's AI Clerk",
+      "category": "Careers",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Build a legal research and case-organisation assistant for a fictional case, with citation discipline. This is not real legal advice.",
+      "careers": "Law, legal operations, paralegal work",
+      "watchNote": "Not legal advice; some tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-142",
+      "title": "Sports Analyst's Match Pack",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Produce a pre-match pack: opposition notes, set-piece patterns, and a short video or graphic package.",
+      "careers": "Sports analysis, coaching, sports media",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-143",
+      "title": "Fashion Studio: Next Season, Explained",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Research trends, generate a capsule collection, and write a responsible-materials note.",
+      "careers": "Fashion, buying, trend forecasting",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-144",
+      "title": "Personal Finance Coach (Not a Bank)",
+      "category": "Careers",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Build a budgeting and how-money-works coach that avoids investment advice and gambling mechanics.",
+      "careers": "Personal finance, fintech, financial education",
+      "watchNote": "No investment advice; trading 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-145",
+      "title": "Newsroom of One",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Run a mini newsroom: a newsgathering plan, draft, edit, headline and a standards checklist.",
+      "careers": "Journalism, editing, broadcasting",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-146",
+      "title": "Architect's First Brief",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Respond to a building brief with mood images, a simple floor idea, and a sustainability note.",
+      "careers": "Architecture, interior design, urban planning",
+      "watchNote": "Some 3D tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-147",
+      "title": "Classroom Sidekick for Teachers",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a teacher-facing lesson aid and a pupil-facing practice tool, with safeguarding baked in.",
+      "careers": "Education, edtech, teaching",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-148",
+      "title": "Hotel, Festival or Restaurant Ops Board",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build an operations dashboard and guest-comms templates for a hospitality or events setting.",
+      "careers": "Hospitality, events, operations",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-149",
+      "title": "Farm, Food and Supply Chain",
+      "category": "Careers",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Use open or simulated data to follow food from field to fork and suggest a waste-reducing change.",
+      "careers": "Agri-tech, food science, sustainability",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-150",
+      "title": "Film Production Office",
+      "category": "Careers",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Create a call sheet, budget outline, shot list and risk assessment for a short film, with AI as the production assistant.",
+      "careers": "Film production, producing, location management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-151",
+      "title": "Civic Tech: Improve Your Town",
+      "category": "Careers",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design an AI-assisted civic idea, such as reporting local issues or briefing a youth council, plus a public explainer.",
+      "careers": "Public service, civic tech, local government",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-152",
+      "title": "Second Brain, First Time",
+      "category": "Productivity",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Set up a notes system with AI summaries, tags and weekly reviews, keeping private material off public tools.",
+      "careers": "Knowledge work, consulting, any office career",
+      "watchNote": "Keep private data off public tools",
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-153",
+      "title": "The Exam-Season Operating System",
+      "category": "Productivity",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a calendar, energy map and task system that gets you through a busy month without burnout theatre.",
+      "careers": "Productivity, coaching, project management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-154",
+      "title": "Meeting Notes that Don't Suck",
+      "category": "Productivity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Practise turning messy discussions into actions and decisions with an AI notetaker, using dummy audio only. Never record people without permission.",
+      "careers": "Operations, project management, assistant work",
+      "watchNote": "Never record without permission; some tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-155",
+      "title": "Focus Playlist and Deep-Work Ritual",
+      "category": "Productivity",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a focus ritual, including a custom soundscape and a blocker plan, and measure what actually helps.",
+      "careers": "Productivity, wellbeing, music supervision",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-156",
+      "title": "Goal System for a Term",
+      "category": "Productivity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Turn a term goal into milestones, habits and a Sunday review, with AI as coach, not nag.",
+      "careers": "Coaching, product, personal development",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-157",
+      "title": "Portfolio and CV Studio",
+      "category": "Productivity",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a CV, portfolio and a short about-me film or page that sounds like you, not like a robot.",
+      "careers": "All careers, recruitment, personal branding",
+      "watchNote": null,
+      "suggestedForLaunch": true
+    },
+    {
+      "id": "IDEA-158",
+      "title": "Design for Everyone: Accessible Website Makeover",
+      "category": "Accessibility",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Rebuild a page so it works with keyboards, screen readers, captions and clear language.",
+      "careers": "Accessibility, front-end, UX",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-159",
+      "title": "Alt Text and Audio Description Lab",
+      "category": "Accessibility",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Write excellent alt text and a short audio description for a film scene or comic, with AI as a first draft only.",
+      "careers": "Accessibility, media, museums",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-160",
+      "title": "Communication Aid Prototype",
+      "category": "Accessibility",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a simple symbol or text-to-speech aid for a specific need, tested with empathy and with no medical claims.",
+      "careers": "Assistive tech, speech and language-adjacent work, product",
+      "watchNote": "Some voice tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-161",
+      "title": "Captions, Easy Read and Translation",
+      "category": "Accessibility",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Take one piece of content and produce accurate captions, an Easy Read version, and a careful translation you verify.",
+      "careers": "Accessibility, translation, public communications",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-162",
+      "title": "Inclusive Game or App Modes",
+      "category": "Accessibility",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Add colour-safe, motion-safe, and one-handed or simplified modes to a small game or app you built.",
+      "careers": "Game accessibility, UX, inclusive design",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-163",
+      "title": "Home Energy Detective",
+      "category": "Environment",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a simple energy or waste tracker and a plan to cut use, with AI help on the maths and the comms.",
+      "careers": "Sustainability, energy, facilities",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-164",
+      "title": "Biodiversity Map of My Patch",
+      "category": "Environment",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Document local species with photos and notes, and produce a map or guide, being careful with location data for rare species.",
+      "careers": "Ecology, conservation, geography",
+      "watchNote": "Be careful with rare-species locations",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-165",
+      "title": "Climate Explainer for Your Year Group",
+      "category": "Environment",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Make a clear, sourced explainer, as a site, film or comic, of a climate topic that is often misunderstood.",
+      "careers": "Science communication, environmental education, journalism",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-166",
+      "title": "Circular Design Challenge",
+      "category": "Environment",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Redesign a common product for repair, reuse or recycling, with AI-assisted research and visuals.",
+      "careers": "Sustainable design, product, engineering",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-167",
+      "title": "Community Climate Action Pack",
+      "category": "Environment",
+      "level": "Pro",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Produce a practical action pack for a school or local group: a plan, comms, and a way to measure impact.",
+      "careers": "Community organising, sustainability, public engagement",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-168",
+      "title": "Dungeon Master's AI Co-Pilot",
+      "category": "Fun & hobbies",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a campaign helper that invents NPCs, loot and random encounters, while you stay in charge of the story.",
+      "careers": "Game design, writing, tabletop industry",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-169",
+      "title": "Fantasy Football Brain",
+      "category": "Fun & hobbies",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": true
+      },
+      "description": "Create a helper that analyses form and fixtures and explains its suggestions. You still make the picks, and it stays a game, not betting.",
+      "careers": "Sports analytics, product, media",
+      "watchNote": "Game only, not betting (18+)",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-170",
+      "title": "Recipe Generator for What's in the Fridge",
+      "category": "Fun & hobbies",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build an app that turns a photo or list of leftovers into recipes, with allergy warnings you verify yourself.",
+      "careers": "Food, product, app development",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-171",
+      "title": "Pet or Plant Parent Assistant",
+      "category": "Fun & hobbies",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Design a care assistant for a pet or houseplant, with reminders, a log, and a clear see-a-vet or garden-centre rule.",
+      "careers": "Pet tech, product, veterinary-adjacent work",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-172",
+      "title": "Fan Wiki and Theory Board",
+      "category": "Fun & hobbies",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a well-sourced fan wiki or theory board for a book, show or game you love, with spoiler controls.",
+      "careers": "Community, editorial, wiki management",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-173",
+      "title": "Custom Tabletop Miniatures and Cards",
+      "category": "Fun & hobbies",
+      "level": "Builder",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Design a set of cards, tokens or miniature concepts for a homemade game, ready to print.",
+      "careers": "Game design, illustration, hobby business",
+      "watchNote": "Some image tools 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-174",
+      "title": "Travel Dream Itinerary (Stay Safe)",
+      "category": "Fun & hobbies",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": true,
+        "safeguarding": false
+      },
+      "description": "Plan a dream trip with budgets, packing lists and cultural notes, clearly marked as a plan, not a solo-travel instruction.",
+      "careers": "Travel, tourism, planning",
+      "watchNote": "Plan only; booking sites typically 18+",
+      "suggestedForLaunch": false
+    },
+    {
+      "id": "IDEA-175",
+      "title": "Birthday, Prom or Gig Planning HQ",
+      "category": "Fun & hobbies",
+      "level": "Starter",
+      "minAge": 13,
+      "tools": [],
+      "flags": {
+        "age18Tools": false,
+        "safeguarding": false
+      },
+      "description": "Build a planning kit: mood board, budget, playlist, invites and a run-of-show for a celebration.",
+      "careers": "Event planning, creative direction, hospitality",
+      "watchNote": null,
+      "suggestedForLaunch": false
+    }
+  ]
+}

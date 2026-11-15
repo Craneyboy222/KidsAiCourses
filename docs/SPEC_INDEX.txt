@@ -1,0 +1,42 @@
+13:## 1. The idea
+29:### Explicit non-goals
+33:### Voice and copy
+39:## 2. Who it's for
+41:### Age and safety bands
+48:### Personas
+66:## 3. What to build at launch
+70:### 3.1 Accounts
+81:### 3.2 Learning
+93:### 3.3 Tools
+102:### 3.4 Submissions
+109:### 3.5 AI Coach
+121:### 3.6 Parents
+129:### 3.7 Payments
+135:### 3.8 Owner admin dashboard
+151:### 3.9 AI course creation engine
+165:### 3.10 Safety, accessibility and notifications
+177:## 4. How people use it
+197:## 5. Screens and what they must do
+215:## 6. Course content model
+305:### 6.1 Example JSON — Build Your Own Snapchat-Style App
+443:### 6.2 Brief outlines for two further flagships
+451:### 6.3 AI course creation engine
+457:#### Automatic discovery (Tool Radar)
+487:#### On-demand creation
+499:#### Review workflow
+512:#### Front-end preview and inline editing
+524:#### Same content model, and configurable approval
+538:## 7. External tools, setup guides and submissions
+554:## 8. AI Coach
+580:## 9. Safety, privacy and accessibility
+604:## 10. Recommended tech stack
+630:## 11. Monetisation
+645:## 12. Data model
+667:## 13. API routes and repository structure
+693:## 14. Environment variables
+701:## 15. Seed data
+735:## 16. Testing
+741:## 17. Open questions and decisions for Chris (⚖️ = legal or specialist input)
+762:## 18. Glossary
+780:## 19. Future additions (not to build now)
+803:## 20. Instructions to Claude Code — now build it
