@@ -1,8 +1,10 @@
 import { accountsPurgePending, accountsRecalculateBands } from "./accounts";
 import { billingReconcile } from "./billing";
+import { dataDeleteDue, dataExport } from "./data";
 import { evidenceCleanupAbandoned } from "./evidence";
 import type { JobDefinition } from "./define";
 import { notificationsRelease, rateLimitCleanup, sessionsCleanup } from "./housekeeping";
+import { retentionSweep } from "./retention";
 import { publishJobs } from "@/server/services/publish";
 
 /**
@@ -52,6 +54,11 @@ export const JOBS: JobDefinition<never>[] = [
   evidenceCleanupAbandoned as JobDefinition<never>,
   // payments
   billingReconcile as JobDefinition<never>,
+  // parents: data download and deletion
+  dataExport as JobDefinition<never>,
+  dataDeleteDue as JobDefinition<never>,
+  // retention
+  retentionSweep as JobDefinition<never>,
 ];
 
 function assertUnique(jobs: JobDefinition<never>[]): void {

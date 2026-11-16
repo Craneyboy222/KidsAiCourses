@@ -135,6 +135,8 @@ export const ACTIONS = {
   "flag.manage": { staff: ADMIN },
   "setting.manage": { staff: ADMIN },
   "audit.read": { staff: ADMIN },
+  /** Retention policies and the retention sweep (dry run from Studio; the nightly job runs as the system actor). */
+  "retention.manage": { staff: ADMIN },
   "analytics.read": { staff: ["admin", "editor", "reviewer"] },
   "staff.invite": { staff: ADMIN },
   /** Granting admin, dsl or super_admin is for the owner alone (spec 3.8). */

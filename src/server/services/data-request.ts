@@ -97,6 +97,8 @@ export const EXPORT_SIGNED_LINK_SECONDS = 120;
 /** Stored files beyond this total are listed in the export but not copied into it. */
 export const MAX_EXPORT_FILE_BYTES = 250 * 1024 * 1024;
 export const EXPORT_EVENT = "data/export.requested";
+/** A run still marked `processing` after this long is assumed to have died and is picked up again. */
+const STALE_PROCESSING_MS = 60 * 60 * 1000;
 
 /**
  * Whether an export a PARENT asks for contains the child's private writing: Coach messages, notes
@@ -256,7 +258,8 @@ function toView(row: RequestRow, nicknames: Map<string, string>, now: Date): Dat
     id: row.id,
     kind: row.kind,
     status: row.status,
-    scope: row.kind === "delete" && row.learnerId === null && row.status !== "completed" ? "family" : row.learnerId === null && row.kind === "delete" && row.requestedBy === null ? "family" : "learner",
+    // A child's request loses its learner id only when that deletion completes; a family request never has one.
+    scope: row.kind === "delete" && row.learnerId === null && row.status !== "completed" ? "family" : "learner",
     learnerId: row.learnerId,
     learnerNickname: row.learnerId ? (nicknames.get(row.learnerId) ?? null) : null,
     requestedAt: row.createdAt,
@@ -281,7 +284,12 @@ export async function listDataRequests(ctx: Ctx, options: { limit?: number } = {
   const rows = await ctx.db
     .select()
     .from(dataRequest)
-    .where(who.kind === "parent" ? eq(dataRequest.familyId, who.actor.familyId) : eq(dataRequest.learnerId, who.actor.userId))
+    .where(
+      who.kind === "parent"
+        ? // An 18-year-old's own requests are theirs: a parent in the same family is not shown them.
+          and(eq(dataRequest.familyId, who.actor.familyId), or(isNull(dataRequest.learnerId), isNull(dataRequest.requestedBy), ne(dataRequest.requestedBy, dataRequest.learnerId)))
+        : eq(dataRequest.learnerId, who.actor.userId),
+    )
     .orderBy(desc(dataRequest.createdAt))
     .limit(Math.min(Math.max(options.limit ?? 30, 1), 100));
   const nicknames = await nicknamesFor(ctx, [...new Set(rows.flatMap((row) => (row.learnerId ? [row.learnerId] : [])))]);
@@ -292,8 +300,9 @@ export type RetentionLine = { key: string; what: string; why: string; keptFor: s
 
 const plural = (n: number, unit: string) => `${n} ${unit}${n === 1 ? "" : "s"}`;
 function period(days: number): string {
-  if (days % 365 === 0) return plural(days / 365, "year");
-  if (days >= 365 && Math.abs(days / 30.4 - Math.round(days / 30.4)) < 0.2) return plural(Math.round(days / 30.4), "month");
+  // Whole years from three up ("6 years"); months from one year ("24 months", "13 months"); days below that ("90 days").
+  if (days % 365 === 0 && days >= 3 * 365) return plural(days / 365, "year");
+  if (days >= 365) return plural(Math.round(days / 30.4), "month");
   return plural(days, "day");
 }
 
@@ -707,7 +716,14 @@ export async function runExport(ctx: Ctx, requestId: string): Promise<ExportJobR
   const [claimed] = await ctx.db
     .update(dataRequest)
     .set({ status: "processing", updatedAt: ctx.now })
-    .where(and(eq(dataRequest.id, requestId), eq(dataRequest.kind, "export"), inArray(dataRequest.status, ["requested", "failed"])))
+    .where(
+      and(
+        eq(dataRequest.id, requestId),
+        eq(dataRequest.kind, "export"),
+        // A run that died half-way leaves `processing` behind: after an hour it may be taken over.
+        or(inArray(dataRequest.status, ["requested", "failed"]), and(eq(dataRequest.status, "processing"), lt(dataRequest.updatedAt, new Date(ctx.now.getTime() - STALE_PROCESSING_MS)))),
+      ),
+    )
     .returning();
   if (!claimed) return { requestId, status: "skipped" };
 
@@ -846,19 +862,20 @@ export async function requestSelfDeletion(ctx: Ctx): Promise<DataRequestView> {
   const learner = await getLearnerSummary(ctx, learnerId);
   const undoUntil = undoDeadline(ctx.now);
 
-  const row = await ctx.db.transaction(async (tx) => {
+  const { row, created } = await ctx.db.transaction(async (tx) => {
     await tx.select({ id: user.id }).from(user).where(eq(user.id, learnerId)).for("update");
     const [open] = await tx.select().from(dataRequest).where(and(eq(dataRequest.learnerId, learnerId), eq(dataRequest.kind, "delete"), inArray(dataRequest.status, [...OPEN_DELETE]))).limit(1);
-    if (open) return open;
+    if (open) return { row: open, created: false };
     // They stay signed in so that they can undo it; the account does nothing else while it waits.
     await tx.update(user).set({ status: "pending_deletion", statusReason: "deleted_by_self", updatedAt: ctx.now }).where(eq(user.id, learnerId));
     await revokeInviteCodes(ctx, learnerId, tx);
     const [inserted] = await tx.insert(dataRequest).values({ kind: "delete", status: "requested", familyId: learner.familyId, learnerId, requestedBy: learnerId, undoUntil, createdAt: ctx.now, updatedAt: ctx.now }).returning();
     if (!inserted) throw new AppError("internal", "We couldn't start that. Nothing was removed. Try again in a moment.");
     await audit(ctx, { action: "data.delete.request", targetType: "user", targetId: learnerId, reason: "Asked for by the learner (18 or over)", meta: { requestId: inserted.id, scope: "self", undoUntil: undoUntil.toISOString() } }, tx);
-    return inserted;
+    return { row: inserted, created: true };
   });
-  await tellRequesterScheduled(ctx, learnerId, "adult", "your account", row.undoUntil ?? undoUntil, row.id);
+  // Asking twice is one request and one confirmation.
+  if (created) await tellRequesterScheduled(ctx, learnerId, "adult", "your account", row.undoUntil ?? undoUntil, row.id);
   return toView(row, new Map([[learnerId, learner.nickname]]), ctx.now);
 }
 
@@ -885,10 +902,10 @@ export async function requestFamilyDeletion(ctx: Ctx): Promise<DataRequestView> 
   for (const child of children) if (await isIndependentLearner(ctx, child.learnerId)) independent.add(child.learnerId);
   const undoUntil = undoDeadline(ctx.now);
 
-  const row = await ctx.db.transaction(async (tx) => {
+  const { row, created } = await ctx.db.transaction(async (tx) => {
     await tx.select({ id: family.id }).from(family).where(eq(family.id, familyId)).for("update");
     const [open] = await tx.select().from(dataRequest).where(and(eq(dataRequest.familyId, familyId), eq(dataRequest.kind, "delete"), isNull(dataRequest.learnerId), inArray(dataRequest.status, [...OPEN_DELETE]))).limit(1);
-    if (open) return open;
+    if (open) return { row: open, created: false };
     for (const child of children) {
       // An 18-year-old who runs their own account is not ours to close: they leave the family with their work.
       if (independent.has(child.learnerId) || child.status === "pending_deletion") continue;
@@ -899,8 +916,10 @@ export async function requestFamilyDeletion(ctx: Ctx): Promise<DataRequestView> 
     const [inserted] = await tx.insert(dataRequest).values({ kind: "delete", status: "requested", familyId, learnerId: null, requestedBy: userId, undoUntil, createdAt: ctx.now, updatedAt: ctx.now }).returning();
     if (!inserted) throw new AppError("internal", "We couldn't start that. Nothing was removed. Try again in a moment.");
     await audit(ctx, { action: "data.delete.request", targetType: "family", targetId: familyId, reason: "Asked for by the parent who owns the family account", meta: { requestId: inserted.id, scope: "family", children: children.length, undoUntil: undoUntil.toISOString() } }, tx);
-    return inserted;
+    return { row: inserted, created: true };
   });
+  // Asking twice is one request and one confirmation.
+  if (!created) return toView(row, new Map(), ctx.now);
 
   await tellRequesterScheduled(ctx, userId, "parent", "your family account and every child's account in it", row.undoUntil ?? undoUntil, row.id);
   for (const learnerId of independent) {
@@ -1023,14 +1042,14 @@ export type EraseOutcome = "erased" | "anonymised";
  * or family) so the held records keep their owner, and everything else is deleted table by table.
  * Consent records and the audit log are never touched.
  */
-async function eraseLearner(ctx: Pick<Ctx, "now">, tx: Db, learnerId: string): Promise<EraseOutcome | null> {
+async function eraseLearner(ctx: Pick<Ctx, "now">, tx: Db, learnerId: string, options: { keepShell?: boolean } = {}): Promise<EraseOutcome | null> {
   const [target] = await tx.select({ id: user.id }).from(user).where(and(eq(user.id, learnerId), eq(user.kind, "learner"))).for("update");
   if (!target) return null;
   // A deleted learner's ledger is removed (see `append-only.ts`); it has no foreign key to follow.
   await tx.delete(creditLedger).where(eq(creditLedger.learnerId, learnerId));
   await tx.delete(rateLimitBucket).where(like(rateLimitBucket.key, `%:user:${learnerId}`));
 
-  if (!(await hasSafeguardingHold(tx, learnerId))) {
+  if (!options.keepShell && !(await hasSafeguardingHold(tx, learnerId))) {
     await tx.delete(user).where(and(eq(user.id, learnerId), eq(user.kind, "learner")));
     return "erased";
   }
@@ -1145,7 +1164,7 @@ async function carryOutDeletion(ctx: Ctx, row: RequestRow): Promise<DeletionResu
   const result: DeletionResult = { learnersErased: 0, learnersAnonymised: 0, adultsErased: 0, filesRemoved: 0, familyRemoved: false };
   const wholeFamily = row.learnerId === null;
   let learnerIds: string[] = [];
-  let leaving: string[] = [];
+  const leaving: string[] = [];
   let ownsFamily = false;
 
   if (wholeFamily) {
@@ -1164,7 +1183,6 @@ async function carryOutDeletion(ctx: Ctx, row: RequestRow): Promise<DeletionResu
     const [target] = await ctx.db.select({ status: user.status }).from(user).where(and(eq(user.id, row.learnerId ?? ""), eq(user.kind, "learner"))).limit(1);
     // Only an account that is still waiting to be deleted. Anything else means the request was overtaken.
     if (target?.status === "pending_deletion" && row.learnerId) learnerIds = [row.learnerId];
-    else leaving = [];
     ownsFamily = row.familyId !== null && row.learnerId !== null && (await familyOwnerId(ctx.db, row.familyId)) === row.learnerId;
   }
 
@@ -1182,6 +1200,9 @@ async function carryOutDeletion(ctx: Ctx, row: RequestRow): Promise<DeletionResu
   result.filesRemoved = await deleteFiles(keys);
 
   await withAppendOnlyMaintenance(ctx.db, "account_deletion", async (tx) => {
+    // The files have gone, so nothing may still point at them. Done first: these rows lose their ids when the accounts go.
+    if (closesFamily && row.familyId) await tx.update(dataRequest).set({ exportStorageKey: null, updatedAt: ctx.now }).where(and(eq(dataRequest.familyId, row.familyId), isNotNull(dataRequest.exportStorageKey)));
+    if (learnerIds.length > 0) await tx.update(dataRequest).set({ exportStorageKey: null, updatedAt: ctx.now }).where(and(inArray(dataRequest.learnerId, learnerIds), isNotNull(dataRequest.exportStorageKey)));
     for (const learnerId of leaving) await moveToOwnFamily(ctx, tx, learnerId);
     for (const learnerId of learnerIds) {
       // A learner who owns their family cannot be removed before the family row that points at them.
@@ -1199,12 +1220,11 @@ async function carryOutDeletion(ctx: Ctx, row: RequestRow): Promise<DeletionResu
       await audit(ctx, { action: "data.delete.complete", targetType: "user", targetId: row.learnerId, meta: { requestId: row.id, outcome, familyId: row.familyId } }, tx);
     }
     if (wholeFamily && row.familyId) {
-      const family = await eraseFamily(ctx, tx, row.familyId);
-      result.adultsErased = family.adultsErased;
-      result.familyRemoved = !family.ownerAnonymised;
+      const closed = await eraseFamily(ctx, tx, row.familyId);
+      result.adultsErased = closed.adultsErased;
+      result.familyRemoved = !closed.ownerAnonymised;
       await audit(ctx, { action: "data.delete.complete", targetType: "family", targetId: row.familyId, meta: { requestId: row.id, ...result } }, tx);
     }
-    await tx.update(dataRequest).set({ exportStorageKey: null, updatedAt: ctx.now }).where(and(isNotNull(dataRequest.exportStorageKey), wholeFamily && row.familyId ? eq(dataRequest.familyId, row.familyId) : inArray(dataRequest.learnerId, learnerIds.length > 0 ? learnerIds : [row.id])));
   });
   return result;
 }
@@ -1218,50 +1238,14 @@ async function eraseOwningLearner(ctx: Pick<Ctx, "now">, tx: Db, learnerId: stri
   const [target] = await tx.select({ stripeCustomerId: family.stripeCustomerId }).from(family).where(and(eq(family.id, familyId), eq(family.ownerUserId, learnerId))).for("update");
   const [paid] = await tx.select({ id: subscription.id }).from(subscription).where(eq(subscription.familyId, familyId)).limit(1);
   const keepForBilling = target !== undefined && (target.stripeCustomerId !== null || paid !== undefined);
-  const hold = await hasSafeguardingHold(tx, learnerId);
-  if (!keepForBilling && !hold) {
-    await tx.delete(creditLedger).where(eq(creditLedger.learnerId, learnerId));
-    await tx.delete(rateLimitBucket).where(like(rateLimitBucket.key, `%:user:${learnerId}`));
-    await tx.delete(family).where(eq(family.id, familyId));
-    await tx.delete(user).where(and(eq(user.id, learnerId), eq(user.kind, "learner")));
-    return "erased";
-  }
-  if (!hold) {
-    // Nothing held for safeguarding, so every learning record can go by cascade from the tables below.
-    await tx.delete(enrolment).where(eq(enrolment.learnerId, learnerId));
-    await tx.delete(tutorConversation).where(eq(tutorConversation.learnerId, learnerId));
-    await tx.delete(aiRequest).where(eq(aiRequest.userId, learnerId));
-    await tx.delete(moderationEvent).where(eq(moderationEvent.learnerId, learnerId));
-    await tx.delete(moderationItem).where(eq(moderationItem.learnerId, learnerId));
-  }
-  // The shared path anonymises the row and clears everything else. It returns "anonymised" only when there was a hold.
-  if (hold) await eraseLearner(ctx, tx, learnerId);
-  else {
-    await tx.delete(creditLedger).where(eq(creditLedger.learnerId, learnerId));
-    await tx.delete(rateLimitBucket).where(like(rateLimitBucket.key, `%:user:${learnerId}`));
-    for (const table of [wishlist, unlockRequest, toolApproval, usageDay, parentControl, inviteCode, parentLinkRequest, creditBalance] as const) {
-      await tx.delete(table).where(eq(table.learnerId, learnerId));
-    }
-    await tx.delete(notification).where(eq(notification.userId, learnerId));
-    await tx.delete(session).where(eq(session.userId, learnerId));
-    await tx.delete(account).where(eq(account.userId, learnerId));
-    await tx.delete(twoFactor).where(eq(twoFactor.userId, learnerId));
-    await tx.delete(familyMember).where(eq(familyMember.userId, learnerId));
-    await tx.delete(learnerProfile).where(eq(learnerProfile.userId, learnerId));
-    await tx
-      .update(user)
-      .set({ name: "Deleted learner", email: newLearnerPlaceholderEmail(), emailVerified: false, image: null, username: null, status: "deleted", statusReason: "data_request", lastActiveAt: null, lockedUntil: null, updatedAt: ctx.now })
-      .where(eq(user.id, learnerId));
-  }
+  // The family row points at its owner, so it has to go first when it is going at all.
+  if (target !== undefined && !keepForBilling) await tx.delete(family).where(eq(family.id, familyId));
+  const outcome = (await eraseLearner(ctx, tx, learnerId, { keepShell: keepForBilling })) ?? "erased";
   if (keepForBilling) await tx.update(family).set({ plan: "free", updatedAt: ctx.now }).where(eq(family.id, familyId));
-  else await tx.delete(family).where(and(eq(family.id, familyId), ne(family.ownerUserId, learnerId)));
-  return "anonymised";
+  return outcome;
 }
 
 export type DeleteDueSummary = { due: number; completed: number; failed: number; learnersErased: number; learnersAnonymised: number; adultsErased: number; filesRemoved: number };
-
-/** A run still marked `processing` after this long is assumed to have died and is picked up again. */
-const STALE_PROCESSING_MS = 60 * 60 * 1000;
 
 /**
  * The `data.delete_due` job: completes every deletion whose 14 days have passed. Idempotent: a
@@ -1330,7 +1314,7 @@ export async function completeDueDeletions(ctx: Ctx): Promise<DeleteDueSummary> 
     }
     for (const parentId of parentIds) {
       try {
-        await notify(ctx, { userId: parentId, type: "data.delete_completed", title: "The deletion is complete", body: `We have permanently deleted ${label.replace(/^your child's/, "your child's")}.`, href: "/parent/privacy", channels: ["in_app"], dedupeKey: `data-delete-completed:${id}` });
+        await notify(ctx, { userId: parentId, type: "data.delete_completed", title: "The deletion is complete", body: `We have permanently deleted ${label}.`, href: "/parent/privacy", channels: ["in_app"], dedupeKey: `data-delete-completed:${id}` });
       } catch (error) {
         logWarn("data_request.notify_failed", { requestId: id, error: error instanceof Error ? error.message : String(error) });
       }

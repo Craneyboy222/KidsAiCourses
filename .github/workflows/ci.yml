@@ -1,0 +1,147 @@
+# Continuous integration (spec Section 16). Nothing here deploys anything.
+#
+# No job calls a real AI provider, Stripe live mode or a real Radar source: every external service
+# runs on its local stand-in (fixture model, fake Stripe driver, console email, local storage).
+# The secrets below are generated per run and protect nothing.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: "22"
+  DATABASE_URL: postgres://app:app@localhost:5432/platform_test
+  TZ: Europe/London
+
+jobs:
+  checks:
+    name: Typecheck, lint, content, unit and integration tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: platform_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U app -d platform_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: ffmpeg (placeholder media tests)
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+      - name: Write .env.test
+        run: ./.github/scripts/write-test-env.sh
+      - name: Typecheck
+        run: pnpm typecheck
+      - name: Lint
+        run: pnpm lint
+      - name: Format check
+        run: pnpm format:check
+      - name: Content check (strict)
+        run: pnpm content:check --strict
+      - name: Schema reference is up to date
+        run: pnpm exec tsx scripts/schema-doc.ts && git diff --exit-code docs/SCHEMA.md
+      - name: Unit tests
+        run: pnpm test:unit
+      - name: Integration tests (real Postgres, Stripe webhook fixtures, jobs)
+        run: pnpm test:integration
+      - name: Coach evaluations (fixtures only)
+        run: pnpm eval:coach
+
+  scans:
+    name: Dependency and secret scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Dependency audit (high and critical)
+        run: pnpm audit --prod --audit-level high
+      - name: Secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-and-browser:
+    name: Build, Playwright journeys and axe
+    runs-on: ubuntu-latest
+    needs: checks
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: platform_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U app -d platform_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Install
+        run: pnpm install --frozen-lockfile
+      - name: ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core
+      - name: Write .env.test
+        run: ./.github/scripts/write-test-env.sh
+      - name: Build (production build with the test environment)
+        run: pnpm exec dotenv -e .env.test -- pnpm build
+      - name: Install Chrome for Playwright
+        run: pnpm exec playwright install --with-deps chrome
+      - name: Playwright journeys (desktop and Chromebook viewport)
+        # .env.test says the site is at :3000, so the browser tests use that port too.
+        run: pnpm test:e2e --project=desktop --project=chromebook
+        env:
+          CI: "true"
+          E2E_PORT: "3000"
+      - name: Accessibility (axe-core on every route, keyboard scripts)
+        run: pnpm test:a11y
+        env:
+          CI: "true"
+          E2E_PORT: "3000"
+      - name: Upload the Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report
+            test-results
+          retention-days: 7
