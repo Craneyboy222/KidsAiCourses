@@ -15,3 +15,4 @@ One lesson per entry, summary first. Update rather than duplicate; delete anythi
 - **Seeded local accounts** are listed by `pnpm db:seed`; every password is `SEED_PASSWORD` from `.env.local`; staff two-factor uses the fixed local secret the seed prints.
 - **From 16 November 2026 the owner wants no new tests, no test runs and no more courses.** Build only; check with typecheck, lint, one build and the running site. Details in `docs/briefs/REMAINING.md`.
 - **The build moved to Claude Code on the owner's laptop on 16 November 2026.** `HANDOVER.md` has the setup; the cloud workspace notes above about Postgres restarts apply only there.
+- **The owner's laptop has other Node and Postgres projects; nothing here may affect them.** No system-wide installs or upgrades, no use of the shared Postgres, own private server in `.pgdata/` on port 5544, site on 3410, never ports 3000 or 5432. Rules in `CLAUDE.md` and `HANDOVER.md`.

@@ -47,3 +47,6 @@ next-env.d.ts
 /coverage/
 !.env.example
 /.next-*/
+
+# private local Postgres for this project
+.pgdata/

@@ -24,13 +24,29 @@ step lists. Own each task end to end.
 - Never end a turn promising what you are about to do. Do it or hand back.
 - Push back when he is wrong.
 
+## This laptop has other projects on it: do not affect them
+
+The owner runs other Node and Postgres projects here. Absolute rules, no exceptions without his
+say-so:
+
+- Work only inside this repository's folder.
+- Install nothing system-wide and upgrade nothing: no Homebrew, no global npm packages, no change
+  to the default Node version, no edits to shell profiles or any config file outside this folder.
+- Never use, stop, restart or reconfigure a Postgres server that was already on the machine. This
+  project has its own private server in `.pgdata/` on its own port (see `HANDOVER.md`).
+- Never use ports 3000 or 5432. Check a port is free before using it.
+- Stop only processes you started, by process id. Never by name.
+- Before `pnpm db:reset`, confirm `DATABASE_URL` points at this project's private server.
+- If a step cannot be done within these rules, stop and ask.
+
 ## Approval rules
 
 - **Ask first, every time**: pushing to `main`, deploying, publishing, sending email or messages,
   deleting outside the working tree, spending money, creating accounts or hosted resources, any
   paid service, any new data processor or AI provider.
 - **Fine without asking**: local files, commits to `build/launch` and pushes of that branch,
-  local database resets, installing project dependencies with pnpm.
+  resets of this project's own private database, installing project dependencies into this
+  folder with pnpm.
 - Assessment tasks (review, audit, opinion): report only, change nothing.
 
 ## Current standing instructions (16 November 2026)
