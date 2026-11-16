@@ -13,3 +13,5 @@ One lesson per entry, summary first. Update rather than duplicate; delete anythi
 - **The owner uses the Goal Engine plugin.** Keep `goal-engine-state.json` and `goal-engine-plan.md` current so `/goal-engine:status` and `/goal-engine:resume` work.
 - **If every page reloads endlessly in `next dev`** (HMR hash mismatch, seen when two dev servers or an editing workstream share the checkout): restart; if it persists delete `.next/dev`. Never `pkill -f next-server` — it kills other workstreams' servers; kill by port.
 - **Seeded local accounts** are listed by `pnpm db:seed`; every password is `SEED_PASSWORD` from `.env.local`; staff two-factor uses the fixed local secret the seed prints.
+- **From 16 November 2026 the owner wants no new tests, no test runs and no more courses.** Build only; check with typecheck, lint, one build and the running site. Details in `docs/briefs/REMAINING.md`.
+- **The build moved to Claude Code on the owner's laptop on 16 November 2026.** `HANDOVER.md` has the setup; the cloud workspace notes above about Postgres restarts apply only there.

@@ -10,8 +10,9 @@ safeguarding lead.
 
 > **Status, 16 November 2026.** Built: accounts and consent, the catalogue and course player, tools
 > and submissions, Coach, payments (fake Stripe driver exercised; the real one has never run),
-> parent dashboard, seed data, retention. Being built: Studio, safeguarding cases, marketing and
-> help pages, the Tool Radar and course drafting engine, end-to-end tests. Nothing is deployed.
+> parent dashboard, marketing and help pages, seed data, retention. Not built: Studio, safeguarding
+> cases, the Tool Radar and course drafting engine. Nothing is deployed. See `HANDOVER.md` and
+> `docs/briefs/REMAINING.md`.
 
 ## Quick start
 

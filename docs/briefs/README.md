@@ -1,5 +1,9 @@
 # Slice briefs
 
+> **Read `REMAINING.md` first.** It says what is built, the order of what is left, and the owner's
+> instructions of 16 November 2026 (no new tests, no test runs, no more courses), which override
+> the "Tests" and "Verify" sections of every brief here and the test-database rule below.
+
 One file per workstream, kept on disk so that work can be picked up again after an interruption.
 Every brief assumes you have read docs/CONVENTIONS.md, docs/ARCHITECTURE.md, docs/DECISIONS.md,
 docs/KERNEL_API.md, docs/DESIGN.md and MEMORY.md, and that PLATFORM_SPEC.md is the source of truth
