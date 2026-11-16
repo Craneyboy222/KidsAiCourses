@@ -1,0 +1,31 @@
+{
+  "key": "family",
+  "name": "Family",
+  "description": "Every course in the catalogue for up to four learners, with a bigger Coach allowance for each of them.",
+  "position": 1,
+  "seats": 4,
+  "coachCredits": 200,
+  "trialDays": 7,
+  "prices": {
+    "placeholder": true,
+    "monthlyPence": 1499,
+    "annualPence": 11900,
+    "extraSeatMonthlyPence": 300,
+    "founding": {
+      "placeholder": true,
+      "open": true,
+      "monthlyPence": 999,
+      "annualPence": 8900,
+      "lockMonths": 12
+    }
+  },
+  "features": {
+    "fullCatalogue": true,
+    "highlights": [
+      "Up to 4 learners, with extra places if you need them",
+      "Every course in the catalogue",
+      "A bigger Coach allowance for each learner every month",
+      "Every parent control"
+    ]
+  }
+}

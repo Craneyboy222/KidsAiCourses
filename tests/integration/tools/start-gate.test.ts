@@ -41,10 +41,11 @@ describe("checkStart: every blocker, against the database", () => {
     expect((await checkStart(learner, learnerId, target.id)).allowed).toBe(true);
     await db.update(course).set({ status: "published" }).where(eq(course.id, target.id));
 
-    await takeDownCourse(await staffCtx("super_admin"), target.id, "Test take-down");
-    expect(await codes(learner, learnerId, target.id)).toEqual(["course_unavailable"]);
-    await db.update(course).set({ takenDownAt: null, takenDownReason: null, status: "published" }).where(eq(course.id, target.id));
-    expect((await checkStart(learner, learnerId, target.id)).allowed).toBe(true);
+    // A course no other test uses: a take-down is not undone by hand.
+    const doomed = await courseBySlug("shoot-a-promo-advert-in-an-afternoon");
+    expect((await checkStart(learner, learnerId, doomed.id)).allowed).toBe(true);
+    await takeDownCourse(await staffCtx("super_admin"), doomed.id, "Test take-down");
+    expect(await codes(learner, learnerId, doomed.id)).toEqual(["course_unavailable"]);
 
     expect(await codes(learner, learnerId, "00000000-0000-4000-8000-000000000000")).toEqual(["course_unavailable"]);
     await db.update(course).set({ status: "draft" }).where(eq(course.id, target.id));

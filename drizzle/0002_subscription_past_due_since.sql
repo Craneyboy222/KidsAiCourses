@@ -1,0 +1,1 @@
+ALTER TABLE "subscription" ADD COLUMN "past_due_since" timestamp with time zone;

@@ -1,8 +1,8 @@
 // CONTRACT — owner: tools and submissions slice. See _contract.ts.
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq, isNull } from "drizzle-orm";
 import { env } from "@/env";
 import { audit } from "@/server/audit";
-import { assertCan, can, systemActor } from "@/server/authz";
+import { assertCan, can } from "@/server/authz";
 import type { Ctx } from "@/server/context";
 import { newCode } from "@/server/crypto";
 import { certificate, learnerProfile, project, projectVersion } from "@/server/db";
@@ -97,6 +97,27 @@ export async function issueCertificateIfEligible(ctx: Ctx, enrolmentId: string):
   return toView(created);
 }
 
+/**
+ * Catches up on certificates that are due but were never issued: a project accepted BEFORE the
+ * learner finished the last step of the course has nothing to trigger it at the moment the course
+ * completes. Safe to call on any page load: it only ever issues what `issueCertificateIfEligible`
+ * would, and does nothing when there is nothing due.
+ */
+export async function issueOutstandingCertificates(ctx: Ctx, learnerId: string): Promise<CertificateView[]> {
+  await assertMayRead(ctx, learnerId);
+  const due = await ctx.db
+    .select({ enrolmentId: project.enrolmentId })
+    .from(project)
+    .leftJoin(certificate, eq(certificate.enrolmentId, project.enrolmentId))
+    .where(and(eq(project.learnerId, learnerId), eq(project.status, "accepted"), isNull(certificate.id)));
+  const issued: CertificateView[] = [];
+  for (const row of due) {
+    const view = await issueCertificateIfEligible(ctx, row.enrolmentId);
+    if (view) issued.push(view);
+  }
+  return issued;
+}
+
 /** Public verification: first name or nickname, course, date, and whether it was revoked. Nothing else. */
 export async function verifyCertificate(ctx: Ctx, code: string): Promise<{ displayName: string; courseTitle: string; issuedAt: Date; revoked: boolean } | null> {
   assertCan(ctx.actor, "public.certificate.verify", ctx.actor.type === "learner" ? { learnerId: ctx.actor.userId } : ctx.actor.type === "parent" ? { familyId: ctx.actor.familyId } : {});
@@ -172,6 +193,3 @@ export async function setCertificateName(ctx: Ctx, learnerId: string, input: { c
   await ctx.db.update(learnerProfile).set({ certificateNameChoice: "first_name", firstName: checked.nickname, updatedAt: ctx.now }).where(eq(learnerProfile.userId, learnerId));
   return getCertificateName(ctx, learnerId);
 }
-
-/** For callers that have just changed a submission or an enrolment and hold no learner session. */
-export const certificateSystemCtx = (ctx: Ctx): Ctx => ({ ...ctx, actor: systemActor("certificate.issue") });

@@ -10,6 +10,10 @@ Run after the learner-facing slices have landed. You may edit any slice's files,
 - Coach "pause for one learner": make an enforcement restriction from the safety slice stop Coach at stage 1.
 - Safeguarding trigger names: the contract accepts `abuse_disclosure`, `exploitation`, `grooming`; check the database enum maps them without loss.
 - The retention job must delete `ai_message` rows past `expires_at` (policy keys `tutor_conversation_default`, `tutor_conversation_extended`, `flagged_content`).
+- When an enrolment becomes complete, call `issueCertificateIfEligible` (a project accepted before the last step is finished currently gets no certificate until `/certificates` is visited).
+- After hand-in the evidence step forces a full page reload; give the player session a `refresh()` instead.
+- Parents need a page to read a setup guide for a tool they are asked to approve or operate, and a place to see their own reports.
+- Remove stray scratch folders (for example `.smoke/`) or exclude them from lint.
 - Public course pages need the marketing layout's `<main>` and frame.
 - Parent pages use `requireParentPage()`.
 - Sign-in copies saved accessibility preferences into the cookie; settings saves them back to the profile.

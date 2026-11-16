@@ -142,36 +142,36 @@
     {
       "id": 4,
       "name": "Tools and submissions",
-      "status": "PENDING",
+      "status": "DONE",
       "tasks": [
         {
           "id": "4.1",
           "description": "Tool Register and guides",
-          "status": "PENDING",
-          "result": null
+          "status": "DONE",
+          "result": "222 tests pass. Start gate, approvals, evidence checks, moderation queue service, reports, private portfolio, PDF certificates and public verify page. Signed-in screens not yet driven in a browser."
         },
         {
           "id": "4.2",
           "description": "Parent tool approval and start gate",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "4.3",
           "description": "Evidence, checks and moderation",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "4.4",
           "description": "Portfolio",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "4.5",
           "description": "Certificates and verify",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         }
       ]
@@ -454,7 +454,7 @@
   ],
   "blockers": [],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T14:22:53.564728+00:00",
+  "last_updated": "2026-11-16T14:51:23.723692+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",
@@ -466,9 +466,8 @@
   "queue": {
     "note": "Reordered on 16 November 2026 at the owner's instruction: learner-facing path first. Two workstreams at a time. Briefs in docs/briefs/. Payments and parents moved ahead of the course authors because signed-in learner pages depend on their contracts.",
     "order": [
-      "tools-submissions (running)",
       "payments (running)",
-      "parents",
+      "parents (running)",
       "seed-compliance",
       "integration",
       "courses-a",
@@ -488,7 +487,8 @@
       "design system",
       "coach",
       "accounts",
-      "learning"
+      "learning",
+      "tools-submissions"
     ]
   }
 }

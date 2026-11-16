@@ -57,7 +57,6 @@ import { raiseSafeguarding } from "./safeguarding-bridge";
 
 type ArtefactRow = typeof artefact.$inferSelect;
 type ProjectRow = typeof project.$inferSelect;
-type VersionRow = typeof projectVersion.$inferSelect;
 
 export const MAX_EVIDENCE_ITEMS = 8;
 export const MAX_TITLE_LENGTH = 80;
@@ -372,12 +371,16 @@ export async function requestUpload(ctx: Ctx, input: { enrolmentId: string; step
   return { artefactId: id, upload };
 }
 
-/** A file already rejected once for showing a person, or quarantined, is treated the same way again without asking the detector. */
+/**
+ * A file the detector has already rejected for showing a person, or quarantined as possibly
+ * illegal, is treated the same way again without asking the detector. Only the detector's own
+ * verdicts count: a file a moderator sent back or escalated for some other reason is not "known bad".
+ */
 async function knownVerdictForHash(db: Db, hash: string): Promise<PeopleVerdict | null> {
   const rows = await db
     .select({ quarantined: artefact.quarantined })
     .from(artefact)
-    .where(and(eq(artefact.sha256, hash), or(eq(artefact.quarantined, true), and(eq(artefact.moderationState, "blocked"), eq(artefact.peopleCheck, "people_suspected")))))
+    .where(and(eq(artefact.sha256, hash), eq(artefact.peopleCheck, "people_suspected"), or(eq(artefact.quarantined, true), eq(artefact.moderationState, "blocked"))))
     .limit(5);
   if (rows.length === 0) return null;
   return rows.some((row) => row.quarantined) ? "illegal_suspected" : "people";
@@ -755,4 +758,3 @@ export async function cleanUpAbandonedUploads(ctx: Pick<Ctx, "db" | "now">): Pro
   return { removed: rows.length };
 }
 
-export type { VersionRow };

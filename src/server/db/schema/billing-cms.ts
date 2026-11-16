@@ -95,6 +95,8 @@ export const subscription = pgTable(
     currentPeriodEnd: ts("current_period_end"),
     cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
     canceledAt: ts("canceled_at"),
+    /** When a payment first failed and the subscription became `past_due`. The grace period runs from here. Null once paid. */
+    pastDueSince: ts("past_due_since"),
     /** `created` time of the newest Stripe event applied, so an out-of-order webhook cannot roll state back. */
     lastEventAt: ts("last_event_at"),
     ...timestamps(),

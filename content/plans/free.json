@@ -1,0 +1,24 @@
+{
+  "key": "free",
+  "name": "Free",
+  "description": "Four full courses, a Coach allowance for each learner, a portfolio, certificates for the free courses and every parent control.",
+  "position": 0,
+  "seats": 2,
+  "coachCredits": 50,
+  "trialDays": 0,
+  "prices": {
+    "placeholder": true,
+    "monthlyPence": 0,
+    "annualPence": 0
+  },
+  "features": {
+    "fullCatalogue": false,
+    "highlights": [
+      "Up to 2 learners",
+      "4 free courses",
+      "Coach help for each learner every month",
+      "Portfolio and certificates for the free courses",
+      "Every parent control"
+    ]
+  }
+}

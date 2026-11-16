@@ -21,6 +21,7 @@ export const SETTINGS = {
   "site.brand_display_name": def("site", "Brand name shown to users", "Leave empty to use the configured brand name.", z.string().max(60).nullable(), null),
   "site.support_email": def("site", "Support email", "Shown on help and legal pages.", z.email().nullable(), null),
   "site.default_quiet_hours": def("site", "Default quiet hours", "Applied to a new child until a parent changes them. No learner notifications are sent in this window.", z.object({ start: hhmm, end: hhmm }), { start: "21:00", end: "07:00" }),
+  "site.payment_grace_days": def("site", "Days of grace after a failed payment", "A family keeps its paid plan for this many days after a payment fails, so they have time to update their card. After that the family is on Free until a payment succeeds.", z.number().int().min(0).max(60), 7),
   "site.adult_self_serve": def("site", "18-year-olds can sign up and pay themselves", "Spec question 12.", z.boolean(), true),
 
   // ── Safety ──────────────────────────────────────────────────────────────

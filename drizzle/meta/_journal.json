@@ -15,6 +15,13 @@
       "when": 1794784536062,
       "tag": "0001_append_only_and_guards",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794839380352,
+      "tag": "0002_subscription_past_due_since",
+      "breakpoints": true
     }
   ]
 }

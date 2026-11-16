@@ -1,4 +1,5 @@
 import { accountsPurgePending, accountsRecalculateBands } from "./accounts";
+import { billingReconcile } from "./billing";
 import { evidenceCleanupAbandoned } from "./evidence";
 import type { JobDefinition } from "./define";
 import { notificationsRelease, rateLimitCleanup, sessionsCleanup } from "./housekeeping";
@@ -49,6 +50,8 @@ export const JOBS: JobDefinition<never>[] = [
   ...(publishJobs as JobDefinition<never>[]),
   // submissions
   evidenceCleanupAbandoned as JobDefinition<never>,
+  // payments
+  billingReconcile as JobDefinition<never>,
 ];
 
 function assertUnique(jobs: JobDefinition<never>[]): void {

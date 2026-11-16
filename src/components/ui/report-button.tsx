@@ -2,7 +2,7 @@
 
 import { CircleCheck, Flag } from "lucide-react";
 import { useId, useState, type FormEvent, type ReactNode } from "react";
-import { Button } from "./button";
+import { Button, IconButton } from "./button";
 import { Callout } from "./callout";
 import { Dialog } from "./dialog";
 import { Field } from "./field";
@@ -31,6 +31,8 @@ export type ReportButtonProps = {
   label?: string;
   /** `quiet` is a small text button for use on every step and AI reply; `button` is a full secondary button. */
   appearance?: "quiet" | "button";
+  /** Icon only, for tight spaces. The label is still the button's accessible name. */
+  iconOnly?: boolean;
   /**
    * Shown when an urgent reason is picked. Replace it with the approved crisis wording once the DSL has signed it off.
    */
@@ -58,6 +60,7 @@ export function ReportButton({
   subject = "this",
   label = "Report",
   appearance = "quiet",
+  iconOnly = false,
   urgentHelp = DEFAULT_URGENT_HELP,
 }: ReportButtonProps) {
   const [open, setOpen] = useState(false);
@@ -113,13 +116,22 @@ export function ReportButton({
       title={sent ? "Report sent" : `Report ${subject}`}
       description={sent ? undefined : "Tell us what's wrong. Reports go to our team, not to anyone else."}
       trigger={
-        <Button
-          variant={appearance === "button" ? "secondary" : "ghost"}
-          size={appearance === "button" ? "md" : "sm"}
-          iconStart={<Flag aria-hidden="true" className="size-4" strokeWidth={2.5} />}
-        >
-          {label}
-        </Button>
+        iconOnly ? (
+          <IconButton
+            label={label}
+            variant={appearance === "button" ? "secondary" : "ghost"}
+            size="sm"
+            icon={<Flag aria-hidden="true" className="size-4" strokeWidth={2.5} />}
+          />
+        ) : (
+          <Button
+            variant={appearance === "button" ? "secondary" : "ghost"}
+            size={appearance === "button" ? "md" : "sm"}
+            iconStart={<Flag aria-hidden="true" className="size-4" strokeWidth={2.5} />}
+          >
+            {label}
+          </Button>
+        )
       }
       footer={
         sent ? (
