@@ -66,7 +66,13 @@ const JUST_STUCK = "I'm stuck on this step. Can you help me work out what to try
  * - The crisis script is fixed text shown in its own calm panel with tappable numbers.
  * - Learners see energy, never prices.
  */
-export function CoachPanel({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpenChange }: CoachPanelProps) {
+export function CoachPanel(props: CoachPanelProps) {
+  // A new step is a new conversation: Coach only ever knows about the step in front of the learner.
+  // Keying by step throws away the old thread, hints shown and draft in one go.
+  return <CoachThread key={`${props.courseSlug}/${props.stepKey}`} {...props} />;
+}
+
+function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpenChange }: CoachPanelProps) {
   const preview = isPreview(mode);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [hintsShown, setHintsShown] = useState(0);
@@ -82,18 +88,6 @@ export function CoachPanel({ mode, courseSlug, stepKey, stepTitle, hints, open, 
   const logEnd = useRef<HTMLDivElement | null>(null);
   const inputId = useId();
   const nextId = () => `${stepKey}-${(counter.current += 1)}`;
-
-  // A new step is a new conversation: Coach only ever knows about the step in front of the learner.
-  useEffect(() => {
-    setEntries([]);
-    setHintsShown(0);
-    setDraft("");
-    setStop(null);
-    setProblem(null);
-    setAnnouncement("");
-    conversationId.current = null;
-    learnerTurns.current = 0;
-  }, [courseSlug, stepKey]);
 
   useEffect(() => {
     if (!open || preview) return;
@@ -203,9 +197,9 @@ export function CoachPanel({ mode, courseSlug, stepKey, stepTitle, hints, open, 
       <Callout tone="info" title="What Coach will and won't do">
         <ul className="list-disc pl-5">
           <li>It gives hints, clues and questions to get you unstuck.</li>
-          <li>It won't do the project for you, or write homework, essays or exam answers.</li>
-          <li>It will never ask for your name, address, passwords, codes or card details. Don't share them.</li>
-          <li>It's an AI, so it can get things wrong. Check anything important, and talk to an adult you trust about anything that worries you.</li>
+          <li>It won&apos;t do the project for you, or write homework, essays or exam answers.</li>
+          <li>It will never ask for your name, address, passwords, codes or card details. Don&apos;t share them.</li>
+          <li>It&apos;s an AI, so it can get things wrong. Check anything important, and talk to an adult you trust about anything that worries you.</li>
         </ul>
       </Callout>
 
@@ -285,7 +279,7 @@ export function CoachPanel({ mode, courseSlug, stepKey, stepTitle, hints, open, 
         <Button variant="secondary" onClick={stuck} loading={busy && hintsLeft <= 0} disabled={hintsLeft <= 0 && !canAskCoach} iconStart={<Lightbulb aria-hidden="true" className="size-5" strokeWidth={2.5} />}>
           {stuckLabel}
         </Button>
-        {hints.length > 0 && hintsShown === 0 && <p className="text-ink-muted text-sm">You'll get the step's own hints first, one at a time. They don't use any energy.</p>}
+        {hints.length > 0 && hintsShown === 0 && <p className="text-ink-muted text-sm">You&apos;ll get the step&apos;s own hints first, one at a time. They don&apos;t use any energy.</p>}
 
         {canAskCoach && (
           <form onSubmit={submit} className="flex flex-col gap-2" aria-label="Ask Coach">

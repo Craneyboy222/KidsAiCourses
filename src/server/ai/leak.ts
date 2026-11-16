@@ -141,8 +141,9 @@ export function detectLeak({ reply, referenceSolution }: LeakInput): LeakResult 
     const refTokens = tokens(reference).length;
     const overlap = referenceOverlap(reply, reference);
     const run = longestSharedRun(reply, reference);
-    // Half of the solution's phrasing, or one long unbroken stretch of it, is the solution.
-    if (overlap >= 0.5 || run >= Math.max(25, Math.ceil(refTokens * 0.6)) || (refTokens <= 12 && run >= refTokens)) {
+    // A third of the solution's phrasing, or one unbroken stretch of it, is the solution. A short
+    // snippet on a different example shares neither.
+    if (overlap >= 0.3 || run >= 20 || (refTokens <= 20 && run >= Math.ceil(refTokens * 0.7))) {
       reasons.add("reference_solution");
     }
   }

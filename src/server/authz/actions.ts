@@ -58,6 +58,10 @@ export const ACTIONS = {
   "learner.coach.summary.read": { learner: "self", parent: "family" },
   "learner.notification.read": { learner: "self", whilePaused: true },
   "learner.usage.heartbeat": { learner: "self" },
+  // Accounts slice. The first two are for 18-year-olds only: the service checks the safety band.
+  "learner.consent.update": { learner: "self", whilePaused: true },
+  "learner.independence.manage": { learner: "self", whilePaused: true },
+  "learner.parent_link.resend": { learner: "self", whilePaused: true }, // a teen waiting for a parent to approve
   "report.create": { learner: "self", parent: "family", staff: ANY_STAFF, whilePaused: true },
   "report.read_own": { learner: "self", parent: "family", whilePaused: true },
 

@@ -1,0 +1,13 @@
+{
+  "key": "ai_processing",
+  "version": 1,
+  "required": true,
+  "position": 20,
+  "defaultByBand": {
+    "teen_13_15": false,
+    "teen_16_17": false,
+    "adult_18": false
+  },
+  "title": "Coach: our built-in AI helper",
+  "body": "Coach is an AI helper inside the courses. It gives hints and explanations and asks questions. It does not do the project for your child, and it always says that it is an AI, not a person.\n\nWhen your child types a message to Coach, we send that message, with the course step they are on, through our own servers to an AI company that works for us under contract. Before it goes, we check it and remove personal details we can detect, such as names, phone numbers and addresses. We check the reply before your child sees it. We only use AI companies that have signed a data-processing agreement with us, and wherever a company offers settings that stop it keeping messages or using them to train its models, we switch those on.\n\nIf a message suggests your child may be at risk of harm, they are shown where to get help straight away and our safeguarding lead is alerted.\n\nWe also use automated checks on the work your child hands in, to keep unsuitable content out.\n\nThis consent is needed for the account to work, because Coach and these safety checks are built into every course. If you withdraw it, the account is paused straight away and your child is signed out."
+}

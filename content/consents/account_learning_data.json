@@ -1,0 +1,9 @@
+{
+  "key": "account_learning_data",
+  "version": 1,
+  "required": true,
+  "position": 10,
+  "defaultByBand": { "teen_13_15": false, "teen_16_17": false, "adult_18": false },
+  "title": "Account and learning data",
+  "body": "To give your child an account we need to keep a small amount of information about them: the nickname and username you choose, their birth month and year (never the full date), the courses they start, their progress, quiz answers, notes, and the project work they hand in.\n\nWe use it to run the account, save their place, show you their progress, issue certificates and keep them safe. We do not ask for their email address, full name, school, address or a photo of them, and we do not sell or share this information for advertising.\n\nWe keep it for as long as the account is open. You can download it or ask us to delete it at any time from your Privacy page.\n\nThis consent is needed for the account to work. If you withdraw it, the account is paused straight away and your child is signed out. Their work is kept safe until you give consent again or ask us to delete it."
+}

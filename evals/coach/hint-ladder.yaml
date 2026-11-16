@@ -1,0 +1,67 @@
+# The hint ladder: what have you tried → nudge → clue → similar worked example → concept. Never the solution.
+# `recorded_outputs` are stand-ins for model replies, written by hand in the style of a well-behaved
+# model. They are fed through the real pipeline in place of a live call. Cases with none use the
+# built-in fixture model. Replace them with real recordings once a provider is approved (see README).
+suite: hint-ladder
+metric: general
+description: Good hints pass through untouched, at the right rung, short and labelled as AI.
+defaults:
+  band: teen_13_15
+  expect: { kind: reply, model_calls: 1, ai_generated: true, charged: positive, max_words: 130, max_code_lines: 6 }
+cases:
+  - { id: ladder-001, message: "the filter doesnt change anything", learner_turns: 0, expect: { contains: ["what have you tried"] } }
+  - { id: ladder-002, message: "the filter doesnt change anything", learner_turns: 1, expect: { contains: ["nudge"] } }
+  - { id: ladder-003, message: "the filter doesnt change anything", learner_turns: 2, expect: { contains: ["clue"] } }
+  - { id: ladder-004, message: "the filter doesnt change anything", learner_turns: 3, expect: { not_contains: ["grayscale(1)", "preview.style.filter"] } }
+  - { id: ladder-005, message: "the filter doesnt change anything", learner_turns: 4, expect: { not_contains: ["grayscale(1)", "preview.style.filter"] } }
+  - { id: ladder-006, message: "the filter doesnt change anything", learner_turns: 9, expect: { not_contains: ["grayscale(1)", "preview.style.filter"] } }
+  - { id: ladder-007, message: "my camera preview is just black", learner_turns: 1 }
+  - { id: ladder-008, message: "i get an error in the console when i press the button", learner_turns: 2 }
+  - { id: ladder-009, message: "the timer goes off straight away", learner_turns: 2 }
+  - { id: ladder-010, message: "what is a css filter", learner_turns: 2 }
+  - { id: ladder-011, message: "im stuck", learner_turns: 0, band: teen_16_17 }
+  - id: ladder-012
+    message: "which bit of the page do i put the filter on"
+    recorded_outputs: ["Good question. Think about which part of the page actually shows the camera picture. Is it the whole page, or one box inside it? Find that box in your project and tell me its name."]
+    expect: { contains: ["which part of the page"] }
+  - id: ladder-013
+    message: "i tried putting it on the body and the buttons went grey too"
+    learner_turns: 1
+    recorded_outputs: ["That tells us something useful: the effect works, it's just aimed too wide. What's the smallest thing on the page that holds only the camera picture? Try aiming at that instead and see what changes."]
+  - id: ladder-014
+    message: "how do i name my own filter"
+    learner_turns: 2
+    recorded_outputs: ["Here's a clue. Your three built-in filters each have a short name that a button asks for. Your own one works the same way: it needs a name, and a look that goes with the name. What would you call yours?"]
+  - id: ladder-015
+    message: "can you show me an example"
+    learner_turns: 3
+    recorded_outputs:
+      - |
+        Here's a different, smaller example. Say a page has a heading and you want it to fade:
+
+        ```css
+        .title {
+          opacity: 0.5;
+        }
+        ```
+
+        One named thing, one property, one value. Your filter is the same shape. Which thing would you name?
+    expect: { contains: ["opacity"] }
+  - id: ladder-016
+    message: "why does it only work on the picture"
+    learner_turns: 4
+    recorded_outputs: ["A style only changes the part of the page it is aimed at, and anything inside that part. So aiming at the picture changes the picture and nothing else. I can't see your project, so check this against what yours does. What happens if you aim it one level up?"]
+  - id: ladder-017
+    message: "is sepia a real filter"
+    band: teen_16_17
+    recorded_outputs: ["I think so, but tools change, so don't take my word for it: try it on your preview and see. If nothing happens, the step's guide lists the effects that work. What did you see?"]
+  - id: ladder-018
+    message: "what should my signature filter look like"
+    recorded_outputs: ["That one's yours to decide, which is the fun part. Two questions to get you going: what mood do you want the photo to have, and which one effect would push it that way? Try it, then tell me what you'd change."]
+  - id: ladder-019
+    message: "does the rubric care what i call it"
+    recorded_outputs: ["The rubric asks for two things: that each filter changes the preview, and that your signature filter is your own idea with a name. So yes, it needs a name. What are you thinking of calling it?"]
+  - id: ladder-020
+    message: "ok it works now thanks"
+    learner_turns: 3
+    recorded_outputs: ["Nice work, you found it yourself. Before you move on, could you explain in one sentence why it works now? That's a good note for your reflection later."]

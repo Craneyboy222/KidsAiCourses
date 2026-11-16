@@ -1,3 +1,4 @@
+import { accountsPurgePending, accountsRecalculateBands } from "./accounts";
 import type { JobDefinition } from "./define";
 import { notificationsRelease, rateLimitCleanup, sessionsCleanup } from "./housekeeping";
 import { publishJobs } from "@/server/services/publish";
@@ -40,6 +41,9 @@ export const JOBS: JobDefinition<never>[] = [
   notificationsRelease,
   rateLimitCleanup,
   sessionsCleanup,
+  // accounts
+  accountsPurgePending as JobDefinition<never>,
+  accountsRecalculateBands as JobDefinition<never>,
   // publishing
   ...(publishJobs as JobDefinition<never>[]),
 ];

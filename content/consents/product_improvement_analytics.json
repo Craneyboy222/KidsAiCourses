@@ -1,0 +1,9 @@
+{
+  "key": "product_improvement_analytics",
+  "version": 1,
+  "required": false,
+  "position": 50,
+  "defaultByBand": { "teen_13_15": false, "teen_16_17": false, "adult_18": false },
+  "title": "Help us improve the courses (optional)",
+  "body": "If you switch this on, we record how your child moves through courses, for example which steps take longest or get skipped, so that we can make the courses better. The records are kept under a random code, not your child's name or username. We never record their screen, and we never use this for advertising.\n\nThis is optional and is off unless you switch it on. Nothing about your child's account changes if you leave it off, and you can change your mind at any time."
+}

@@ -2,7 +2,7 @@
 
 One lesson per entry, summary first. Update rather than duplicate; delete anything proven wrong.
 
-- **Run at most two or three delegated workstreams at once.** Six in parallel exhausted the account's 5-hour usage limit in about 90 minutes (15 November 2026) and paused everything until 02:50.
+- **Run at most two delegated workstreams at once.** Six in parallel exhausted the account's 5-hour usage limit in about 90 minutes (15 November 2026); three did the same within an hour of the reset (16 November). Each workstream uses roughly half a million tokens.
 - **Paused workstreams keep their work and can be continued** with a follow-up message to the same agent; do not start a replacement.
 - **Each parallel workstream needs its own test database.** Prefix vitest with `TEST_DB_NAME=platform_test_<name>`; the databases already exist (accounts, learning, tools, coach, parents, payments, studio, studiocontent, safety, engine, seed, misc, e2e).
 - **Next.js here is 16.4 and differs from older versions.** `params` are Promises, middleware is `src/proxy.ts`, and Cache Components is deliberately off (D9). Read `node_modules/next/dist/docs/` before using an unfamiliar API.

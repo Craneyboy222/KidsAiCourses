@@ -1,0 +1,13 @@
+{
+  "key": "tutor_history_retention",
+  "version": 1,
+  "required": false,
+  "position": 40,
+  "defaultByBand": {
+    "teen_13_15": false,
+    "teen_16_17": false,
+    "adult_18": false
+  },
+  "title": "Keep Coach conversations for longer (optional)",
+  "body": "Normally we delete what was said in your child's conversations with Coach 30 days after the session ends, and keep only a count and the topics. If you switch this on, we keep them for 90 days instead, so your child can scroll back further and Coach can pick up where they left off.\n\nYou do not see the conversations themselves either way: you see how many there were, the topics, and any safety notices.\n\nThis is optional and is off unless you switch it on. You can change your mind at any time, and conversations older than 30 days are then deleted. A conversation that raised a safety concern is kept for longer under our safeguarding policy, and only our safeguarding lead can read it."
+}

@@ -10,7 +10,7 @@ import { energyPercent } from "./cost";
 import type { FixtureScript } from "./fixture-model";
 import { createFixtureGateway } from "./gateway";
 import { rulesModerator } from "./moderation";
-import type { ChatMessage, CoachDeps, CoachSettings, EnergyView, OpenCaseInput, StepContext, TurnRecord } from "./types";
+import type { ChatMessage, CoachDeps, CoachSettings, EnergyView, GatewayRequest, OpenCaseInput, StepContext, TurnRecord } from "./types";
 
 export const MEMORY_STEP: StepContext = {
   courseId: null,
@@ -50,6 +50,8 @@ export type MemoryState = {
   cases: OpenCaseInput[];
   spendMillipence: number;
   modelCalls: number;
+  /** Everything sent to the model, so a test can prove what it did and did not see. */
+  gatewayRequests: GatewayRequest[];
   history: ChatMessage[];
   learnerTurns: number;
   logs: Array<{ level: "warn" | "error"; event: string }>;
@@ -88,6 +90,7 @@ export function createMemoryCoachDeps(options: MemoryOptions = {}): { deps: Coac
     cases: [],
     spendMillipence: 0,
     modelCalls: 0,
+    gatewayRequests: [],
     history: options.history ?? [],
     learnerTurns: options.learnerTurns ?? 0,
     logs: [],
@@ -147,6 +150,7 @@ export function createMemoryCoachDeps(options: MemoryOptions = {}): { deps: Coac
       prices: (ctx, alias) => inner.prices(ctx, alias),
       generate: async (ctx, request) => {
         state.modelCalls += 1;
+        state.gatewayRequests.push(request);
         return inner.generate(ctx, request);
       },
     },

@@ -9,7 +9,7 @@ import type { Ctx } from "@/server/context";
 import { enrolment, modelRoute, step as stepTable } from "@/server/db";
 import { AppError, isAppError } from "@/server/errors";
 import { logError, logWarn } from "@/server/log";
-import { assertProcessorApproved, isProcessorEnabled } from "@/server/processors";
+import { assertProcessorEnabled } from "@/server/processors";
 import { acquireConcurrency, checkRateLimit, hashIp, releaseConcurrency } from "@/server/ratelimit";
 import { isAgeAssuranceSatisfied } from "@/server/services/age-assurance";
 import { hasConsent } from "@/server/services/consent";
@@ -53,20 +53,13 @@ export async function loadModelRoutes(ctx: Pick<Ctx, "db">, alias: string): Prom
   }));
 }
 
-/** Approved with a DPA on record (decision D1) AND switched on. Throws otherwise. */
-export async function assertProcessorUsable(ctx: Pick<Ctx, "db">, providerKey: string): Promise<void> {
-  await assertProcessorApproved(ctx, providerKey);
-  if (!(await isProcessorEnabled(ctx, providerKey))) {
-    throw new AppError("approval_required", "That provider is approved but not switched on.", { detail: { providerKey } });
-  }
-}
-
 /** The gateway used by Coach and by course drafting. `fixture` unless `AI_PROVIDER_MODE=gateway`. */
 export function defaultModelGateway(): ModelGateway {
   return createModelGateway({
     mode: env.AI_PROVIDER_MODE,
     loadRoutes: loadModelRoutes,
-    assertProcessorApproved: assertProcessorUsable,
+    // Approved with a DPA on record (decision D1) AND switched on.
+    assertProcessorApproved: assertProcessorEnabled,
     resolveModel: (route) => {
       const key = env.AI_GATEWAY_API_KEY;
       if (!key) throw new AppError("ai_unavailable", "Coach can't answer right now.", { detail: { reason: "AI_GATEWAY_API_KEY is not set" } });

@@ -1,0 +1,9 @@
+{
+  "key": "third_party_tools",
+  "version": 1,
+  "required": true,
+  "position": 30,
+  "defaultByBand": { "teen_13_15": false, "teen_16_17": false, "adult_18": false },
+  "title": "Using tools from other companies",
+  "body": "Our courses teach your child to make things with real tools run by other companies, such as app builders, design tools and AI tools. Each course lists the tools it uses, what they cost, the minimum age the company sets, and whether you need to approve the tool or set up the account yourself.\n\nThese tools are not ours. Each one has its own terms, its own privacy policy and its own age rules, and you or your child agree to those with that company, not with us. We check and record each tool's rules before a course goes live, and we link only to the tool's official website.\n\nWhat your child types, uploads or makes inside one of these tools goes to that company, not to us. We do not see it and we do not process it. The only part we receive is what your child chooses to hand back to us as their finished work, such as a link, a screenshot or a file.\n\nWe will never ask your child for a password, sign-in code or key for another company's tool.\n\nWhere a tool needs a parent's permission, the course cannot be started until you have approved that tool. Giving this consent does not approve any particular tool: you are asked about each one.\n\nThis consent is needed for the account to work, because every course uses at least one outside tool. If you withdraw it, the account is paused straight away and your child is signed out."
+}

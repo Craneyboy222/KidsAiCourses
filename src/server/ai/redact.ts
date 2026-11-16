@@ -264,13 +264,18 @@ const NOT_HANDLES = new Set([
 
 const PLATFORMS =
   "(?:insta(?:gram)?|ig|snap(?:chat)?|sc|tik\\s?tok|discord|twitter|x|threads|whats\\s?app|telegram|roblox|xbox|psn|playstation|steam|twitch|youtube|yt|facebook|fb|bereal|kik|gamertag|username|user\\s?name|handle|@)";
-/** "my insta is maya.makes", "add me on snap: mayam", "discord = maya#1234". */
-const PLATFORM_HANDLE = new RegExp(
-  `\\b((?:my|add\\s+me\\s+on|find\\s+me\\s+on|follow\\s+me\\s+on|dm\\s+me\\s+on|message\\s+me\\s+on|im\\s+on|i'm\\s+on|i\\s+am\\s+on)\\s+${PLATFORMS}(?:\\s+(?:name|user\\s?name|handle|account|tag|id))?\\s*(?:is|=|:|-|as|its|it's)?\\s*)@?([A-Za-z0-9_][A-Za-z0-9_.#-]{2,31})`,
+/** "my insta is maya.makes", "discord = maya#1234": the platform word, then a connector, then the handle. */
+const MY_PLATFORM_HANDLE = new RegExp(
+  `\\b(my\\s+${PLATFORMS}\\b(?:\\s+(?:name|user\\s?name|handle|account|tag|id))?\\s*(?:is|=|:|-|its|it's)\\s*)@?([A-Za-z0-9_][A-Za-z0-9_.#-]{2,31})`,
+  "gi",
+);
+/** "add me on snap: mayam", "find me on insta maya.makes": the connector is optional after "on <platform>". */
+const ADD_ME_HANDLE = new RegExp(
+  `\\b((?:add\\s+me\\s+on|find\\s+me\\s+on|follow\\s+me\\s+on|dm\\s+me\\s+on|message\\s+me\\s+on|im\\s+on|i'm\\s+on|i\\s+am\\s+on)\\s+${PLATFORMS}\\b\\s*(?:is|=|:|-|as|its|it's)?\\s*)@?([A-Za-z0-9_][A-Za-z0-9_.#-]{2,31})`,
   "gi",
 );
 /** Words that are plainly not a handle after "my username is …". */
-const HANDLE_STOPWORDS = new Set(["not", "the", "private", "public", "secret", "hidden", "wrong", "broken", "gone", "taken", "what", "where", "how", "and", "but", "there", "working", "showing"]);
+const HANDLE_STOPWORDS = new Set(["now", "too", "today", "again", "later", "sometimes", "with", "for", "because", "when", "can", "cant", "all", "most", "every", "lol", "tbh","not", "the", "private", "public", "secret", "hidden", "wrong", "broken", "gone", "taken", "what", "where", "how", "and", "but", "there", "working", "showing"]);
 
 /** "my name is Maya Okafor", "i'm called Tom", "my full name's …". Takes up to three name-like words. */
 const NAME_INTRO =
@@ -320,10 +325,12 @@ export function redactInput(input: string, options: { now?: Date } = {}): Redact
     return `${lead} ${bump("name")}`;
   });
 
-  text = text.replace(PLATFORM_HANDLE, (whole: string, lead: string, handle: string) => {
-    if (HANDLE_STOPWORDS.has(handle.toLowerCase())) return whole;
-    return `${lead}${bump("handle")}`;
-  });
+  for (const pattern of [MY_PLATFORM_HANDLE, ADD_ME_HANDLE]) {
+    text = text.replace(pattern, (whole: string, lead: string, handle: string) => {
+      if (HANDLE_STOPWORDS.has(handle.toLowerCase())) return whole;
+      return `${lead}${bump("handle")}`;
+    });
+  }
   text = text.replace(AT_HANDLE, (whole: string, handle: string) => (NOT_HANDLES.has(handle.toLowerCase()) ? whole : bump("handle")));
 
   text = text.replace(STREET_ADDRESS, () => bump("address"));
