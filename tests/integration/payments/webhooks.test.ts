@@ -3,9 +3,9 @@ import { POST } from "@/app/api/webhooks/stripe/route";
 import { stripeEvent } from "@/server/db/schema";
 import { startCheckout } from "@/server/services/billing";
 import { receiveStripeWebhook } from "@/server/services/billing-events";
-import { fakeChargeObject, fakeDelivery, fakeWebhookSecret, redeliver, signWebhookPayload } from "@/server/stripe/fake";
+import { createFakeStripeDriver, fakeChargeObject, fakeDelivery, fakeWebhookSecret, redeliver, signWebhookPayload } from "@/server/stripe/fake";
 import { completeFakeCheckout } from "@/server/stripe/fake-simulator";
-import { WebhookSignatureError } from "@/server/stripe";
+import { WebhookSignatureError, setStripeDriverForTests } from "@/server/stripe";
 import { closeDb, db, testCtx } from "../../helpers/db";
 import { createFamily, createLearner } from "../../helpers/factories";
 import { T0, auditRows, daysAfter, entitlementAt, eventRow, familyRow, invoiceEvent, linkCustomer, notificationsFor, send, setUpBilling, subEvent, subState, subscribe, subscriptionRows } from "./helpers";
@@ -42,6 +42,23 @@ describe("signature", () => {
     expect((await post(good.payload, signWebhookPayload(good.payload, new Date(now.getTime() - 60 * 60 * 1000)))).status).toBe(400);
     expect(await db.select().from(stripeEvent)).toHaveLength(0);
     expect(fakeWebhookSecret()).toMatch(/^whsec_fake_[0-9a-f]{64}$/);
+  });
+
+  it("answers 400, not 500, when the signature error comes from another bundle's copy of the class (regression)", async () => {
+    // In the running app the route handler and the driver can be built into different bundles,
+    // each with its own `WebhookSignatureError`. The route must not rely on `instanceof`.
+    class WebhookSignatureError extends Error {
+      override name = "WebhookSignatureError";
+    }
+    const real = createFakeStripeDriver(() => T0);
+    setStripeDriverForTests({
+      ...real,
+      constructEvent: () => {
+        throw new WebhookSignatureError("bad");
+      },
+    });
+    expect((await post("{}", "t=1,v1=x")).status).toBe(400);
+    expect(await db.select().from(stripeEvent)).toHaveLength(0);
   });
 
   it("accepts a correctly signed event through the route and answers 200", async () => {

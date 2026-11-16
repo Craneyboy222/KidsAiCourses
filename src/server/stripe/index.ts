@@ -7,17 +7,16 @@ import type { StripeDriver } from "./driver";
 export * from "./driver";
 export * from "./types";
 
-const globalForStripe = globalThis as typeof globalThis & { __platformStripeDriver?: StripeDriver };
+let current: StripeDriver | undefined;
 
 /**
  * The driver chosen by `STRIPE_DRIVER`. The real one is loaded only when asked for, so the fake
  * never imports the Stripe SDK and the real one never ships the fake's signing code.
  */
 export async function getStripeDriver(): Promise<StripeDriver> {
-  const cached = globalForStripe.__platformStripeDriver;
-  if (cached && cached.name === env.STRIPE_DRIVER) return cached;
+  if (current && current.name === env.STRIPE_DRIVER) return current;
   const driver = env.STRIPE_DRIVER === "stripe" ? (await import("./real")).createRealStripeDriver() : (await import("./fake")).createFakeStripeDriver();
-  globalForStripe.__platformStripeDriver = driver;
+  current = driver;
   return driver;
 }
 
@@ -36,5 +35,5 @@ export async function getStripeDriverForUse(ctx: Pick<Ctx, "db">): Promise<Strip
 
 /** Tests only: use this driver (for example a fake with a pinned clock), or pass `null` to go back to the configured one. */
 export function setStripeDriverForTests(driver: StripeDriver | null): void {
-  globalForStripe.__platformStripeDriver = driver ?? undefined;
+  current = driver ?? undefined;
 }

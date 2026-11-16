@@ -454,7 +454,7 @@
   ],
   "blockers": [],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T14:51:23.723692+00:00",
+  "last_updated": "2026-11-16T15:05:45.097760+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",
@@ -466,9 +466,8 @@
   "queue": {
     "note": "Reordered on 16 November 2026 at the owner's instruction: learner-facing path first. Two workstreams at a time. Briefs in docs/briefs/. Payments and parents moved ahead of the course authors because signed-in learner pages depend on their contracts.",
     "order": [
-      "payments (running)",
       "parents (running)",
-      "seed-compliance",
+      "seed-compliance (running)",
       "integration",
       "courses-a",
       "courses-b",
@@ -488,7 +487,8 @@
       "coach",
       "accounts",
       "learning",
-      "tools-submissions"
+      "tools-submissions",
+      "payments"
     ]
   }
 }

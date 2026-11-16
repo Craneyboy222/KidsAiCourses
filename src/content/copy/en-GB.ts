@@ -157,6 +157,16 @@ export const EN_GB = {
   "save.saved": "Saved",
   "save.failed":
     "We couldn't save that. Check your connection and try again. We've kept what you typed on this screen.",
+  // ── Billing: shown to parents, carers and adult account owners only ───────
+  "billing.card_check.why":
+    "The law expects us to take reasonable steps to check that an adult is behind a younger teenager's account. For 13 to 15-year-olds we do that with a card check, because only an adult can hold a bank card.",
+  "billing.card_check.what":
+    "Stripe, the company that handles cards for us, confirms that your card is real. No money is taken. We never see or store your card number, and your child never sees this step.",
+  "billing.card_check.alternative": "Starting a Family plan does the same job, so you never need to do both.",
+  "billing.hosted_by_stripe":
+    "You'll finish on a secure page run by Stripe. We never see or store your card details.",
+  "billing.nothing_deleted":
+    "If a plan ends, nothing is deleted: finished projects, portfolios and certificates are kept, and the free courses stay open.",
 } as const;
 
 export type CopyKey = keyof typeof EN_GB;

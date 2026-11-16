@@ -91,5 +91,13 @@ export class WebhookSignatureError extends Error {
   }
 }
 
+/**
+ * Use this rather than `instanceof`: the app is built as several bundles (pages, route handlers),
+ * each with its own copy of this class, and an error made in one is not an `instanceof` another's.
+ */
+export function isWebhookSignatureError(error: unknown): error is WebhookSignatureError {
+  return error instanceof Error && error.name === "WebhookSignatureError";
+}
+
 /** Events older than this are refused even with a good signature, the same window Stripe's own library uses. */
 export const WEBHOOK_TOLERANCE_SECONDS = 300;

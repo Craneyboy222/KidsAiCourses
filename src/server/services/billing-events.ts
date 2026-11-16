@@ -6,7 +6,6 @@ import { systemActor } from "@/server/authz";
 import type { Ctx } from "@/server/context";
 import { db as rootDb } from "@/server/db/client";
 import { family, stripeEvent, subscription } from "@/server/db";
-import { registerEmailTemplate } from "@/server/email";
 import { logError, logInfo, logWarn } from "@/server/log";
 import { getSetting } from "@/server/settings/store";
 import { getStripeDriver, refId, type BillingEvent, type HandledEventType, type WireCharge, type WireCheckoutSession, type WireInvoice, type WireSetupIntent, type WireSubscription } from "@/server/stripe";
@@ -35,46 +34,6 @@ import { notifyPaidUnlocks, resolvePaidUnlocksForFamily } from "./unlock-request
  * trial_will_end, invoice.paid, invoice.payment_failed, charge.refunded, setup_intent.succeeded.
  * Anything else is recorded as ignored.
  */
-
-registerEmailTemplate("billing_payment_failed", {
-  audience: "parent",
-  category: "transactional",
-  description: "A subscription payment did not go through.",
-  subject: "Your payment didn't go through",
-  body: `
-We tried to take the payment for your {{brandName}} plan and it didn't go through. This is usually an expired card or a bank check.
-
-Nothing changes until {{graceDate}}. If the payment hasn't gone through by then, your family moves to the Free plan. Nothing is deleted: finished projects and certificates stay.
-
-[Update your card]({{url}})
-`,
-});
-registerEmailTemplate("billing_trial_ending", {
-  audience: "parent",
-  category: "transactional",
-  description: "A free trial ends in a few days and the first payment will be taken.",
-  subject: "Your free trial ends on {{date}}",
-  body: `
-Your free trial of {{brandName}} ends on {{date}}. Your first payment is taken then, using the card you gave at the start.
-
-If you'd rather not carry on, you can cancel before that date and you won't be charged. Your family then stays on the Free plan.
-
-[See your plan]({{url}})
-`,
-});
-registerEmailTemplate("billing_plan_ended", {
-  audience: "parent",
-  category: "transactional",
-  description: "A paid plan has ended and the family is on Free.",
-  subject: "Your plan has ended",
-  body: `
-Your {{brandName}} plan has ended and your family is now on the Free plan.
-
-Nothing has been deleted. Finished projects, portfolios and certificates are all still there, and the free courses stay open. You can choose a plan again at any time.
-
-[See your plan]({{url}})
-`,
-});
 
 export type WebhookOutcome = {
   /** `duplicate`: we had already handled this event id. `ignored`: verified, but nothing for us to do. */

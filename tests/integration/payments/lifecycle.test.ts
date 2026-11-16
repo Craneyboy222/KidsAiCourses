@@ -1,4 +1,5 @@
 import { afterAll, beforeEach, describe, expect, it } from "vitest";
+import { getSentEmails } from "@/server/email";
 import { runJob } from "@/server/jobs";
 import { billingReconcile } from "@/server/jobs/billing";
 import { getBillingOverview } from "@/server/services/billing";
@@ -70,7 +71,7 @@ describe("Family", () => {
 
 describe("a failed payment: grace, then downgrade", () => {
   it("keeps the plan for the grace period, then Free until a payment succeeds", async () => {
-    const { family, parentActor } = await createFamily();
+    const { family, parent, parentActor } = await createFamily();
     const { user: learner } = await createLearner({ familyId: family.id, now: T0 });
     const paid = await createCourse();
     const free = await createCourse({ isFree: true });
@@ -97,6 +98,12 @@ describe("a failed payment: grace, then downgrade", () => {
     expect((await familyRow(family.id))?.plan).toBe("free");
     await runJob(billingReconcile, undefined, { now: after });
     expect(await notificationsFor(parentActor.userId, "billing.plan_ended")).toHaveLength(1);
+    // By email too, to the parent only, with a link to their own billing page and no amount of money.
+    const ended = getSentEmails().filter((email) => email.template === "billing_plan_ended");
+    expect(ended.map((email) => email.to)).toEqual([parent.email]);
+    expect(getSentEmails().filter((email) => email.template === "billing_payment_failed")).toHaveLength(1);
+    expect(JSON.stringify(getSentEmails())).toContain("/parent/billing");
+    expect(JSON.stringify(getSentEmails())).not.toMatch(/£\d/);
 
     // The card is fixed: the plan is back straight away.
     const paidAt = daysAfter(40);

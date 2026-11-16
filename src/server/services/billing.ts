@@ -6,13 +6,14 @@ import { assertCan } from "@/server/authz";
 import type { Ctx } from "@/server/context";
 import { family, plan, promoCode, subscription, user, type Db } from "@/server/db";
 import { AppError } from "@/server/errors";
+import { registerEmailTemplate } from "@/server/email";
 import { logError } from "@/server/log";
 import { notify } from "@/server/notifications";
 import { getSetting } from "@/server/settings/store";
 import { getStripeDriverForUse } from "@/server/stripe";
 import type { AgeAssuranceLevel } from "./age-assurance";
 import { getEntitlementForFamily, subscriptionAccess, type Entitlement } from "./entitlements";
-import { countSeatsUsed, listChildren, listParentUserIds } from "./family";
+import { countSeatsUsed, getLearnerSummary, listChildren, listParentUserIds } from "./family";
 import { FREE_PLAN_KEY, getPlanByKey, isFoundingVariant, pencePrice, planFeatures, priceIdFor, type BillingInterval, type PlanRow, type PriceVariant } from "./plans";
 import { checkPromoForFamily, describePromo, type PromoRow } from "./promo";
 
@@ -26,6 +27,48 @@ import { checkPromoForFamily, describePromo, type PromoRow } from "./promo";
  * check only send the browser to Stripe; the entitlement changes when Stripe's webhook arrives
  * (`billing-events.ts`). The one exception is an admin's billing exception, which is audited.
  */
+
+// The billing emails. Registered here, not in the webhook handler, because the daily job sends one
+// too and every sender of a billing notice imports this file.
+registerEmailTemplate("billing_payment_failed", {
+  audience: "parent",
+  category: "transactional",
+  description: "A subscription payment did not go through.",
+  subject: "Your payment didn't go through",
+  body: `
+We tried to take the payment for your {{brandName}} plan and it didn't go through. This is usually an expired card or a bank check.
+
+Nothing changes until {{graceDate}}. If the payment hasn't gone through by then, your family moves to the Free plan. Nothing is deleted: finished projects and certificates stay.
+
+[Update your card]({{url}})
+`,
+});
+registerEmailTemplate("billing_trial_ending", {
+  audience: "parent",
+  category: "transactional",
+  description: "A free trial ends in a few days and the first payment will be taken.",
+  subject: "Your free trial ends on {{date}}",
+  body: `
+Your free trial of {{brandName}} ends on {{date}}. Your first payment is taken then, using the card you gave at the start.
+
+If you'd rather not carry on, you can cancel before that date and you won't be charged. Your family then stays on the Free plan.
+
+[See your plan]({{url}})
+`,
+});
+registerEmailTemplate("billing_plan_ended", {
+  audience: "parent",
+  category: "transactional",
+  description: "A paid plan has ended and the family is on Free.",
+  subject: "Your plan has ended",
+  body: `
+Your {{brandName}} plan has ended and your family is now on the Free plan.
+
+Nothing has been deleted. Finished projects, portfolios and certificates are all still there, and the free courses stay open. You can choose a plan again at any time.
+
+[See your plan]({{url}})
+`,
+});
 
 export type BillingAccount = {
   familyId: string;
@@ -251,7 +294,8 @@ export async function getBillingOverview(ctx: Ctx): Promise<BillingOverview> {
     status: entitlement.status,
     seats: { used, total: entitlement.seats, extra: live?.sub.extraSeats ?? 0 },
     subscription: summary,
-    canManage: fam.stripeCustomerId !== null,
+    // A customer made for a checkout that was never finished has nothing in the portal.
+    canManage: fam.stripeCustomerId !== null && (history.some((row) => row.sub.stripeSubscriptionId !== null) || fam.ageAssuranceLevel === "card_authorisation" || fam.ageAssuranceLevel === "paid_subscription"),
     canChoosePlan: live === null,
     offers: live === null ? await loadOffers(ctx, history) : [],
     ageAssurance: { level: fam.ageAssuranceLevel, checkedAt: fam.ageAssuredAt, needed: waitingFor.length > 0, waitingFor },
@@ -374,12 +418,22 @@ export async function openBillingPortal(ctx: Ctx): Promise<{ url: string }> {
 
 // ── Keeping `family.plan` in step, and telling people ───────────────────────
 
-/** The adults to tell about a family's billing: its parents and carers, or the 18-year-old who owns it. */
-export async function billingContactIds(ctx: Pick<Ctx, "db">, familyId: string): Promise<string[]> {
+/**
+ * The adults to tell about a family's billing: its parents and carers, or the 18-year-old who
+ * owns it. Never a learner under 18: an owner who is a learner is checked to be an adult first.
+ */
+export async function billingContactIds(ctx: Pick<Ctx, "db" | "now">, familyId: string): Promise<string[]> {
   const parents = await listParentUserIds(ctx, familyId);
   if (parents.length > 0) return parents;
   const [fam] = await ctx.db.select({ ownerUserId: family.ownerUserId, kind: user.kind }).from(family).innerJoin(user, eq(user.id, family.ownerUserId)).where(eq(family.id, familyId)).limit(1);
-  return fam ? [fam.ownerUserId] : [];
+  if (!fam) return [];
+  if (fam.kind === "parent") return [fam.ownerUserId];
+  if (fam.kind !== "learner") return [];
+  try {
+    return (await getLearnerSummary(ctx, fam.ownerUserId)).safetyBand === "adult_18" ? [fam.ownerUserId] : [];
+  } catch {
+    return [];
+  }
 }
 
 export type BillingNotice = { type: string; title: string; body: string; emailTemplate?: string; emailData?: Record<string, string>; dedupeKey: string; urgent?: boolean };

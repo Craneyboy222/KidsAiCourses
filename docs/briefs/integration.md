@@ -14,6 +14,8 @@ Run after the learner-facing slices have landed. You may edit any slice's files,
 - After hand-in the evidence step forces a full page reload; give the player session a `refresh()` instead.
 - Parents need a page to read a setup guide for a tool they are asked to approve or operate, and a place to see their own reports.
 - Remove stray scratch folders (for example `.smoke/`) or exclude them from lint.
+- An adult learner's settings page links to `/settings/billing`; account deletion calls `cancelFamilySubscriptions`.
+- Do not use `instanceof` on error classes across route handlers and services (separate bundles): check by name or code.
 - Public course pages need the marketing layout's `<main>` and frame.
 - Parent pages use `requireParentPage()`.
 - Sign-in copies saved accessibility preferences into the cookie; settings saves them back to the profile.

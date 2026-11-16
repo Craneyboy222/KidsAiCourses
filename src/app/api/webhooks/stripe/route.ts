@@ -1,7 +1,6 @@
-import { ZodError } from "zod";
 import { logWarn } from "@/server/log";
 import { receiveStripeWebhook } from "@/server/services/billing-events";
-import { WebhookSignatureError } from "@/server/stripe";
+import { isWebhookSignatureError } from "@/server/stripe";
 
 /**
  * POST /api/webhooks/stripe — the only way a family's plan ever changes (spec 3.7, Section 13).
@@ -30,11 +29,11 @@ export async function POST(request: Request): Promise<Response> {
     const outcome = await receiveStripeWebhook({ rawBody, signature: request.headers.get("stripe-signature"), requestId: request.headers.get("x-request-id") ?? undefined });
     return Response.json({ received: true, status: outcome.status }, { headers: { "Cache-Control": "no-store" } });
   } catch (error) {
-    if (error instanceof WebhookSignatureError) {
+    if (isWebhookSignatureError(error)) {
       logWarn("stripe.webhook.bad_signature", { reason: error.message });
       return refuse(400, "forbidden", "The signature on that request could not be verified.");
     }
-    if (error instanceof ZodError) return refuse(400, "invalid_input", "That event was not in the expected form.");
+    if (error instanceof Error && error.name === "ZodError") return refuse(400, "invalid_input", "That event was not in the expected form.");
     // Logged in the service. A 500 tells Stripe to try again later.
     return refuse(500, "internal", "Something went wrong on our side. Please send the event again.");
   }
