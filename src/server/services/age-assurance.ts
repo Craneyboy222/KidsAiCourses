@@ -2,7 +2,7 @@
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { audit } from "@/server/audit";
-import type { SafetyBand } from "@/server/authz";
+import { assertCan, type SafetyBand } from "@/server/authz";
 import type { Ctx } from "@/server/context";
 import { family } from "@/server/db";
 import { AppError } from "@/server/errors";
@@ -116,6 +116,8 @@ export async function recordAgeAssurance(ctx: Ctx, familyId: string, method: Age
   if (ctx.actor.type === "learner" || ctx.actor.type === "anonymous") {
     throw new AppError("forbidden", "You don't have permission to do that.");
   }
+  // Staff may record a check only as a billing exception (admins). Webhooks run as the system actor.
+  if (ctx.actor.type === "staff") assertCan(ctx.actor, "billing.exception");
   if (ctx.actor.type === "parent" && (ctx.actor.familyId !== familyId || method !== "parent_email")) {
     // A parent's own session can only ever vouch for their own verified email, never for a card.
     throw new AppError("forbidden", "You don't have permission to do that.");

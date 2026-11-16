@@ -34,6 +34,67 @@ export const EN_GB = {
   "signup.pending_parent.body":
     "We've emailed your parent or carer. Once they approve your account you can get started. If they don't reply within 7 days, we delete your details.",
   "signup.learner_no_email": "You don't need an email address. You'll sign in with a username and password.",
+  "signup.under13.just_turned_13":
+    "Just turned 13? We only ever ask for the month and year you were born, so accounts open on the 1st of the month after a 13th birthday.",
+  "signup.under13.parent":
+    "Adding a child as a parent or carer? Children can join once they are 13. Nothing about them has been saved.",
+  "signup.closed.title": "We're not open yet",
+  "signup.closed.body":
+    "We're getting everything ready before we let anyone sign up, and we're not quite there. Nothing you typed has been saved. Please check back soon.",
+  "signup.teen.deleted_after_7_days":
+    "If your parent or carer doesn't approve your account within 7 days, we delete it and everything in it. You can always sign up again.",
+  "signup.teen.locked_until_approved":
+    "Until they approve it, your account is locked: you can look around, but you can't use Coach, save work or earn a certificate.",
+  "signin.learner.forgot_password":
+    "Forgotten your password? Ask your parent or carer to reset it from their dashboard. They can set a new one or give you a one-time code.",
+
+  // ── How safety and outside tools work (parents; shown in parent onboarding, reusable elsewhere) ──
+  "safety.how_it_works.title": "How safety and outside tools work",
+  "safety.how_it_works.intro":
+    "{{brandName}} teaches teenagers to make real things with today's AI tools. Here is what we do to keep that safe, and what stays in your hands.",
+  "safety.how_it_works.private":
+    "Private by default. There are no public profiles, no friends lists and no messaging between learners. Your child is known by a nickname and a username, never a real name or a photo.",
+  "safety.how_it_works.coach":
+    "Coach is our built-in AI helper. It gives hints, not answers, and always says it is an AI. Messages are checked before they go out and before your child sees a reply. If a message suggests your child may be at risk, they are shown where to get help straight away and our safeguarding lead is alerted.",
+  "safety.how_it_works.tools":
+    "Courses use real tools made by other companies. Each course lists the tools it needs, what they cost, the company's own minimum age and whether you need to approve the tool or run it yourself. Those tools have their own terms and privacy policies.",
+  "safety.how_it_works.tools_data":
+    "What your child types into another company's tool goes to that company, not to us. We only receive what your child chooses to hand in as their finished work, such as a link or a screenshot. We never ask for a password, sign-in code or key for an outside tool.",
+  "safety.how_it_works.controls":
+    "You stay in charge. You can set a daily time limit and quiet hours, block categories or courses, approve tools one by one, pause the account, download your child's data or ask us to delete it.",
+  "safety.how_it_works.people":
+    "Work is checked before it reaches a portfolio, and photos or videos of real people are not accepted. Every published course has been reviewed and signed off by a person on our team.",
+
+  // ── "What my parent can see" (the same facts for the teen and for the parent) ──
+  "parent_view.title": "What my parent can see",
+  "parent_view.title.parent": "What you can see, and what stays private",
+  "parent_view.intro":
+    "Your parent or carer helps look after your account. They see enough to know you're safe and making progress, not everything you type.",
+  "parent_view.intro.parent":
+    "You see enough to know your child is safe and making progress. Some things stay private to them, so they can ask questions freely.",
+  "parent_view.sees.progress": "The courses you've started and finished, and how far through you are.",
+  "parent_view.sees.time": "How much time you've spent this week.",
+  "parent_view.sees.projects": "The projects in your portfolio and the certificates you've earned.",
+  "parent_view.sees.coach_summary": "How many Coach chats you've had and the topics they covered.",
+  "parent_view.sees.safety": "Safety notices, if something worrying came up.",
+  "parent_view.sees.requests": "Anything you've asked them to approve, such as a tool or a locked course.",
+  "parent_view.hidden.coach_messages": "What you actually typed to Coach, or what Coach said back.",
+  "parent_view.hidden.notes": "Your private notes on a step.",
+  "parent_view.hidden.password": "Your password. They can reset it, but they can never read it.",
+  // The same list, worded for the parent.
+  "parent_view.parent.sees.progress": "The courses your child has started and finished, and how far through they are.",
+  "parent_view.parent.sees.time": "How much time they have spent this week.",
+  "parent_view.parent.sees.projects": "The projects in their portfolio and the certificates they have earned.",
+  "parent_view.parent.sees.coach_summary": "How many Coach chats they have had and the topics covered.",
+  "parent_view.parent.sees.safety": "Safety notices, if something worrying came up.",
+  "parent_view.parent.sees.requests": "Anything they have asked you to approve, such as a tool or a locked course.",
+  "parent_view.parent.hidden.coach_messages": "What they actually typed to Coach, or what Coach said back.",
+  "parent_view.parent.hidden.notes": "Their private notes on a step.",
+  "parent_view.parent.hidden.password": "Their password. You can reset it, but you can never read it.",
+  "parent_view.controls":
+    "They can also set a daily time limit and quiet hours, block categories or courses, approve tools, pause your account, and download or delete your data.",
+  "parent_view.safeguarding":
+    "If something suggests you might be in danger, our safeguarding lead may contact your parent or carer. That is the only time more is shared.",
 
   // ── Asking a parent ───────────────────────────────────────────────────────
   "unlock.ask_parent.title": "Ask a parent to unlock",
@@ -99,3 +160,42 @@ export const EN_GB = {
 } as const;
 
 export type CopyKey = keyof typeof EN_GB;
+
+/** The paragraphs of "How safety and outside tools work", in reading order. */
+export const SAFETY_HOW_IT_WORKS_KEYS = [
+  "safety.how_it_works.private",
+  "safety.how_it_works.coach",
+  "safety.how_it_works.tools",
+  "safety.how_it_works.tools_data",
+  "safety.how_it_works.people",
+  "safety.how_it_works.controls",
+] as const satisfies readonly CopyKey[];
+
+/** "What my parent can see": what a parent sees, and what stays private to the learner. */
+export const PARENT_VIEW_SEES_KEYS = [
+  "parent_view.sees.progress",
+  "parent_view.sees.time",
+  "parent_view.sees.projects",
+  "parent_view.sees.coach_summary",
+  "parent_view.sees.safety",
+  "parent_view.sees.requests",
+] as const satisfies readonly CopyKey[];
+export const PARENT_VIEW_HIDDEN_KEYS = [
+  "parent_view.hidden.coach_messages",
+  "parent_view.hidden.notes",
+  "parent_view.hidden.password",
+] as const satisfies readonly CopyKey[];
+/** The same two lists, worded for the parent's screens. */
+export const PARENT_VIEW_PARENT_SEES_KEYS = [
+  "parent_view.parent.sees.progress",
+  "parent_view.parent.sees.time",
+  "parent_view.parent.sees.projects",
+  "parent_view.parent.sees.coach_summary",
+  "parent_view.parent.sees.safety",
+  "parent_view.parent.sees.requests",
+] as const satisfies readonly CopyKey[];
+export const PARENT_VIEW_PARENT_HIDDEN_KEYS = [
+  "parent_view.parent.hidden.coach_messages",
+  "parent_view.parent.hidden.notes",
+  "parent_view.parent.hidden.password",
+] as const satisfies readonly CopyKey[];

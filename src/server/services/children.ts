@@ -91,9 +91,9 @@ export async function addChild(ctx: Ctx, input: AddChildInput): Promise<AddChild
   if (ctx.actor.type !== "parent") throw new AppError("forbidden", "Only a parent or carer can add a child.");
   const parent = ctx.actor;
   assertCan(parent, "family.child.add", { familyId: parent.familyId });
-  await assertSignupOpen(ctx);
   const birth = { birthYear: input.birthYear, birthMonth: input.birthMonth };
   const age = await assertOldEnough(ctx, birth);
+  await assertSignupOpen(ctx);
 
   const nickname = checkNickname(input.nickname);
   if (!nickname.ok) throw new AppError("invalid_input", nickname.message, { fieldErrors: { nickname: [nickname.message] } });

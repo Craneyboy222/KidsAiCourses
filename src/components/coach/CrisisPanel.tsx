@@ -1,4 +1,5 @@
 import { MessageSquareText, Phone } from "lucide-react";
+import { useId } from "react";
 import type { CrisisContact, CrisisScript } from "@/server/ai/crisis";
 import { AiLabel } from "@/components/ui";
 
@@ -28,9 +29,12 @@ function ContactLink({ contact }: { contact: CrisisContact }) {
 }
 
 export function CrisisPanel({ script, label }: { script: CrisisScript; label: string }) {
+  // The script can be shown more than once in a thread. So the heading's id is unique each time,
+  // and the panel is a named group rather than a landmark region (two regions with one name clash).
+  const titleId = useId();
   return (
-    <section aria-labelledby="coach-crisis-title" data-testid="coach-crisis" className="border-info bg-info-soft text-ink rounded-card flex flex-col gap-3 border-2 p-4">
-      <h3 id="coach-crisis-title" className="text-lg font-bold">
+    <div role="group" aria-labelledby={titleId} data-testid="coach-crisis" className="border-info bg-info-soft text-ink rounded-card flex flex-col gap-3 border-2 p-4">
+      <h3 id={titleId} className="text-lg font-bold">
         {script.title}
       </h3>
       {script.body.map((paragraph) => (
@@ -47,6 +51,6 @@ export function CrisisPanel({ script, label }: { script: CrisisScript; label: st
       <ContactLink contact={script.emergency.contact} />
       <p>{script.closing}</p>
       <AiLabel>{label}</AiLabel>
-    </section>
+    </div>
   );
 }

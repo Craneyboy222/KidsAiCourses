@@ -55,17 +55,29 @@ async function sendApprovalEmail(ctx: Pick<Ctx, "db" | "now">, input: { parentEm
  * notifications and any trial progress go with it by cascade), rate-limit counters keyed by their
  * id, and any append-only rows that mention them. Runs in the caller's maintenance transaction.
  */
-async function eraseUser(tx: Db, userId: string): Promise<void> {
+async function eraseUser(tx: Db, userId: string): Promise<boolean> {
+  // Lock the row and look again: a parent may have approved the account a moment ago, and an
+  // approved learner's consent and audit records must never be touched from here.
+  const rows = await tx
+    .select({ id: user.id })
+    .from(user)
+    .where(and(eq(user.id, userId), eq(user.kind, "learner"), eq(user.status, "pending_parent")))
+    .for("update");
+  if (rows.length === 0) return false;
   await tx.delete(auditLog).where(or(eq(auditLog.actorId, userId), eq(auditLog.targetId, userId)));
   await tx.delete(consentRecord).where(eq(consentRecord.learnerId, userId));
   await tx.delete(creditLedger).where(eq(creditLedger.learnerId, userId));
   await tx.delete(rateLimitBucket).where(like(rateLimitBucket.key, `%:user:${userId}`));
   await tx.delete(user).where(and(eq(user.id, userId), eq(user.kind, "learner"), eq(user.status, "pending_parent")));
+  return true;
 }
 
-/** Deletes one pending teen and everything about them. Does nothing if the account is no longer pending. */
-export async function erasePendingTeen(ctx: Pick<Ctx, "db">, learnerId: string): Promise<void> {
-  await withAppendOnlyMaintenance(ctx.db, "account_deletion", (tx) => eraseUser(tx, learnerId));
+/**
+ * Deletes one pending teen and everything about them. Does nothing, and returns false, if the
+ * account is no longer pending.
+ */
+export async function erasePendingTeen(ctx: Pick<Ctx, "db">, learnerId: string): Promise<boolean> {
+  return withAppendOnlyMaintenance(ctx.db, "account_deletion", (tx) => eraseUser(tx, learnerId));
 }
 
 /**
@@ -74,10 +86,10 @@ export async function erasePendingTeen(ctx: Pick<Ctx, "db">, learnerId: string):
  * an approval that can never come.
  */
 export async function signUpTeen(ctx: Ctx, input: TeenSignupInput): Promise<TeenSignupResult> {
-  await assertSignupOpen(ctx);
   const birth = { birthYear: input.birthYear, birthMonth: input.birthMonth };
   // First, before anything typed into the form is looked at. Under 13: counted, then stopped.
   const age = await assertOldEnough(ctx, birth);
+  await assertSignupOpen(ctx);
   if (age.age >= ADULT_AGE && (await getSetting(ctx, "site.adult_self_serve"))) {
     throw new AppError("invalid_input", "You're 18 or over, so you can sign up with your own email address. Go back to the start and we'll take you there.");
   }
@@ -197,6 +209,7 @@ export async function purgePendingTeens(ctx: Pick<Ctx, "db" | "now">): Promise<{
       ),
     );
   const due = [...new Set(rows.map((row) => row.id))];
-  for (const id of due) await erasePendingTeen(ctx, id);
-  return { purged: due.length };
+  let purged = 0;
+  for (const id of due) if (await erasePendingTeen(ctx, id)) purged += 1;
+  return { purged };
 }

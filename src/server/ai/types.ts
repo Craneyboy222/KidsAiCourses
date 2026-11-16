@@ -49,6 +49,7 @@ export type CoachCode =
   | "ai_break"
   | "rate_limited"
   | "busy"
+  | "duplicate"
   | "credits_exhausted"
   | "secret_refused"
   | "input_blocked"
@@ -191,7 +192,8 @@ export type CoachEntitlement = { coachCreditsPerLearnerPerMonth: number; periodK
 
 export type ReserveOutcome =
   | { ok: true; reservationId: string; reserved: number; energy: EnergyView }
-  | { ok: false; reason: "insufficient"; energy: EnergyView };
+  /** `duplicate`: this idempotency key already has a hold, open or settled. It never buys a second model call. */
+  | { ok: false; reason: "insufficient" | "duplicate"; energy: EnergyView };
 
 export type RateScope = { scope: "user" | "family" | "ip"; id: string; limit: number; windowSec: number };
 
@@ -287,6 +289,11 @@ export type CoachDeps = {
   gateway: ModelGateway;
   safeguarding: { openCase(ctx: Ctx, input: OpenCaseInput): Promise<{ caseId: string }> };
   store: CoachStore;
+  /**
+   * Runs `work` so that everything it writes through the context it is given succeeds or fails
+   * together (a database transaction). Used to record a reply and take its credits as one step.
+   */
+  atomic<T>(ctx: Ctx, work: (ctx: Ctx) => Promise<T>): Promise<T>;
   clock: { nowMs(): number; sleep(ms: number): Promise<void> };
   log: { warn(event: string, data?: unknown): void; error(event: string, error?: unknown, data?: unknown): void };
 };

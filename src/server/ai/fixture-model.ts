@@ -15,10 +15,19 @@ import { MockLanguageModelV4 } from "ai/test";
 export const FIXTURE_PROVIDER_KEY = "fixture";
 export const FIXTURE_MODEL_ID = "fixture-coach-1";
 
-export type FixtureTurn = { instructions: string; lastUserMessage: string; userTurns: number };
+export type FixtureTurn = {
+  instructions: string;
+  lastUserMessage: string;
+  userTurns: number;
+  /** The settings the gateway passed with this call, so a test can check them (and honour the timeout). */
+  call?: { providerOptions?: unknown; maxOutputTokens?: number; temperature?: number; abortSignal?: AbortSignal };
+};
 
-/** Optional override: return a string to use it as the reply, or undefined to fall back to the built-in one. */
-export type FixtureScript = (turn: FixtureTurn) => string | undefined;
+/**
+ * Optional override: return a string to use it as the reply, or undefined to fall back to the
+ * built-in one. May be async, so a test can stand in for a slow or failing provider.
+ */
+export type FixtureScript = (turn: FixtureTurn) => string | undefined | Promise<string | undefined>;
 
 const field = (instructions: string, label: string): string | null => {
   const match = instructions.match(new RegExp(`^${label}:\\s*(.+)$`, "m"));
@@ -124,8 +133,13 @@ export function createFixtureModel(script?: FixtureScript): LanguageModel {
       const instructions = options.prompt.filter((m) => m.role === "system").map((m) => promptText(m.content)).join("\n\n");
       const users = options.prompt.filter((m) => m.role === "user");
       const lastUserMessage = promptText(users[users.length - 1]?.content);
-      const turn: FixtureTurn = { instructions, lastUserMessage, userTurns: users.length };
-      const text = script?.(turn) ?? fixtureReply(turn);
+      const turn: FixtureTurn = {
+        instructions,
+        lastUserMessage,
+        userTurns: users.length,
+        call: { providerOptions: options.providerOptions, maxOutputTokens: options.maxOutputTokens, temperature: options.temperature, abortSignal: options.abortSignal },
+      };
+      const text = (await script?.(turn)) ?? fixtureReply(turn);
       const inputTokens = Math.ceil(options.prompt.reduce((sum, m) => sum + promptText(m.content).length, 0) / 4);
       const outputTokens = Math.ceil(text.length / 4);
       return {

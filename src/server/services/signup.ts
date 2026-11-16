@@ -308,9 +308,10 @@ export type AdultSignupResult = { created: boolean; userId: string | null; famil
  * billing and entitlements work exactly as they do for a parent's family.
  */
 export async function signUpAdultLearner(ctx: Ctx, input: AdultSignupInput): Promise<AdultSignupResult> {
-  await assertSignupOpen(ctx);
   const birth = { birthYear: input.birthYear, birthMonth: input.birthMonth };
+  // The age gate comes first, as everywhere: under 13, nothing else is looked at.
   const age = await assertOldEnough(ctx, birth);
+  await assertSignupOpen(ctx);
   if (age.age < ADULT_AGE || !(await getSetting(ctx, "site.adult_self_serve"))) {
     throw new AppError("parent_approval_required", "Under-18s need a parent or carer to approve their account. Go back and use the sign-up for teenagers.");
   }

@@ -32,7 +32,12 @@ export type CreditBalance = { balance: number; monthlyAllowance: number; periodK
 export type CreditEntitlement = { coachCreditsPerLearnerPerMonth: number; periodKey: string };
 
 export type ReserveResult =
-  | { ok: true; reservationId: string; reserved: number; balance: CreditBalance }
+  /**
+   * `replayed` is true when this key already had a reservation, open or settled: nothing more was
+   * held. A caller that is about to spend money on the strength of the hold (the Coach pipeline)
+   * must treat a replay as "already used" and not go ahead, or one hold would pay for many calls.
+   */
+  | { ok: true; reservationId: string; reserved: number; balance: CreditBalance; replayed: boolean }
   | { ok: false; reason: "insufficient"; balance: CreditBalance };
 
 export const TUTOR_MESSAGE_PRICE_KEY = "tutor.message";
@@ -179,7 +184,7 @@ export async function grantCredits(ctx: Ctx, input: { learnerId: string; amount:
 
 /**
  * Holds `amount` credits before a model call. Returns `ok: false` when there are not enough.
- * Idempotent: the same `idempotencyKey` returns the first reservation and holds nothing more.
+ * Idempotent: the same `idempotencyKey` returns the first reservation, marked `replayed`, and holds nothing more.
  * Parallel calls queue on the balance row's lock, so the total held can never exceed what is there.
  */
 export async function reserveCredits(
@@ -195,7 +200,7 @@ export async function reserveCredits(
       if (existing.learnerId !== input.learnerId || existing.entryType !== "reserve") {
         throw new AppError("conflict", "That request was already used. Send your message again.", { detail: { key } });
       }
-      return { ok: true, reservationId: existing.id, reserved: existing.amount, balance: view(row, input.entitlement) };
+      return { ok: true, reservationId: existing.id, reserved: existing.amount, balance: view(row, input.entitlement), replayed: true };
     }
     if (available(row) < input.amount) return { ok: false, reason: "insufficient", balance: view(row, input.entitlement) };
 
@@ -205,7 +210,7 @@ export async function reserveCredits(
       .returning({ id: creditLedger.id });
     if (!entry) throw new Error("reserveCredits: the ledger insert returned nothing");
     const [updated] = await tx.update(creditBalance).set({ reserved: row.reserved + input.amount, updatedAt: ctx.now }).where(eq(creditBalance.id, row.id)).returning();
-    return { ok: true, reservationId: entry.id, reserved: input.amount, balance: view(updated ?? row, input.entitlement) };
+    return { ok: true, reservationId: entry.id, reserved: input.amount, balance: view(updated ?? row, input.entitlement), replayed: false };
   });
 }
 

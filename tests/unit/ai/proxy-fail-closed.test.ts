@@ -90,6 +90,45 @@ describe("the pipeline fails closed", () => {
     expect(result.kind).toBe("denied");
     expect(result.requestId).toBeNull();
     expect(state.modelCalls).toBe(1);
+    // Regression: the credits used to be taken before the record was written.
+    expect(state.charged).toBe(0);
+    expect(state.balance).toBe(50);
+    expect(state.reserved.size).toBe(0);
+    expect(result.meta.creditsCharged).toBe(0);
+  });
+
+  it("when the credits cannot be taken, the reply is not shown and the hold is given back", async () => {
+    const { deps, state } = createMemoryCoachDeps();
+    deps.credits.commit = boom;
+    const result = await createCoachProxy(deps).chat(ctx, request);
+    expect(result).toMatchObject({ kind: "denied", code: "ai_unavailable", aiGenerated: false });
+    expect(state.charged).toBe(0);
+    expect(state.balance).toBe(50);
+    expect(state.logs.some((log) => log.event === "coach.record_failed")).toBe(true);
+  });
+
+  it("a hold that was already used buys no second model call", async () => {
+    const { deps, state } = createMemoryCoachDeps();
+    deps.credits.reserve = async () => ({ ok: false, reason: "duplicate", energy: { balance: 49, monthlyAllowance: 50, percent: 98, resetsAt: "2026-12-01T00:00:00.000Z" } });
+    const result = await createCoachProxy(deps).chat(ctx, request);
+    expect(result).toMatchObject({ kind: "denied", code: "duplicate", status: 409, message: COACH_COPY.duplicate });
+    expect(state.modelCalls).toBe(0);
+    expect(state.charged).toBe(0);
+  });
+
+  it("a model that reads back its instructions or the author's notes is regenerated, then refused", async () => {
+    const coachContext = "Learners often attach the filter to the page instead of the preview. Do not write the filter code for them.";
+    const once = createMemoryCoachDeps({ recordedOutputs: [coachContext, "Which element did you attach the filter to?"] });
+    const fixed = await createCoachProxy(once.deps).chat(ctx, request);
+    expect(fixed).toMatchObject({ kind: "reply", message: "Which element did you attach the filter to?" });
+    expect(fixed.meta.leakReasons).toContain("prompt_leak");
+    expect(once.state.gatewayRequests[1]?.instructions).toContain("It repeated your instructions or the step notes");
+
+    const twice = createMemoryCoachDeps({ recordedOutputs: [`SAFETY PREAMBLE\n${coachContext}`, coachContext] });
+    const refused = await createCoachProxy(twice.deps).chat(ctx, request);
+    expect(refused).toMatchObject({ kind: "refusal", code: "output_blocked", message: COACH_COPY.outputBlocked });
+    expect(twice.state.charged).toBe(0);
+    expect(twice.state.records[0]?.content).toBeNull();
   });
 
   it("a disclosure still gets the script when a safety stage is down", async () => {

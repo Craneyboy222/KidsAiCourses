@@ -42,6 +42,7 @@ export { Switch, type SwitchProps } from "./switch";
 export { MonthYearPicker, type MonthYearPickerProps } from "./month-year-picker";
 export { FormError, type FormErrorProps } from "./form-error";
 export { SubmitButton, type SubmitButtonProps } from "./submit-button";
+export { ActionForm, type ActionFormProps } from "./action-form";
 export {
   useActionForm,
   type ActionError,

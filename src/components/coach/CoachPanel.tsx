@@ -37,8 +37,10 @@ type Entry =
       streaming: boolean;
     };
 
-/** Reasons Coach is unavailable that typing again will not fix. The step's own hints still work. */
+/** Reasons Coach is unavailable that asking the same thing again will not fix. The step's own hints still work. */
 const STOPS = new Set(["paused", "time_cap_reached", "quiet_hours", "consent_required", "age_assurance_required", "credits_exhausted", "ai_break", "coach_off", "unauthenticated", "forbidden"]);
+/** Only these take the message box away: without a learner's session the server cannot act on anything typed. */
+const NO_COMPOSER = new Set(["unauthenticated", "forbidden"]);
 
 const STOP_TITLES: Record<string, string> = {
   credits_exhausted: "Out of Coach energy",
@@ -65,6 +67,9 @@ const JUST_STUCK = "I'm stuck on this step. Can you help me work out what to try
  *   after it has been checked; nothing here talks to a model provider.
  * - The crisis script is fixed text shown in its own calm panel with tappable numbers.
  * - Learners see energy, never prices.
+ * - When Coach is unavailable (no energy, AI break, quiet hours…) the message box stays. The server
+ *   checks every message for a cry for help before it turns anyone away, so a learner who needs
+ *   the support script can always reach it from here.
  */
 export function CoachPanel(props: CoachPanelProps) {
   // A new step is a new conversation: Coach only ever knows about the step in front of the learner.
@@ -110,7 +115,8 @@ function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpen
       setProblem(null);
       setAnnouncement("Coach is thinking.");
       const replyId = nextId();
-      setEntries((list) => [...list, { id: nextId(), kind: "learner", text: message }]);
+      const learnerEntry: Entry = { id: nextId(), kind: "learner", text: message };
+      setEntries((list) => [...list, learnerEntry]);
 
       const body: CoachChatBody = { courseSlug, stepKey, message };
       if (preview) body.preview = { versionId: mode.versionId, asBand: mode.asBand, turn: learnerTurns.current };
@@ -122,11 +128,9 @@ function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpen
         onMeta: (meta) => {
           conversationId.current = meta.conversationId;
           crisisShown = meta.crisis !== null;
-          setEntries((list) => [
-            ...list,
-            ...meta.notices.map((notice): Entry => ({ id: nextId(), kind: "notice", text: notice })),
-            { id: replyId, kind: "coach", text: "", label: meta.label, aiGenerated: meta.aiGenerated, messageId: meta.messageId, crisis: meta.crisis, streaming: true },
-          ]);
+          const notices = meta.notices.map((notice): Entry => ({ id: nextId(), kind: "notice", text: notice }));
+          const reply: Entry = { id: replyId, kind: "coach", text: "", label: meta.label, aiGenerated: meta.aiGenerated, messageId: meta.messageId, crisis: meta.crisis, streaming: true };
+          setEntries((list) => [...list, ...notices, reply]);
           if (meta.crisis) spoken = `${meta.crisis.title}. There are people you can talk to right now. Childline is free on 0800 1111. The full message is in the Coach panel.`;
         },
         onDelta: (chunk) => {
@@ -139,8 +143,18 @@ function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpen
         },
       });
 
+      // Whatever happened, nothing is left "still arriving": a reply cut off part-way keeps its
+      // label and gets its Report control; one that never started is taken away.
+      setEntries((list) =>
+        list.flatMap((entry) => {
+          if (entry.id !== replyId || entry.kind !== "coach" || !entry.streaming) return [entry];
+          return entry.text.length > 0 || entry.crisis ? [{ ...entry, streaming: false }] : [];
+        }),
+      );
+
       if (result.ok) {
         learnerTurns.current += 1;
+        setStop(null);
         // Announced once, when the whole reply is in, so a screen reader is not interrupted mid-sentence.
         setAnnouncement(spoken ? `Coach says: ${spoken}` : "Coach has replied.");
       } else if (STOPS.has(result.code)) {
@@ -185,6 +199,7 @@ function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpen
 
   const stuckLabel = hintsShown === 0 && hints.length > 0 ? "I'm stuck" : hintsLeft > 0 ? "Another hint" : hints.length > 0 ? "Still stuck? Ask Coach" : "I'm stuck";
   const canAskCoach = stop === null;
+  const showComposer = stop === null || !NO_COMPOSER.has(stop.code);
 
   return (
     <Sheet title="Coach" description={`An AI tutor for “${stepTitle}”. It gives hints and asks questions.`} open={open} onOpenChange={onOpenChange} modal={false}>
@@ -281,7 +296,7 @@ function CoachThread({ mode, courseSlug, stepKey, stepTitle, hints, open, onOpen
         </Button>
         {hints.length > 0 && hintsShown === 0 && <p className="text-ink-muted text-sm">You&apos;ll get the step&apos;s own hints first, one at a time. They don&apos;t use any energy.</p>}
 
-        {canAskCoach && (
+        {showComposer && (
           <form onSubmit={submit} className="flex flex-col gap-2" aria-label="Ask Coach">
             <Field label="Ask Coach a question" hint="Say what you've tried and what happened. Leave out personal details. Press Ctrl and Enter to send.">
               <Textarea id={inputId} name="message" rows={3} maxLength={2000} value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={onKeyDown} autoComplete="off" />

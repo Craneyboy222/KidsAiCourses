@@ -18,7 +18,10 @@ import { getLearnerSummary, isIndependentLearner } from "./family";
  * - Every grant and every withdrawal appends a `consent_record` (who, when, how, which version).
  *   Nothing is ever updated: the state of a consent is its newest record.
  * - A consent counts as given only if the newest record is a grant **for the current version**.
- *   So publishing a new version of a required consent means it must be given again.
+ *   So publishing a new version of a required consent means it must be given again. Nobody is
+ *   paused by the publication itself: the consent shows as missing (`missingRequiredConsents`),
+ *   the parent is asked for it, and anything that depends on it (Coach, through age assurance)
+ *   stays shut until it is given.
  * - Withdrawing a required consent pauses the learner and signs them out. Giving it again lifts
  *   that pause, unless something else (a parent's own pause) is also holding the account.
  * - Until every required consent has been given, a new child's account is held (`paused`, reason
@@ -265,14 +268,15 @@ type ApplyOptions = {
  */
 export async function applyConsentChoices(ctx: Ctx, tx: Db, options: ApplyOptions): Promise<SaveConsentsResult> {
   const definitions = await listConsentDefinitions(ctx, tx);
-  const before = await latestRecords(tx, options.learnerId);
+  // Lock the learner first, so two saves for the same learner run one after the other.
   const targetRows = await tx
     .select({ status: user.status, statusReason: user.statusReason })
     .from(user)
     .where(eq(user.id, options.learnerId))
-    .limit(1);
+    .for("update");
   const target = targetRows[0];
   if (!target) throw new AppError("not_found", "That learner could not be found. They may have been removed.");
+  const before = await latestRecords(tx, options.learnerId);
 
   const changed: SaveConsentsResult["changed"] = [];
   let withdrawsRequired = false;
@@ -283,10 +287,16 @@ export async function applyConsentChoices(ctx: Ctx, tx: Db, options: ApplyOption
     const state = consentState(definition.version, record);
     if (wanted && (!state.granted || options.reaffirm === true)) {
       changed.push({ key: definition.key, action: "granted", version: definition.version });
-    } else if (!wanted && record?.action === "granted") {
+    } else if (!wanted && state.granted) {
+      // Withdrawing a consent that is in force.
       changed.push({ key: definition.key, action: "revoked", version: definition.version });
-      if (definition.required && state.granted) withdrawsRequired = true;
+      if (definition.required) withdrawsRequired = true;
+    } else if (!wanted && !definition.required && record?.action === "granted") {
+      // An optional consent given for older wording and not given again: record that it has ended.
+      changed.push({ key: definition.key, action: "revoked", version: definition.version });
     }
+    // A required consent that is waiting to be given again (new wording) and is left unticked is
+    // not a withdrawal: it is already not in force, and saving something else must not pause anyone.
   }
 
   if (withdrawsRequired && target.status === "active" && !options.confirmPause) {
@@ -296,6 +306,15 @@ export async function applyConsentChoices(ctx: Ctx, tx: Db, options: ApplyOption
       { fieldErrors: { confirmPause: ["Tick this box to confirm that the account should be paused."] } },
     );
   }
+
+  // "The newest record wins" needs a strict order, and the only order these rows have is their
+  // time. So a record is never written at or before the one it replaces: if two changes to the
+  // same consent land in the same instant, the later one is stamped one millisecond on.
+  const stampFor = (key: string): Date => {
+    const previous = before.get(key)?.createdAt;
+    return previous && previous.getTime() >= ctx.now.getTime() ? new Date(previous.getTime() + 1) : ctx.now;
+  };
+  const stamps = new Map(changed.map((change) => [change.key, stampFor(change.key)]));
 
   if (changed.length > 0) {
     await tx.insert(consentRecord).values(
@@ -309,7 +328,7 @@ export async function applyConsentChoices(ctx: Ctx, tx: Db, options: ApplyOption
         method: options.method,
         ip: ctx.ip ?? null,
         requestId: ctx.requestId,
-        createdAt: ctx.now,
+        createdAt: stamps.get(change.key) ?? ctx.now,
       })),
     );
     for (const change of changed) {
@@ -328,14 +347,16 @@ export async function applyConsentChoices(ctx: Ctx, tx: Db, options: ApplyOption
 
   const after = new Map(before);
   for (const change of changed) {
-    after.set(change.key, { action: change.action, consentVersion: change.version, createdAt: ctx.now });
+    after.set(change.key, { action: change.action, consentVersion: change.version, createdAt: stamps.get(change.key) ?? ctx.now });
   }
   const missingRequired = missingFrom(definitions, after);
 
   let status = target.status;
   let paused = false;
   let activated = false;
-  if (missingRequired.length > 0 && target.status === "active") {
+  if (withdrawsRequired && target.status === "active") {
+    // Only an explicit withdrawal pauses. New wording that has not been agreed yet leaves the
+    // account as it is: `missingRequiredConsents` reports it, and Coach stays shut until it is given.
     await tx
       .update(user)
       .set({ status: "paused", statusReason: CONSENT_HOLD.revoked, updatedAt: ctx.now })

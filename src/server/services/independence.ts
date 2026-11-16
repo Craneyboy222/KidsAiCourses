@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, notInArray, sql } from "drizzle-orm";
 import { env } from "@/env";
 import { normaliseEmail } from "@/server/auth/accounts";
 import { isLearnerPlaceholderEmail } from "@/server/auth/learner-email";
@@ -12,7 +12,7 @@ import { AppError } from "@/server/errors";
 import { logWarn } from "@/server/log";
 import { notify } from "@/server/notifications";
 import { rateLimit } from "@/server/ratelimit";
-import { REQUIRED_CONSENT_KEYS, applyConsentChoices, listConsentDefinitions } from "./consent";
+import { CONSENT_HOLD, REQUIRED_CONSENT_KEYS, applyConsentChoices, listConsentDefinitions } from "./consent";
 import { listParentUserIds } from "./family";
 import { revokeInviteCodes } from "./invite";
 
@@ -150,8 +150,16 @@ async function moveToOwnFamily(ctx: Pick<Ctx, "now">, tx: Db, learnerId: string)
   if (moved.length === 0) {
     await tx.insert(familyMember).values({ familyId, userId: learnerId, role: "learner", createdAt: ctx.now, updatedAt: ctx.now });
   }
-  // The parent's limits belonged to the link that has just ended.
-  await tx.delete(parentControl).where(eq(parentControl.learnerId, learnerId));
+  // The parent's limits belonged to the link that has just ended, and so did a parent's pause:
+  // nobody would be left who could lift it. A hold for consent is not touched here (the consent
+  // step that follows decides that), and neither is a lock or ban, which are other statuses.
+  const controls = await tx.delete(parentControl).where(eq(parentControl.learnerId, learnerId)).returning({ paused: parentControl.paused });
+  if (controls.some((control) => control.paused)) {
+    await tx
+      .update(user)
+      .set({ status: "active", statusReason: null, updatedAt: ctx.now })
+      .where(and(eq(user.id, learnerId), eq(user.status, "paused"), notInArray(sql`coalesce(${user.statusReason}, '')`, Object.values(CONSENT_HOLD))));
+  }
   await revokeInviteCodes(ctx, learnerId, tx);
   return familyId;
 }

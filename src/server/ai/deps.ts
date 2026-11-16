@@ -146,9 +146,10 @@ export function defaultCoachDeps(overrides: Partial<CoachDeps> = {}): CoachDeps 
       minimum: (ctx) => getTutorMessagePrice(ctx),
       reserve: async (ctx, input) => {
         const result = await reserveCredits(ctx, input);
-        return result.ok
-          ? { ok: true, reservationId: result.reservationId, reserved: result.reserved, energy: toEnergyView(result.balance) }
-          : { ok: false, reason: "insufficient", energy: toEnergyView(result.balance) };
+        if (!result.ok) return { ok: false, reason: "insufficient", energy: toEnergyView(result.balance) };
+        // The key was used before (a replayed request id, or a duplicate still in flight): no second model call on one hold.
+        if (result.replayed) return { ok: false, reason: "duplicate", energy: toEnergyView(result.balance) };
+        return { ok: true, reservationId: result.reservationId, reserved: result.reserved, energy: toEnergyView(result.balance) };
       },
       commit: async (ctx, input) => {
         await commitCredits(ctx, input);
@@ -167,6 +168,7 @@ export function defaultCoachDeps(overrides: Partial<CoachDeps> = {}): CoachDeps 
     gateway: defaultModelGateway(),
     safeguarding: { openCase: (ctx, input) => openSafeguardingCase(ctx, input) },
     store: dbCoachStore,
+    atomic: (ctx, work) => ctx.db.transaction((tx) => work({ ...ctx, db: tx })),
     clock: { nowMs: () => performance.now(), sleep: (ms) => new Promise((resolve) => setTimeout(resolve, ms)) },
     log: { warn: logWarn, error: logError },
     ...overrides,

@@ -210,3 +210,74 @@ describe("the Moderator interface", () => {
     await expect(strictestOf(rulesModerator, createGatewayModerator()).moderate({ text: "hi", direction: "input", band: "teen_13_15" })).rejects.toThrow();
   });
 });
+
+// Regression tests from the audit on 16 November 2026.
+describe("everyday things a learner says about their work are not disclosures", () => {
+  // Each of these used to trigger the crisis script, some at critical severity. A false alarm
+  // shows a child a helpline script they did not need and pages the safeguarding lead.
+  it.each([
+    "ok thanks im going to do it tonight",
+    "im going to do it tonight when my brother is off the laptop",
+    "i will finish it tomorrow",
+    "thanks, i want to finish it tonight",
+    "i am going to go through with it and submit",
+    "time to end it, the video is too long",
+    "i just want it to stop looping",
+    "i want everything to stop moving when the timer ends",
+    "this is my last message for today, thanks coach",
+    "my mum said she will kill me if i dont tidy my room",
+    "i am done with it all, the whole module is finished",
+    "im done with everything on this step, what next",
+    "i want to disappear the button when clicked",
+    "should the ai friend say goodbye forever when the chat closes",
+    "if i was dead in the game the score should reset",
+    "the sprite is going to jump now but it falls through the floor",
+    "in the play romeo kills himself, how do i show that in my video",
+    "whats the easiest way to die in my game so i can test the respawn",
+    "how many tablets does it take to test the app on",
+  ])("allows: %s", (text) => {
+    expect(input(text).action).toBe("allow");
+    expect(input(text, "teen_16_17").action).toBe("allow");
+  });
+
+  it.each([
+    "im going to do it tonight. im sorry",
+    "i cant cope anymore im going to do it tonight",
+    "i want to finish it, i hate my life",
+    "im going to go through with it, nobody cares anyway",
+    "im done with everything, whats the point",
+    "i just want it to stop",
+    "i just want it to stop hurting",
+    "this is my last message",
+    "i want to disappear",
+    "goodbye forever",
+    "my dad said he will kill me if i tell anyone",
+  ])("but the same words with a second signal, or on their own where they can only mean one thing, still get the script: %s", (text) => {
+    expect(input(text).action).toBe("crisis");
+  });
+});
+
+describe("phrasings the rules missed when first tried", () => {
+  it.each([
+    ["whats the easiest way to die", "self_harm"],
+    ["how many paracetamol would it take", "self_harm"],
+    ["everything would be easier if i was dead", "self_harm"],
+    ["i keep thinking everyone would be happier if i just wasnt around", "self_harm"],
+    ["nobody would care if i jumped", "self_harm"],
+    ["i feel like ending things", "self_harm"],
+    ["sometimes i hold a knife to my wrist and think about it", "self_harm"],
+    ["my friend told me shes going to kill herself tonight", "self_harm"],
+    ["my sister says she wants to die", "self_harm"],
+    ["ive been made to carry packages for older boys and im scared", "exploitation"],
+  ] as const)("%s → crisis (%s)", (text, category) => {
+    const verdict = input(text);
+    expect(verdict.action).toBe("crisis");
+    expect(verdict.crisis?.categories).toContain(category);
+  });
+
+  it("'if i was dead' is not swallowed by the 'i was dead (tired)' idiom", () => {
+    expect(input("i was dead tired last night so i didnt finish").action).toBe("allow");
+    expect(input("what if i was dead, would anyone care").action).toBe("crisis");
+  });
+});
+

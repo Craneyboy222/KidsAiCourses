@@ -79,6 +79,7 @@ const NO_MATCH = "That code and username don't match. Check both, then try again
 const EXPIRED = "That code has run out. Codes last 72 hours. Ask your parent or carer to make a new one.";
 const SWITCHED_OFF =
   "There were too many wrong tries, so that code has been switched off. Ask your parent or carer to make a new one.";
+const REPLACED = "That code has been replaced by a newer one. Ask your parent or carer for the latest code.";
 const USED = "That code has already been used. If you've forgotten your password, ask your parent or carer to reset it.";
 
 const noMatch = () =>
@@ -163,14 +164,18 @@ export async function verifyInviteCode(
     .from(inviteCode)
     .innerJoin(user, eq(user.id, inviteCode.learnerId))
     .where(and(eq(user.username, username), eq(user.kind, "learner")))
-    .orderBy(desc(inviteCode.createdAt))
-    .limit(1);
-  const invite = rows[0];
+    .orderBy(desc(inviteCode.createdAt), desc(inviteCode.id));
   // Same answer whether the username is unknown or has no code: never confirm that a username exists.
-  if (!invite) throw noMatch();
+  if (rows.length === 0) throw noMatch();
 
-  if (invite.codeHash !== hashInviteCode(input.code)) {
-    if (inviteState(invite, ctx.now) !== "usable") throw noMatch();
+  // Find the code by its hash among this learner's codes. (Not "the newest row": a replacement
+  // made in the same instant as the code it replaces has the same timestamp.)
+  const hash = hashInviteCode(input.code);
+  const invite = rows.find((row) => row.codeHash === hash);
+  if (!invite) {
+    // A wrong code counts against the learner's live code, if there is one.
+    const live = rows.find((row) => inviteState(row, ctx.now) === "usable");
+    if (!live) throw noMatch();
     const updated = await ctx.db
       .update(inviteCode)
       .set({
@@ -178,10 +183,10 @@ export async function verifyInviteCode(
         revokedAt: sql`CASE WHEN ${inviteCode.failedAttempts} + 1 >= ${INVITE_MAX_FAILED_ATTEMPTS} THEN ${ctx.now.toISOString()}::timestamptz ELSE ${inviteCode.revokedAt} END`,
         updatedAt: ctx.now,
       })
-      .where(eq(inviteCode.id, invite.id))
+      .where(eq(inviteCode.id, live.id))
       .returning({ failedAttempts: inviteCode.failedAttempts });
     if ((updated[0]?.failedAttempts ?? 0) >= INVITE_MAX_FAILED_ATTEMPTS) {
-      throw new AppError("rate_limited", SWITCHED_OFF, { detail: { inviteId: invite.id } });
+      throw new AppError("rate_limited", SWITCHED_OFF, { detail: { inviteId: live.id } });
     }
     throw noMatch();
   }
@@ -191,7 +196,7 @@ export async function verifyInviteCode(
     case "used":
       throw new AppError("conflict", USED);
     case "revoked":
-      throw new AppError("conflict", SWITCHED_OFF);
+      throw new AppError("conflict", invite.failedAttempts >= INVITE_MAX_FAILED_ATTEMPTS ? SWITCHED_OFF : REPLACED);
     case "expired":
       throw new AppError("conflict", EXPIRED);
     case "usable":

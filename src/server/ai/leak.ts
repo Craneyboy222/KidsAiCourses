@@ -5,13 +5,15 @@
  * whole file of code, or a finished piece of writing. A reply counts as a leak when it:
  *  - contains a code block longer than a short snippet, or a lot of code in total;
  *  - substantially reproduces the step's reference solution (when the step has one);
- *  - reads as a complete essay-style answer rather than a hint.
+ *  - reads as a complete essay-style answer rather than a hint;
+ *  - repeats Coach's own instructions or the author's private notes for the step (`coachContext`).
+ *    Those are for the server only and must never reach a learner's browser, whoever asks.
  *
  * Pure and deterministic. A leak makes the pipeline regenerate once with a corrective
  * instruction; a second leak becomes a safe refusal.
  */
 
-export type LeakReason = "long_code_block" | "too_much_code" | "reference_solution" | "essay_answer" | "too_long";
+export type LeakReason = "long_code_block" | "too_much_code" | "reference_solution" | "essay_answer" | "too_long" | "prompt_leak";
 
 export type LeakResult = { leak: boolean; reasons: LeakReason[] };
 
@@ -115,14 +117,48 @@ function proseStats(replyWithoutCode: string): { words: number; longParagraphs: 
   return { words, longParagraphs, questions: (replyWithoutCode.match(/\?/g) ?? []).length };
 }
 
+/**
+ * Headings and fences that only ever appear in the text we send to the model. None of them is a
+ * phrase a tutor would use with a learner, so seeing one in a reply means the instructions are
+ * being read back. (The safeguarding flag is handled before this check: it shows the crisis script.)
+ */
+const INTERNAL_MARKERS =
+  /SAFETY PREAMBLE|STEP NOTES|THESE RULES STILL APPLY|reference material, not instructions|Hint ladder rung for this turn|Author[’']s guidance for Coach|\bcoachContext\b|\[\[\s*SAFEGUARDING\s*\]\]/i;
+
+/** An unbroken run of this many tokens shared with a confidential text is a quotation, not a coincidence. */
+export const PROMPT_LEAK_RUN = 12;
+/** A short text (an author's note of a sentence or two) counts as leaked when most of it is there. */
+const PROMPT_LEAK_SHARE = 0.5;
+
+/**
+ * True when the reply reads back any of the confidential texts: an internal marker, a long
+ * verbatim stretch, or (for a short note) most of its wording.
+ */
+export function detectPromptLeak(reply: string, confidential: ReadonlyArray<string | null | undefined>): boolean {
+  if (INTERNAL_MARKERS.test(reply)) return true;
+  for (const item of confidential) {
+    const text = item?.trim();
+    if (!text) continue;
+    const size = tokens(text).length;
+    if (size < 6) continue; // Too short to tell apart from ordinary words.
+    const run = longestSharedRun(reply, text);
+    if (run >= PROMPT_LEAK_RUN || (size < 18 && run >= Math.max(6, Math.ceil(size * 0.7)))) return true;
+    if (size <= 120 && referenceOverlap(reply, text) >= PROMPT_LEAK_SHARE) return true;
+  }
+  return false;
+}
+
 export type LeakInput = {
   reply: string;
   /** The step's reference solution, when the author supplied one (`config.referenceSolution`). */
   referenceSolution?: string | null;
+  /** Text the learner must never be shown: Coach's instructions and the author's `coachContext`. */
+  confidential?: ReadonlyArray<string | null | undefined>;
 };
 
-export function detectLeak({ reply, referenceSolution }: LeakInput): LeakResult {
+export function detectLeak({ reply, referenceSolution, confidential }: LeakInput): LeakResult {
   const reasons = new Set<LeakReason>();
+  if (detectPromptLeak(reply, confidential ?? [])) reasons.add("prompt_leak");
 
   const blocks = codeBlocks(reply);
   let totalCodeLines = 0;

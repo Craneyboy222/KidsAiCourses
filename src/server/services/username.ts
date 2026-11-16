@@ -97,7 +97,8 @@ const EMAIL_PROVIDERS =
   /(gmail|googlemail|hotmail|outlook|yahoo|icloud|protonmail|proton_me|aol_com|live_co|msn_com)/;
 const EMAIL_SHAPE = /(_at_|^at_).*(_?com|_?co_?uk|_?org|_?net)$|dot_?com|_co_?uk$|_com$/;
 
-const SCHOOL_WORDS = /(school|skool|academy|college|sixth_?form|grammar|high_?sch|uni_?of|year_?\d{1,2}(?!\d)|yr_?\d{1,2}(?!\d)|class_?\d|form_?\d)/;
+// `yr`, `class` and `form` count only at the start of a word, so `platform_3` and `uniform_5` are fine.
+const SCHOOL_WORDS = /(school|skool|academy|college|sixth_?form|grammar|high_?sch|uni_?of|year_?\d{1,2}(?!\d)|(?<![a-z])yr_?\d{1,2}(?!\d)|(?<![a-z])class_?\d|(?<![a-z])form_?\d)/;
 
 /** The largest UK towns and cities. A small list on purpose: it catches the obvious, not everything. */
 const PLACES = [

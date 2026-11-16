@@ -45,6 +45,7 @@ import {
   type EnergyView,
   type GatewayResult,
   type StepContext,
+  type TurnRecord,
 } from "./types";
 
 export * from "./types";
@@ -75,6 +76,7 @@ export const COACH_COPY = {
   aiBreak: "AI break — back soon. Coach is having a rest, but your steps and hints still work.",
   stepMissing: "Coach isn't available on that step. Open the step from your course and try again.",
   busy: "Coach is really busy right now. Wait a few seconds, then try again.",
+  duplicate: "That message was already sent, so it wasn't sent twice. If no answer came back, ask again.",
   unavailable: "Coach can't answer right now. Nothing was lost and no energy was used. Your steps and hints still work — try Coach again in a little while.",
   outputBlocked:
     "I couldn't put together a helpful hint for that one, so I've stopped rather than risk giving you the answer. No energy was used. Try asking in a different way, or tell me what you've tried so far.",
@@ -188,8 +190,10 @@ const authStage: Stage = async (state, deps) => {
       learning.reason === "time_cap" ? "time_cap_reached" : learning.reason === "quiet_hours" ? "quiet_hours" : learning.reason === "consent" ? "consent_required" : "paused";
     return halt(next, denied(code, 403, learning.message));
   }
-  if (!(await deps.people.ageAssured(ctx, actor.userId))) return halt(next, denied("age_assurance_required", 403, COACH_COPY.ageAssurance));
+  // Consent first: age assurance also fails while a required consent is missing, and "a parent needs
+  // to say yes to AI help" is the more exact thing to tell a learner whose parent has not agreed.
   if (!(await deps.people.hasConsent(ctx, actor.userId, "ai_processing"))) return halt(next, denied("consent_required", 403, COACH_COPY.consent));
+  if (!(await deps.people.ageAssured(ctx, actor.userId))) return halt(next, denied("age_assurance_required", 403, COACH_COPY.ageAssurance));
 
   const a11y = await deps.people.a11y(ctx, actor.userId);
   return go({ ...next, identity: { mode: "live", userId: actor.userId, familyId: actor.familyId, band: actor.safetyBand, a11y } });
@@ -262,7 +266,13 @@ const creditStage: Stage = async (state, deps) => {
     entitlement,
   });
   const next = { ...state, entitlement, minimumCredits, energy: reserved.energy };
-  if (!reserved.ok) return halt(next, denied("credits_exhausted", 402, outOfEnergyCopy(reserved.energy)));
+  if (!reserved.ok) {
+    // A key that has been used before buys nothing more: one hold pays for one model call. Without
+    // this, replaying a request id would get any number of answers for the price of one. The
+    // earlier hold is deliberately not attached here, so this turn can neither spend nor release it.
+    if (reserved.reason === "duplicate") return halt(next, denied("duplicate", 409, COACH_COPY.duplicate));
+    return halt(next, denied("credits_exhausted", 402, outOfEnergyCopy(reserved.energy)));
+  }
   return go({ ...next, reservation: { id: reserved.reservationId, amount: reserved.reserved } });
 };
 
@@ -331,7 +341,8 @@ async function checkOutput(text: string, state: State, deps: CoachDeps): Promise
   if (trimmed.length === 0) return { ok: false, verdict: null, leakReasons: [], hadSecret: false, empty: true };
   // The same classifiers as the input, pointed at the model's words.
   const verdict = await deps.moderator.moderate({ text: trimmed, direction: "output", band: identity.band });
-  const leak = detectLeak({ reply: trimmed, referenceSolution: step.step.referenceSolution });
+  // The solution, a whole file of code, finished writing — or Coach's own instructions and the author's private notes.
+  const leak = detectLeak({ reply: trimmed, referenceSolution: step.step.referenceSolution, confidential: state.prompt?.confidential });
   // A reply must never carry anything shaped like a password, key, code or card number.
   const hadSecret = redactInput(trimmed, { now: state.ctx.now }).refused;
   if (verdict.action !== "allow" || leak.leak || hadSecret) return { ok: false, verdict, leakReasons: leak.reasons, hadSecret, empty: false };
@@ -461,70 +472,84 @@ async function finalise(state: State, terminal: Terminal, stage: CoachStage, dep
   let energy: EnergyView | null = state.energy ?? null;
   let recordFailed = false;
 
-  // Stage 10a: settle the reservation. Only an approved reply is ever charged for.
-  if (state.reservation) {
-    const { id, amount } = state.reservation;
-    try {
-      if (isReply && state.settings) {
-        creditsCharged = creditsToCommit(amount, cost, { creditValuePence: state.settings.creditValuePence, creditMargin: state.settings.creditMargin, minimumCredits: state.minimumCredits ?? 1 });
-        await deps.credits.commit(ctx, { reservationId: id, amount: creditsCharged, aiRequestId: state.aiRequestId });
-      } else {
-        await deps.credits.release(ctx, { reservationId: id, reason: terminal.code });
-      }
-    } catch (error) {
-      deps.log.error("coach.credits.settle_failed", error, { reservationId: id, requestId: ctx.requestId });
-      creditsCharged = 0;
-      recordFailed = isReply;
-    }
-  }
-
   // Money was spent whenever a model was called, whatever the learner ended up seeing.
   if (state.generations.length > 0) {
     await deps.spend.record(ctx, { feature: "tutor", costMillipence: cost }).catch((error: unknown) => deps.log.error("coach.spend.record_failed", error, { requestId: ctx.requestId }));
   }
   if (state.lease) await state.lease.release().catch((error: unknown) => deps.log.warn("coach.concurrency.release_failed", { error: String(error) }));
 
-  // Stage 10b: metadata (never message text), and content only where retention allows.
+  // Stage 10: metadata (never message text), content only where retention allows, and the charge.
   const keepContent = live && (isReply || terminal.flagContent === true);
   const recordable = identity !== undefined && terminal.outcome !== "rate_limited";
-  if (recordable && !recordFailed) {
+  const flagged = terminal.flagContent === true;
+  const turn = async (charged: number): Promise<TurnRecord | null> => {
+    if (!recordable) return null;
+    const userText = state.cleanText ?? scrubForStorage(state.request.message.trim());
+    const extendedRetention = keepContent && !flagged ? await deps.people.hasConsent(ctx, identity.userId, "tutor_history_retention").catch(() => false) : false;
+    return {
+      aiRequestId: state.aiRequestId,
+      userId: identity.userId,
+      familyId: identity.familyId,
+      isPreview: identity.mode === "preview",
+      outcome: terminal.outcome,
+      errorCode: terminal.errorCode ?? (terminal.kind === "denied" || terminal.kind === "refusal" ? terminal.code : null),
+      step: state.step ? { courseId: state.step.courseId, stepId: state.step.stepId, enrolmentId: state.step.enrolmentId, courseTitle: state.step.courseTitle, stepTitle: state.step.step.title } : null,
+      conversation: live && conversation && (keepContent || !conversation.isNew) ? { id: conversation.id, isNew: conversation.isNew } : null,
+      moderation:
+        state.inputVerdict || state.outputVerdict || terminal.crisis
+          ? {
+              input: state.inputVerdict?.summary ?? null,
+              output: state.outputVerdict?.summary ?? null,
+              leak: state.leakReasons,
+              crisis: terminal.crisis ? { severity: terminal.crisis.severity, categories: terminal.crisis.categories } : null,
+              moderator: state.inputVerdict?.moderator ?? null,
+              stage,
+            }
+          : null,
+      routeAlias: last?.routeAlias ?? null,
+      providerKey: last?.providerKey ?? null,
+      model: last?.model ?? null,
+      promptVersion: state.prompt ? COACH_PROMPT_VERSION : null,
+      inputTokens: sum(state.generations, (g) => g.inputTokens),
+      outputTokens: sum(state.generations, (g) => g.outputTokens),
+      costMillipence: cost,
+      creditsCharged: charged,
+      latencyMs: Math.max(0, Math.round(deps.clock.nowMs() - state.startedMs)),
+      content: keepContent ? { user: userText, userRedacted: state.redacted, assistant: isReply ? (state.reply ?? null) : null } : null,
+      flagged,
+      extendedRetention,
+    };
+  };
+  const release = async (reason: string): Promise<void> => {
+    if (!state.reservation) return;
+    await deps.credits.release(ctx, { reservationId: state.reservation.id, reason }).catch((error: unknown) => deps.log.error("coach.credits.settle_failed", error, { reservationId: state.reservation?.id, requestId: ctx.requestId }));
+  };
+
+  if (isReply) {
+    // An approved reply: the record and the charge are written together or not at all, so a
+    // learner is never charged for an answer they did not get, and never gets one for nothing.
+    const planned =
+      state.reservation && state.settings
+        ? creditsToCommit(state.reservation.amount, cost, { creditValuePence: state.settings.creditValuePence, creditMargin: state.settings.creditMargin, minimumCredits: state.minimumCredits ?? 1 })
+        : 0;
     try {
-      const flagged = terminal.flagContent === true;
-      const userText = state.cleanText ?? scrubForStorage(state.request.message.trim());
-      const extendedRetention = keepContent && !flagged ? await deps.people.hasConsent(ctx, identity.userId, "tutor_history_retention").catch(() => false) : false;
-      await deps.store.record(ctx, {
-        aiRequestId: state.aiRequestId,
-        userId: identity.userId,
-        familyId: identity.familyId,
-        isPreview: identity.mode === "preview",
-        outcome: terminal.outcome,
-        errorCode: terminal.errorCode ?? (terminal.kind === "denied" || terminal.kind === "refusal" ? terminal.code : null),
-        step: state.step ? { courseId: state.step.courseId, stepId: state.step.stepId, enrolmentId: state.step.enrolmentId, courseTitle: state.step.courseTitle, stepTitle: state.step.step.title } : null,
-        conversation: live && conversation && (keepContent || !conversation.isNew) ? { id: conversation.id, isNew: conversation.isNew } : null,
-        moderation:
-          state.inputVerdict || state.outputVerdict || terminal.crisis
-            ? {
-                input: state.inputVerdict?.summary ?? null,
-                output: state.outputVerdict?.summary ?? null,
-                leak: state.leakReasons,
-                crisis: terminal.crisis ? { severity: terminal.crisis.severity, categories: terminal.crisis.categories } : null,
-                moderator: state.inputVerdict?.moderator ?? null,
-                stage,
-              }
-            : null,
-        routeAlias: last?.routeAlias ?? null,
-        providerKey: last?.providerKey ?? null,
-        model: last?.model ?? null,
-        promptVersion: state.prompt ? COACH_PROMPT_VERSION : null,
-        inputTokens: sum(state.generations, (g) => g.inputTokens),
-        outputTokens: sum(state.generations, (g) => g.outputTokens),
-        costMillipence: cost,
-        creditsCharged,
-        latencyMs: Math.max(0, Math.round(deps.clock.nowMs() - state.startedMs)),
-        content: keepContent ? { user: userText, userRedacted: state.redacted, assistant: isReply ? (state.reply ?? null) : null } : null,
-        flagged,
-        extendedRetention,
+      const record = await turn(planned);
+      await deps.atomic(ctx, async (tx) => {
+        if (record) await deps.store.record(tx, record);
+        if (state.reservation) await deps.credits.commit(tx, { reservationId: state.reservation.id, amount: planned, aiRequestId: state.aiRequestId });
       });
+      creditsCharged = planned;
+    } catch (error) {
+      deps.log.error("coach.record_failed", error, { requestId: ctx.requestId, outcome: terminal.outcome });
+      recordFailed = true;
+      await release("record_failed");
+    }
+  } else {
+    // Anything else is free: the whole hold goes back, then the turn is recorded.
+    await release(terminal.code);
+    try {
+      const record = await turn(0);
+      if (record) await deps.store.record(ctx, record);
     } catch (error) {
       deps.log.error("coach.record_failed", error, { requestId: ctx.requestId, outcome: terminal.outcome });
       recordFailed = true;
@@ -532,13 +557,7 @@ async function finalise(state: State, terminal: Terminal, stage: CoachStage, dep
   }
 
   // A reply that could not be accounted for is not shown: fail closed. A crisis script is always shown.
-  let shown = terminal;
-  if (isReply && recordFailed) {
-    shown = faultTerminal("record_failed");
-    if (state.reservation && creditsCharged === 0) {
-      await deps.credits.release(ctx, { reservationId: state.reservation.id, reason: "record_failed" }).catch(() => undefined);
-    }
-  }
+  const shown = isReply && recordFailed ? faultTerminal("record_failed") : terminal;
 
   // Background: the safeguarding case. It must not delay the script.
   let settled: Promise<void> = Promise.resolve();
@@ -573,8 +592,10 @@ async function finalise(state: State, terminal: Terminal, stage: CoachStage, dep
     aiGenerated: shown.kind === "reply",
     label: shown.kind === "reply" ? AI_LABEL : FIXED_LABEL,
     notices: shown.kind === "denied" ? [] : [...state.notices, ...(isCrisis && preview ? [COACH_COPY.previewCrisisNote] : [])],
-    // After a crisis turn the conversation is closed to the learner; the next message starts a new one.
-    conversationId: live && shown.kind === "reply" && conversation ? conversation.id : null,
+    // A reply continues its conversation, and so does a refusal part-way through one (the hint
+    // ladder keeps its place). After a crisis turn, or anything else that flags the conversation,
+    // it is closed to the learner and the next message starts a new one.
+    conversationId: live && conversation && (shown.kind === "reply" || (shown.kind === "refusal" && !conversation.isNew && !flagged)) ? conversation.id : null,
     requestId: recordable && !recordFailed ? state.aiRequestId : null,
     crisis: script,
     energy: live ? energy : null,

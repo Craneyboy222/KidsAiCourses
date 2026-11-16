@@ -246,8 +246,8 @@ async function main(): Promise<number> {
     console.log("script, the leak and homework checks, redaction, and the jailbreak blocks.");
     console.log("What it does not prove: how a real model behaves (recorded outputs are hand-written stand-ins), or");
     console.log("how many real disclosures the rules would catch. The crisis cases are ones the rules were tuned on;");
-    console.log("on fresh phrasings written afterwards the rules alone caught about half (see the notes at the top of");
-    console.log("evals/coach/crisis.yaml).");
+    console.log("on four batches of fresh phrasings, written before the rules were adjusted to them, the rules alone");
+    console.log("caught between about half and two thirds (see the notes at the top of evals/coach/crisis.yaml).");
   }
   const ok = lines.every((line) => line[3]);
   console.log("");

@@ -168,6 +168,8 @@ export function createMemoryCoachDeps(options: MemoryOptions = {}): { deps: Coac
       },
       linkCase: async () => undefined,
     },
+    // No database here, so nothing to roll back: the fakes simply run in order.
+    atomic: (ctx, work) => work(ctx),
     clock: { nowMs: () => 0, sleep: async () => undefined },
     log: {
       warn: (event) => {
