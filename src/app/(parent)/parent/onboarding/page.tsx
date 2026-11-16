@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge, Card, CardTitle, LinkButton, PageHeader, Stepper, type StepperStep } from "@/components/ui";
 import { PARENT_VIEW_PARENT_HIDDEN_KEYS, PARENT_VIEW_PARENT_SEES_KEYS, SAFETY_HOW_IT_WORKS_KEYS } from "@/content/copy/en-GB";
-import { requireParent } from "@/server/context";
+import { requireParentPage } from "@/app/(auth)/_lib/after-sign-in";
 import { tMany } from "@/server/copy";
 import { plan } from "@/server/db";
 import { getParentOnboarding } from "@/server/services/onboarding";
@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: "Getting started" };
  * shows whether it is done, and the page can be left and come back to at any time.
  */
 export default async function ParentOnboardingPage() {
-  const ctx = await requireParent();
+  const ctx = await requireParentPage();
   const state = await getParentOnboarding(ctx);
   const copy = await tMany(ctx, [
     "safety.how_it_works.title",

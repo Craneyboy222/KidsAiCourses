@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge, Breadcrumbs, Callout, LinkButton, PageHeader } from "@/components/ui";
 import { formatDate } from "@/lib/dates";
-import { requireParent } from "@/server/context";
+import { requireParentPage } from "@/app/(auth)/_lib/after-sign-in";
 import { isAppError } from "@/server/errors";
 import { getAgeAssurance } from "@/server/services/age-assurance";
 import { getConsentCentre, type ConsentCentre } from "@/server/services/consent";
@@ -24,7 +24,7 @@ export default async function ChildConsentPage({ params, searchParams }: Props) 
   const { id } = await params;
   if (!UUID.test(id)) notFound();
   const from = (await searchParams).from;
-  const ctx = await requireParent();
+  const ctx = await requireParentPage();
 
   let centre: ConsentCentre;
   try {

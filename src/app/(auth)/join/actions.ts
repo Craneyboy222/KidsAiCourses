@@ -33,6 +33,6 @@ export async function redeemInviteAction(_prev: ActionState<never>, formData: Fo
       // The password is set; they can sign in by hand.
       redirect("/signin?as=learner&notice=joined");
     }
-    return finishSignIn(learnerId);
+    return finishSignIn(ctx, learnerId);
   });
 }

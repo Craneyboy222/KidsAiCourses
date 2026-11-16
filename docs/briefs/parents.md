@@ -6,6 +6,7 @@ Spec to read in full: Section 3.6, the parent flows in Section 4, the Parent scr
 Services `parent-controls.ts`, `approvals.ts` (contracts) plus `parent-dashboard.ts`, `data-request.ts`. Pages under `src/app/(parent)/parent/`: `page.tsx` (dashboard), `children/[id]` (progress, portfolio, Coach summary, controls, reset password, pause, tool approvals for that child), `approvals`, `notices`, `privacy` (consent links, download, delete), `settings`. Jobs `data.export`, `data.delete_due`. Tests in `tests/unit/parents`, `tests/integration/parents`. The `(parent)` layout, onboarding, add-child and consent pages belong to the accounts slice; billing belongs to payments.
 
 ## Calls
+Use `requireParentPage()` from `src/app/(auth)/_lib/after-sign-in.ts` in pages (it redirects non-parents instead of throwing) and `requireParent()` in actions.
 `listChildren`, `getLearnerSummary`, `getProgressSummary`, `listProjects`, `listCertificates`, `getCoachSummaryForParent`, `countSafetyNoticesForLearner`, `listToolApprovals` / `decideToolApproval` / `revokeToolApproval`, `listUnlockRequests` / `decideUnlockRequest`, `resetChildPassword` (children.ts), consent services, `getUsageByDay`, notifications, storage, email.
 
 ## Requirements

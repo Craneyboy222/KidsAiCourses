@@ -1,3 +1,4 @@
+import { createHmac } from "node:crypto";
 import { eq } from "drizzle-orm";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { getAuth } from "@/server/auth/auth";
@@ -93,6 +94,19 @@ async function run<T>(action: (prev: null, data: FormData) => Promise<T>, fields
     throw error;
   }
 }
+/** The current six-digit code for a base32 authenticator key (RFC 6238, SHA-1, 30 seconds). */
+function totpNow(base32Secret: string): string {
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+  let bits = "";
+  for (const char of base32Secret.replace(/[\s=]/g, "").toUpperCase()) bits += alphabet.indexOf(char).toString(2).padStart(5, "0");
+  const key = Buffer.from((bits.match(/.{8}/g) ?? []).map((byte) => Number.parseInt(byte, 2)));
+  const counter = Buffer.alloc(8);
+  counter.writeBigUInt64BE(BigInt(Math.floor(Date.now() / 30_000)));
+  const digest = createHmac("sha1", key).update(counter).digest();
+  const offset = (digest[digest.length - 1] ?? 0) & 15;
+  return String((digest.readUInt32BE(offset) & 0x7fffffff) % 1_000_000).padStart(6, "0");
+}
+
 type Failed = { ok: false; error: { code: string; message: string; fieldErrors?: Record<string, string[]> } };
 const failure = (outcome: { result: unknown }) => outcome.result as Failed;
 
@@ -292,6 +306,81 @@ describe("sign-in actions", () => {
     expect(failure(await run(signin.verifyTwoFactorAction, { code: "123456" })).error.code).toMatch(/unauthenticated|invalid_input/);
   });
 
+  /**
+   * How many times the action looked the session up after `call` had run. Better Auth is not
+   * running inside Next.js here, so the cookies it sets never reach the jar above; what can be
+   * checked is the cause of the bug rather than the cookie itself.
+   */
+  const lookUpsAfter = (lookUp: { mock: { invocationCallOrder: number[] } }, call: { mock: { invocationCallOrder: number[] } }): number => {
+    const last = Math.max(...call.mock.invocationCallOrder);
+    return lookUp.mock.invocationCallOrder.filter((order) => order > last).length;
+  };
+
+  // Regression: the request still carries the cookie the browser sent. If the action looks the
+  // session up again after signing in, Better Auth finds that old cookie dead and clears the
+  // session cookie, which wipes out the one it has just set: the person lands on their first page
+  // signed out. Seen in a browser for a learner whose sessions a parent had ended, and for every
+  // member of staff finishing first-time two-step set-up.
+  it("does not look the session up again once a sign-in has replaced the cookie the browser sent", async () => {
+    const { user: learner } = await createLearner({ username: "pixel_wren_77", password: TEST_PASSWORD });
+    await actAs("username", "pixel_wren_77");
+    await db.delete(session); // signed out everywhere, as after a parent resets the password
+    const api = getAuth().api;
+    const getSession = vi.spyOn(api, "getSession");
+    const signInUsername = vi.spyOn(api, "signInUsername");
+    try {
+      const outcome = await run(signin.signInLearnerAction, { username: "pixel_wren_77", password: TEST_PASSWORD });
+      expect(outcome.redirect).toBe("/onboarding");
+      expect(signInUsername).toHaveBeenCalledTimes(1);
+      expect(lookUpsAfter(getSession, signInUsername)).toBe(0);
+      expect(await db.select().from(session).where(eq(session.userId, learner.id))).toHaveLength(1);
+    } finally {
+      getSession.mockRestore();
+      signInUsername.mockRestore();
+    }
+  });
+
+  it("first-time two-step set-up ends with one verified session, and does not look the replaced one up", async () => {
+    const staff = await createStaff({ email: "sam@example.test", password: TEST_PASSWORD });
+    await actAs("email", "sam@example.test");
+    const start = await run(signin.startTwoFactorSetupAction, { password: TEST_PASSWORD });
+    const { secret } = (start.result as { ok: true; data: { secret: string } }).data;
+    const api = getAuth().api;
+    const getSession = vi.spyOn(api, "getSession");
+    const verifyTOTP = vi.spyOn(api, "verifyTOTP");
+    try {
+      const outcome = await run(signin.confirmTwoFactorSetupAction, { code: totpNow(secret), next: "/studio/review" });
+      expect(outcome.redirect).toBe("/studio/review");
+      expect(verifyTOTP).toHaveBeenCalledTimes(1);
+      expect(lookUpsAfter(getSession, verifyTOTP)).toBe(0);
+    } finally {
+      getSession.mockRestore();
+      verifyTOTP.mockRestore();
+    }
+    // The password-only session was replaced by a verified one, not kept alongside it.
+    const rows = await db.select({ twoFactorVerified: session.twoFactorVerified }).from(session).where(eq(session.userId, staff.user.id));
+    expect(rows).toEqual([{ twoFactorVerified: true }]);
+    expect((await db.select({ on: user.twoFactorEnabled }).from(user).where(eq(user.id, staff.user.id)))[0]?.on).toBe(true);
+  });
+
+  it("joining with a code on a device where someone else is signed in does not look their ended session up", async () => {
+    const { user: parent, family } = await createParent({ email: "priya@example.test", password: TEST_PASSWORD });
+    const added = await addChild(testCtx({ type: "parent", userId: parent.id, familyId: family.id, status: "active" }), { nickname: "Maya", username: "brave_otter_314", birthMonth: 1, birthYear: Number(bornYearsAgo(14).birthYear) });
+    await actAs("email", "priya@example.test"); // the parent is still signed in on the family laptop
+    const api = getAuth().api;
+    const getSession = vi.spyOn(api, "getSession");
+    const signInUsername = vi.spyOn(api, "signInUsername");
+    try {
+      const outcome = await run(join.redeemInviteAction, { code: added.invite?.formatted ?? "", username: "brave_otter_314", password: "plum-tractor-violin-42" });
+      expect(outcome.redirect).toBe("/home"); // held for consent, so home explains the pause
+      expect(signInUsername).toHaveBeenCalledTimes(1);
+      expect(lookUpsAfter(getSession, signInUsername)).toBe(0);
+    } finally {
+      getSession.mockRestore();
+      signInUsername.mockRestore();
+    }
+  });
+
   it("the magic-link and reset forms give the same answer whether or not the address has an account", async () => {
     await createParent({ email: "priya@example.test", password: TEST_PASSWORD });
     const known = await run(signin.sendMagicLinkAction, { email: "priya@example.test" });
@@ -408,6 +497,41 @@ describe("parent actions", () => {
     const outcome = failure(await run(children.saveConsentsAction, { learnerId: added.learnerId, consentKeys: "ai_processing", "consent.ai_processing": "on" }));
     expect(outcome.error.code).toBe("forbidden");
     expect(failure(await run(children.saveConsentsAction, { learnerId: "not-a-uuid", consentKeys: "" })).error.code).toBe("invalid_input");
+  });
+});
+
+describe("parent pages", () => {
+  /** Where a page helper redirected to, or null when it let the visitor in. */
+  async function redirectOf(fn: () => Promise<unknown>): Promise<string | null> {
+    try {
+      await fn();
+      return null;
+    } catch (error) {
+      const digest = (error as { digest?: string }).digest ?? "";
+      if (digest.startsWith("NEXT_REDIRECT")) return digest.split(";")[2] ?? "";
+      throw error;
+    }
+  }
+
+  // Regression: the pages used `requireParent()`, which throws `forbidden`. Next.js renders a page
+  // alongside its layout, so for a learner that error raced the layout's redirect and was logged
+  // as a server error on every visit.
+  it("send anyone who is not a parent away by redirect, never by throwing an error", async () => {
+    const { requireParentPage } = await import("@/app/(auth)/_lib/after-sign-in");
+    expect(await redirectOf(requireParentPage)).toBe("/signin?as=parent");
+
+    await createLearner({ username: "pixel_wren_77", password: TEST_PASSWORD });
+    await actAs("username", "pixel_wren_77");
+    expect(await redirectOf(requireParentPage)).toBe("/onboarding");
+
+    await createStaff({ email: "sam@example.test", password: TEST_PASSWORD });
+    await actAs("email", "sam@example.test");
+    expect(await redirectOf(requireParentPage)).toMatch(/^\/(studio|signin\/two-factor\/setup)$/);
+
+    const { user: parent, family } = await createParent({ email: "priya@example.test", password: TEST_PASSWORD });
+    await actAs("email", "priya@example.test");
+    const ctx = await requireParentPage();
+    expect(ctx.actor).toMatchObject({ type: "parent", userId: parent.id, familyId: family.id });
   });
 });
 

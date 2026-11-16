@@ -10,7 +10,7 @@ import { rateLimit } from "@/server/ratelimit";
 import { safeNextPath } from "@/lib/protected-paths";
 import { TWO_FACTOR_PATH, passwordFailure, signInFailure, twoFactorFailure } from "@/server/services/sign-in";
 import { AFTER_EMAIL_LINK_PATH } from "@/server/services/signup";
-import { endSession, finishSignIn, requestHeaders } from "../_lib/after-sign-in";
+import { endSession, finishSignIn, requestHeaders, type SignInBase } from "../_lib/after-sign-in";
 import { raw, text } from "../_lib/form";
 
 /** Per caller, on top of the per-account lock in `auth/lockout.ts`. Server-side calls skip Better Auth's own HTTP limiter. */
@@ -21,12 +21,12 @@ const withNext = (path: string, next: string) => (next ? `${path}?next=${encodeU
 type SignedIn = { user?: { id?: string } | null; twoFactorRedirect?: boolean };
 
 /** After the password is accepted: staff with two-step go to the code page, everyone else to their home. */
-async function afterPassword(result: unknown, next: string): Promise<never> {
+async function afterPassword(ctx: SignInBase, result: unknown, next: string): Promise<never> {
   const outcome = (result ?? {}) as SignedIn;
   if (outcome.twoFactorRedirect === true) redirect(withNext(TWO_FACTOR_PATH, next));
   const userId = outcome.user?.id;
   if (!userId) throw new AppError("internal", "We couldn't sign you in just then. Nothing is wrong with your account. Please try again.");
-  return finishSignIn(userId, next);
+  return finishSignIn(ctx, userId, next);
 }
 
 const learnerSchema = z.object({
@@ -47,7 +47,7 @@ export async function signInLearnerAction(_prev: ActionState<never>, formData: F
     } catch (error) {
       throw signInFailure(error, "username");
     }
-    return afterPassword(result, next);
+    return afterPassword(ctx, result, next);
   });
 }
 
@@ -70,7 +70,7 @@ export async function signInEmailAction(_prev: ActionState<never>, formData: For
     } catch (error) {
       throw signInFailure(error, "email");
     }
-    return afterPassword(result, next);
+    return afterPassword(ctx, result, next);
   });
 }
 
@@ -113,7 +113,7 @@ export async function verifyTwoFactorAction(_prev: ActionState<never>, formData:
     }
     const userId = (result as SignedIn | null)?.user?.id;
     if (!userId) throw new AppError("internal", "We couldn't finish signing you in. Go back to sign in and start again.");
-    return finishSignIn(userId, next, { twoFactorVerified: true });
+    return finishSignIn(ctx, userId, next, { twoFactorVerified: true });
   });
 }
 
@@ -158,7 +158,7 @@ export async function confirmTwoFactorSetupAction(_prev: ActionState<never>, for
     } catch (error) {
       throw twoFactorFailure(error);
     }
-    return finishSignIn(userId, next, { twoFactorVerified: true });
+    return finishSignIn(ctx, userId, next, { twoFactorVerified: true });
   });
 }
 

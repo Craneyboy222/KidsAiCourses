@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { SignOutButton } from "@/app/(auth)/_components/sign-out-button";
+import { requireParentPage } from "@/app/(auth)/_lib/after-sign-in";
 import { ParentShell, type ParentChildLink } from "@/components/layout";
 import { Callout } from "@/components/ui";
 import { assertCan } from "@/server/authz";
-import { getCtx } from "@/server/context";
 import { logWarn } from "@/server/log";
 import { countPendingApprovals } from "@/server/services/approvals";
 import { missingRequiredConsents } from "@/server/services/consent";
 import { listChildren } from "@/server/services/family";
-import { resolveAfterSignIn } from "@/server/services/sign-in";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -21,9 +19,7 @@ export const metadata: Metadata = { robots: { index: false, follow: false } };
  * else is sent to sign in, or to their own home.
  */
 export default async function ParentLayout({ children }: { children: ReactNode }) {
-  const ctx = await getCtx();
-  if (ctx.actor.type === "anonymous" || ctx.actor.type === "system") redirect("/signin?as=parent");
-  if (ctx.actor.type !== "parent") redirect((await resolveAfterSignIn(ctx)).path);
+  const ctx = await requireParentPage();
   const { familyId } = ctx.actor;
   assertCan(ctx.actor, "family.read", { familyId });
 

@@ -6,6 +6,7 @@ Spec to read in full: Section 3.7, the upgrade flow in Section 4, Section 13 bil
 Services `entitlements.ts`, `unlock-requests.ts` (contracts) plus `billing.ts`, `plans.ts`, `promo.ts`. `src/server/stripe/**` (a `StripeDriver` interface with the real `stripe` SDK implementation and a `fake` driver that behaves the same way for development and tests). `src/app/api/webhooks/stripe/route.ts`. Pages `src/app/(parent)/parent/billing/**`. A read-only `listPublicPlans(ctx)` for the marketing pricing page. Tests in `tests/unit/payments`, `tests/integration/payments`.
 
 ## Calls
+The accounts slice already depends on `getEntitlementForFamily` for seat limits (add child, approve teen): implement the contracts first. Use `requireParentPage()` from `src/app/(auth)/_lib/after-sign-in.ts` in parent pages.
 `recordAgeAssurance`, `grantCredits`, `listChildren`, `listParentUserIds`, notifications, email, audit.
 
 ## Requirements

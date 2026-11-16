@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirectIfAgeGated } from "@/app/(auth)/_lib/age-gate";
 import { Breadcrumbs, Callout, PageHeader } from "@/components/ui";
 import { londonYearMonth } from "@/lib/dates";
-import { requireParent } from "@/server/context";
+import { requireParentPage } from "@/app/(auth)/_lib/after-sign-in";
 import { tMany } from "@/server/copy";
 import { logWarn } from "@/server/log";
 import { getEntitlementForFamily } from "@/server/services/entitlements";
@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Add a child" };
 /** Adds a child profile: nickname, birth month and year, username. Never a child's email, real name, photo, school or location. */
 export default async function AddChildPage() {
   await redirectIfAgeGated();
-  const ctx = await requireParent();
+  const ctx = await requireParentPage();
   const header = (
     <PageHeader
       title="Add a child"
