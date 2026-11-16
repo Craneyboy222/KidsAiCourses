@@ -1,0 +1,955 @@
+{
+  "slug": "shoot-a-promo-advert-in-an-afternoon",
+  "title": "Shoot a Promo Advert in an Afternoon",
+  "tagline": "Script, storyboard, shoot and edit a 30-second advert for a made-up brand. No actors needed: the product is the star.",
+  "category": "video-film",
+  "interests": [
+    "film",
+    "business",
+    "design",
+    "social"
+  ],
+  "difficulty": "starter",
+  "pathways": [
+    "ks3",
+    "ks4",
+    "sixth_form"
+  ],
+  "minAge": 13,
+  "estimatedMinutes": 133,
+  "sessions": 3,
+  "isFree": true,
+  "careers": [
+    "advertising",
+    "film-production",
+    "marketing"
+  ],
+  "skills": [
+    "scriptwriting",
+    "storyboarding",
+    "product-shots",
+    "video-editing",
+    "captions-and-sound"
+  ],
+  "trailer": {
+    "assetId": "vid-promo-advert-trailer",
+    "posterAssetId": "img-promo-advert-trailer-poster",
+    "captionsAssetId": "vtt-promo-advert-trailer"
+  },
+  "whatYouMake": "A 30-second advert for a product, club or cause with a brand you invented. You write a 60-word script, storyboard five shots in Canva, film objects on a desk (or build the whole thing from graphics), then cut it together in CapCut with captions, rights-cleared music and an end card. Nobody appears in it: the product, the text and the edit do the work. You submit the finished video as a file or a view-only link.",
+  "ethicsNote": "Adverts persuade, so we test yours for honesty: can you back up every claim, is anything made to look like a real review or a real person's opinion, and would a viewer feel misled if they knew how it was made?",
+  "safeguardingSensitive": false,
+  "watchOut": {
+    "type": "data",
+    "note": "Nobody appears in this advert, and nothing personal goes in it: no real names, addresses, phone numbers, school names or social handles. The brand, prices and web address are made up, and nothing is really for sale. Keep the finished video private or view-only."
+  },
+  "toolRequirements": [
+    {
+      "toolSlug": "canva",
+      "purpose": "Design the brand, storyboard, title cards and end card",
+      "required": true
+    },
+    {
+      "toolSlug": "capcut",
+      "purpose": "Edit the shots together with captions and music, then export",
+      "required": true
+    }
+  ],
+  "setupGuides": [
+    {
+      "id": "guide-canva",
+      "toolSlug": "canva",
+      "title": "Set up Canva (free plan)",
+      "lastVerifiedAt": "2026-11-16",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account, with a parent's OK",
+          "order": 1,
+          "kind": "create_account",
+          "body": "Sign up with a parent or carer nearby: under-18s should have an adult agree to a tool's terms with them, and Canva's own terms set the exact age rules.\n\n1. Open the Canva link from this course and choose **Sign up**.\n2. Choose **Continue with email** (rather than a social media account) and enter an email address you can open today.\n3. If Canva asks what you will use it for, choose **Personal** or **Student**.\n4. For your display name, use a first name or a nickname, not your full name.\n\nIf your school already gives you Canva through a school account, ask a parent or teacher before using it for a project outside school."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "Canva emails you a short code. Type it into the sign-up screen to finish. The code is for that screen only: never share it or paste it anywhere else.\n\nNo email? Check spam, wait a couple of minutes, then choose **Resend code**."
+        },
+        {
+          "id": "g3",
+          "title": "Stay on Canva Free",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "Canva will offer a free trial of its paid plan. Close the offer or choose **Maybe later**. You do not need to enter a card for anything in this course.\n\nPaid extras are marked with a small crown. In this course, stick to fonts, graphics and templates without the crown. If a download screen ever asks you to pay, a paid element has crept into your design: find the item with the crown and swap it for a free one."
+        },
+        {
+          "id": "g4",
+          "title": "Keep your designs private",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "Canva designs are private until you share them. Keep it that way.\n\n1. In a design, press **Share**. Check that link access says **Only you can access**. Leave it there until this course tells you to make a view-only link.\n2. Open **Settings** (the cog) and look through the privacy and message options: switch off marketing emails, and switch off any option that lets your designs be used to train AI.\n3. Do not connect social media accounts, and do not use any button that publishes a design straight to a social platform or to a public website.\n\nKeep real names, addresses, phone numbers and school names out of anything you design."
+        },
+        {
+          "id": "g5",
+          "title": "Download or share a view-only link",
+          "order": 5,
+          "kind": "export",
+          "body": "To hand work in you have two safe options.\n\n**Download:** press **Share → Download**, choose the file type the step asks for, then **Download**.\n\n**View-only link:** press **Share**, change link access to **Anyone with the link**, set the role to **Can view**, then **Copy link**. Only people you give the link to can open it. Do not choose a public website or social option."
+        }
+      ]
+    },
+    {
+      "id": "guide-capcut",
+      "toolSlug": "capcut",
+      "title": "Set up CapCut (free plan)",
+      "lastVerifiedAt": "2026-11-16",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account, with a parent's OK",
+          "order": 1,
+          "kind": "create_account",
+          "body": "CapCut's terms say it is only for people aged 13 and over, and that under-18s need a parent or guardian's consent. Do this step with a parent nearby.\n\n1. Open the CapCut link from this course in Chrome or Edge on a laptop or Chromebook and choose **Sign up**.\n2. Choose **Continue with email** rather than a social media account, so nothing is linked to a social profile.\n3. Enter an email address you can open today, create a password you do not use anywhere else, and give your real date of birth.\n4. Use a nickname, not your full name.\n\nThe course uses CapCut in the browser. The phone app works too, but the buttons sit in different places."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "CapCut emails you a code. Type it into the sign-up screen. Never paste that code anywhere else or read it out to anyone.\n\nNo email after two minutes? Check spam, then choose **Resend**."
+        },
+        {
+          "id": "g3",
+          "title": "Stay on the free plan",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "CapCut shows offers for its paid plans and puts a **Pro** badge on paid effects, fonts and templates. Skip every offer: this course only uses free tools, and you never need to enter a card.\n\nBefore you export, look for a warning that your project uses Pro features. If you see one, remove the items with the Pro badge. Anything that costs money needs a parent, and nothing here does."
+        },
+        {
+          "id": "g4",
+          "title": "Keep your project to yourself",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "1. When you finish a video, choose **Download** (or **Export**), not a button that posts it to TikTok, YouTube or anywhere else.\n2. Do not publish your project as a template.\n3. If the browser asks to use your camera or microphone, choose **Block**. In this course you bring in files you have already made; you do not record inside CapCut.\n4. In your account settings, switch off marketing emails and any option that shares your activity.\n\nOnly bring in files you made or that this course gave you."
+        },
+        {
+          "id": "g5",
+          "title": "Export your video",
+          "order": 5,
+          "kind": "export",
+          "body": "Press **Export**, choose **Download**, set the resolution to 1080p (or 720p on a slow connection) and the format to MP4. The file lands in your Downloads folder. Watch it once all the way through before you submit it."
+        }
+      ]
+    }
+  ],
+  "projectBrief": {
+    "scenario": "It is 1 pm on a Saturday. A small brand needs a 30-second advert by 5 pm, and you are the whole agency. Pick your client: a product you invent (a hot sauce, a trainer-cleaning kit, a phone stand), a club (chess, climbing, coding) or a cause (a litter pick, a book swap). There is no budget and no cast. You have a phone or webcam, a desk by a window, an everyday object to stand in for the product, and two free tools.",
+    "deliverables": [
+      "A made-up brand: name, simple logo and two brand colours",
+      "A script of about 60 words in five beats: hook, problem, product, proof, ask",
+      "A five-frame storyboard made in Canva",
+      "A finished advert between 25 and 35 seconds long, in one shape throughout (wide 16:9 or tall 9:16)",
+      "At least four different shots of objects, graphics or text, with a hook in the first three seconds",
+      "Captions on screen for every spoken or key line, so it works with the sound off",
+      "An end card with the brand, a pretend call to action, and a line saying which parts (if any) used AI"
+    ],
+    "constraints": [
+      "No people in any shot: no faces, hands, reflections or voices of other people. The product, objects, text and graphics carry the advert",
+      "The brand is your own invention. No copied logos, slogans, characters or packaging from real brands; turn or cover any real label on the object you film",
+      "Music is one of the course tracks or something you made yourself. No chart music",
+      "Every claim is one you could back up. No fake reviews, fake statistics or made-up quotes",
+      "No real prices, payments, addresses, phone numbers, school names or social handles. Use a made-up web address ending in .example",
+      "The export stays private: a downloaded file or a view-only link, not a public post"
+    ],
+    "stretchGoals": [
+      "A stop-motion shot: move the product a little between twelve still photos",
+      "A second cut in the other shape (tall if you made wide, wide if you made tall)",
+      "A six-second version that still makes sense",
+      "Sound design: one well-placed sound effect of your own making, such as a lid popping or a zip"
+    ],
+    "artefactTypes": [
+      "video",
+      "external_link"
+    ],
+    "evidence": [
+      "link",
+      "video"
+    ]
+  },
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Brand and brief",
+      "summary": "Set up Canva, invent your brand and make a title card in your first sitting.",
+      "order": 1,
+      "lessons": [
+        {
+          "id": "m1l1",
+          "title": "First win",
+          "order": 1,
+          "estimatedMinutes": 16,
+          "steps": [
+            {
+              "id": "s1",
+              "type": "video",
+              "title": "A whole advert in 30 seconds",
+              "order": 1,
+              "estimatedMinutes": 2,
+              "assetIds": [
+                "vid-promo-advert-trailer",
+                "vtt-promo-advert-trailer",
+                "tx-promo-advert-trailer"
+              ],
+              "completion": {
+                "rule": "view",
+                "threshold": 0.8
+              },
+              "hints": []
+            },
+            {
+              "id": "s2",
+              "type": "setup_guide",
+              "title": "Set up Canva on the free plan",
+              "order": 2,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "canva",
+                "guideId": "guide-canva",
+                "throughStepIds": [
+                  "g1",
+                  "g2",
+                  "g3",
+                  "g4"
+                ]
+              },
+              "completion": {
+                "rule": "setup_acknowledged"
+              },
+              "coachContext": "Talk them through the setup step they are on, one click at a time. Never ask for a password, a verification code or card details, and stop them if they start to type one. If the screen they describe does not match the guide, say the tool may have changed and ask them to use Report so the guide can be updated.",
+              "hints": [
+                "Sign up with a parent nearby and use email rather than a social account.",
+                "Find the code in your inbox (check spam) and type it into the sign-up screen.",
+                "Skip the paid trial, avoid anything with a crown, and leave sharing on Only you can access."
+              ]
+            },
+            {
+              "id": "s3",
+              "type": "external_task",
+              "title": "First win: name your brand and make a title card",
+              "order": 3,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Decide what you are advertising: a product, a club or a cause. Invent a brand name. In Canva, create a new video design, choose two colours, and make a title card with the brand name in big type and one simple shape or graphic. Rename the design with your brand name.",
+                "clicks": [
+                  "Create a design",
+                  "Choose Video (wide) or Mobile Video (tall)",
+                  "Add a heading and type your brand name",
+                  "Set a background colour and a second colour for the text",
+                  "Add one shape or graphic from Elements",
+                  "Rename the design"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Quick win: a name and a card, not a perfect logo. The name must be invented. If they pick a real brand or something close to one, ask them to change it. Make sure they choose wide or tall now and stick with it.",
+              "hints": [
+                "Short names read fastest on screen. Try two words at most.",
+                "Pick one dark colour and one light one so the text stands out from the background.",
+                "Unsure between wide and tall? Think about where an advert like this would be watched."
+              ]
+            },
+            {
+              "id": "s4",
+              "type": "checkpoint",
+              "title": "Brand on screen",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "You have a client, a name and a title card. That is the first second of your advert made.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s5",
+              "type": "read",
+              "title": "The brief: 30 seconds, no cast",
+              "order": 5,
+              "estimatedMinutes": 3,
+              "body": "**Deadline:** 5 pm. **Length:** 30 seconds. **Cast:** none.\n\nProfessional product adverts often have nobody in them at all. Think of a trainer turning slowly on a plinth, a drink being poured, bold words landing on the beat. That is the style you are working in: **the product is the star**.\n\nThe rules of the set:\n\n- Nobody in shot: no faces, no hands, no reflections in shiny things.\n- Your own brand: no real logos or packaging.\n- Honest claims only.\n- Nothing is really for sale.\n\nNo camera? You can build every shot from graphics and text in Canva instead. The edit matters more than the kit.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Plan it",
+      "summary": "Write a 60-word script, check it for honesty and storyboard five shots.",
+      "order": 2,
+      "lessons": [
+        {
+          "id": "m2l1",
+          "title": "Script and storyboard",
+          "order": 1,
+          "estimatedMinutes": 27,
+          "steps": [
+            {
+              "id": "s6",
+              "type": "read",
+              "title": "Five beats in 60 words",
+              "order": 1,
+              "estimatedMinutes": 4,
+              "body": "Thirty seconds is about 60 spoken words, or fewer if you want room for music. Every good short advert moves through five beats.\n\n1. **Hook** (0 to 3 seconds). A picture or line that stops the scroll.\n2. **Problem** (3 to 9). The annoyance your viewer recognises.\n3. **Product** (9 to 18). What it is and the one thing it does.\n4. **Proof** (18 to 25). One reason to believe you. Showing beats telling.\n5. **Ask** (25 to 30). One thing to do next.\n\nWrite for the screen. You do not need a voice-over at all: big captions and music can carry the whole advert. If you do want a voice, record your own, sound only.\n\nDownload the storyboard template below if you would like to sketch on paper first.",
+              "assetIds": [
+                "tpl-promo-advert-storyboard"
+              ],
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s7",
+              "type": "external_task",
+              "title": "Write the script and storyboard five frames",
+              "order": 2,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "canva",
+                "task": "In your Canva design, add four more pages after your title card so that you have one page per beat. On each page write the line for that beat (as a caption, not a paragraph) and add a rough picture of the shot using shapes and graphics: what is in frame, how close, and what moves. Count your words and trim to about 60. This is a plan, so rough is fine.",
+                "clicks": [
+                  "Add four pages",
+                  "Label the pages Hook, Problem, Product, Proof and Ask",
+                  "Type one short line per page",
+                  "Rough out each shot with shapes and graphics",
+                  "Count the words and trim"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Watch for scripts that are a list of adjectives, and for five beats that are really one. Ask what the viewer sees in each frame. If their idea needs a person in shot, help them find the object-only version: the product, a prop, text. Do not write their lines.",
+              "hints": [
+                "Say each line aloud with a timer. If it takes longer than its beat, cut words.",
+                "For each frame, decide what moves: the object, the camera or the text. One is enough.",
+                "Stuck on Proof? Think of something you could demonstrate on a desk in five seconds."
+              ]
+            },
+            {
+              "id": "s8",
+              "type": "ethics_checkpoint",
+              "title": "Can you back that up?",
+              "order": 3,
+              "estimatedMinutes": 6,
+              "body": "Adverts are allowed to be enthusiastic. They are not allowed to mislead. In the UK, real adverts have to be legal, decent, honest and truthful, and broken rules get adverts taken down.\n\nGo through your script line by line. For each claim, ask:\n\n- **Could I prove it?** \"Cleans in two minutes\" is fine if you timed it.\n- **Is it clearly an opinion?** \"Our favourite\" is fine. \"The UK's favourite\" is a claim you cannot support.\n- **Is anyone invented?** Made-up reviews, made-up experts and made-up statistics are there to trick people.\n- **Would I feel misled** if I found out how this was made? That includes AI: if a tool wrote or made part of it, say so on the end card.",
+              "config": {
+                "prompt": "Pick the boldest claim in your script. Write it down, then write how you could back it up, or how you will reword it so that it is honest."
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Do not rule on their claim for them; ask how they would prove it. If the advert is for a cause, check it does not use guilt or scare tactics on viewers. If they plan a fake review or a fake expert, be clear that it cannot go in, and help them find a real demonstration instead.",
+              "hints": []
+            },
+            {
+              "id": "s9",
+              "type": "quiz",
+              "title": "Quick check: plan before you shoot",
+              "order": 4,
+              "estimatedMinutes": 4,
+              "config": {
+                "quizId": "q-promo-advert-1"
+              },
+              "completion": {
+                "rule": "quiz_pass",
+                "threshold": 0.75
+              },
+              "hints": []
+            },
+            {
+              "id": "s10",
+              "type": "checkpoint",
+              "title": "Plan locked",
+              "order": 5,
+              "estimatedMinutes": 1,
+              "body": "Five frames, about 60 words, and nothing in it you could not defend. Time to shoot.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Shoot and rough cut",
+      "summary": "Film your product shots with nobody in frame, then assemble them in CapCut.",
+      "order": 3,
+      "lessons": [
+        {
+          "id": "m3l1",
+          "title": "Shoot",
+          "order": 1,
+          "estimatedMinutes": 25,
+          "steps": [
+            {
+              "id": "s11",
+              "type": "read",
+              "title": "Make an object look good",
+              "order": 1,
+              "estimatedMinutes": 4,
+              "body": "You need three things: light, a steady camera and a clean frame.\n\n**Light.** Put the product on a desk next to a window, with the window to one side. Turn off the ceiling light if it makes things look yellow. A sheet of white paper opposite the window bounces light back into the shadows.\n\n**Steady.** Lean the phone against a stack of books or a mug. Start recording, let go, and count to five. Shaky footage is the fastest way to look amateur.\n\n**Clean frame.** A plain background: a sheet of card, a tea towel, a tidy wall. Check the edges of the frame before each shot for clutter, post with an address on, and anything shiny. Shiny things show reflections, and reflections can show the person filming, so angle them away.\n\n**Movement without a cast.** Turn the object between shots, slide a sheet of paper it is sitting on, roll something into frame, or move the camera slowly towards it. If something has to be nudged, nudge it, let go, and cut the nudge out later.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s12",
+              "type": "read",
+              "title": "Shoot your shots",
+              "order": 2,
+              "estimatedMinutes": 20,
+              "body": "Work down your storyboard and film each shot three times: wide, close and extra close. Each take only needs to be five to eight seconds long.\n\nShot list checklist:\n\n- Hook shot\n- Problem shot\n- Product shot (your hero shot: take the most care here)\n- Proof shot (the demonstration)\n- One spare: a texture, a pour, a detail\n\nBefore you move on, play each clip back and check three things: is it steady, is it in focus, and is the frame free of people, reflections and real brand labels? Reshoot anything that fails. Then get the clips onto the computer you will edit on.\n\n**No camera?** Skip the filming. In your Canva design, build each shot as a page with graphics, shapes and big text, use **Animate** to add movement, and download the pages as an MP4. Those are your clips.",
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "They are filming objects only. If they describe a shot with a person in it (a hand holding the product, someone reacting), help them find the object-only version. Remind them to check reflections and labels. If they have no camera, the Canva-only route is equally valid.",
+              "hints": [
+                "Three takes of each shot means you will have a choice in the edit. One take means you are stuck with it.",
+                "If the product has a real label, turn it away or cover it with a label you printed or drew.",
+                "Clips too dark? Move closer to the window before you reach for a filter."
+              ]
+            },
+            {
+              "id": "s13",
+              "type": "checkpoint",
+              "title": "Footage in the can",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "body": "You have your clips and nobody is in them. The advert is now somewhere inside that footage. Editing is finding it.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        },
+        {
+          "id": "m3l2",
+          "title": "Rough cut",
+          "order": 2,
+          "estimatedMinutes": 18,
+          "steps": [
+            {
+              "id": "s14",
+              "type": "setup_guide",
+              "title": "Set up CapCut on the free plan",
+              "order": 1,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "capcut",
+                "guideId": "guide-capcut",
+                "throughStepIds": [
+                  "g1",
+                  "g2",
+                  "g3",
+                  "g4"
+                ]
+              },
+              "completion": {
+                "rule": "setup_acknowledged"
+              },
+              "coachContext": "Talk them through the setup step they are on, one click at a time. Never ask for a password, a verification code or card details, and stop them if they start to type one. If the screen they describe does not match the guide, say the tool may have changed and ask them to use Report so the guide can be updated.",
+              "hints": [
+                "Sign up with a parent nearby and use email rather than a social account.",
+                "Type the emailed code into the sign-up screen and nowhere else.",
+                "Skip every Pro offer and block the camera and microphone request: you only bring in files."
+              ]
+            },
+            {
+              "id": "s15",
+              "type": "external_task",
+              "title": "Import and build a rough cut",
+              "order": 2,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Create a new project in the same shape as your Canva design. Upload your clips and your title card. Drag the best take of each shot onto the timeline in storyboard order: hook, problem, product, proof, ask. Do not trim carefully yet. Play it through once and check that the story makes sense with the sound off.",
+                "clicks": [
+                  "Create new project and choose the ratio",
+                  "Media, then Upload",
+                  "Select your clips",
+                  "Drag the best take of each shot onto the timeline in order",
+                  "Play it through"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "A rough cut is meant to be rough: order first, polish later. If it runs to a minute, that is normal at this stage. Check the project shape matches their footage. If an upload shows a person, a reflection or a real logo, they should leave that clip out.",
+              "hints": [
+                "Order first. Do not touch trimming or effects until the five beats are in a row.",
+                "Watch it with the sound off. If you cannot follow the story, a shot is missing or in the wrong place.",
+                "Black bars at the sides? Your project shape and your footage shape do not match. Change the project ratio."
+              ]
+            },
+            {
+              "id": "s16",
+              "type": "checkpoint",
+              "title": "Rough cut assembled",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "body": "It is too long and a bit clunky, and it tells the story. That is exactly where a rough cut should be.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "title": "Cut, caption and ship",
+      "summary": "Trim to 30 seconds, add captions, music and an end card, then export.",
+      "order": 4,
+      "lessons": [
+        {
+          "id": "m4l1",
+          "title": "Fine cut",
+          "order": 1,
+          "estimatedMinutes": 31,
+          "steps": [
+            {
+              "id": "s17",
+              "type": "external_task",
+              "title": "Trim it to 30 seconds",
+              "order": 1,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Cut every shot down to the part that matters. Use Split to cut a clip at the playhead, delete what you do not need, and close the gaps. Aim for the hook to land inside the first three seconds and the whole advert to finish between 25 and 35 seconds. No shot should stay on screen longer than about six seconds unless something is happening in it.",
+                "clicks": [
+                  "Select a clip on the timeline",
+                  "Move the playhead to where the action starts",
+                  "Split, then delete the part before it",
+                  "Repeat at the end of the action",
+                  "Check the total length"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "The usual problem is being too attached to footage. Ask which second of each shot actually matters. If they are over 35 seconds, the product and proof beats are normally where the fat is. Do not trim it for them; ask what the viewer would miss.",
+              "hints": [
+                "Start each shot as late as you can and end it as early as you can.",
+                "If a shot only sets up the next one, try the advert without it.",
+                "Count the beats again: five beats in 30 seconds is about six seconds each, and the hook gets fewer."
+              ]
+            },
+            {
+              "id": "s18",
+              "type": "external_task",
+              "title": "Captions and sound",
+              "order": 2,
+              "estimatedMinutes": 10,
+              "body": "Two short tracks made for this course are attached to this step. You are free to use either in your advert.",
+              "assetIds": [
+                "aud-promo-advert-track-upbeat",
+                "aud-promo-advert-track-calm"
+              ],
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Add your script as on-screen captions, one short line at a time, each on screen long enough to read twice. If your CapCut offers free auto captions and you recorded a voice-over, you can use them, then correct every mistake by hand. Download one of the two course tracks from this step, add it to the timeline, trim it to length and turn it down so it supports the advert instead of fighting it. Fade the music out under the end card.",
+                "clicks": [
+                  "Text, then add a caption for each line",
+                  "Set each caption's length on the timeline",
+                  "Upload the course track you chose",
+                  "Drag it to the audio track and trim it",
+                  "Lower the volume and add a fade out"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Captions should be big, short and high contrast. Music must be a course track or something they made: not chart music, and not a track from a library whose licence they have not read. If auto captions carry a Pro badge, typing them by hand is the free route. Any voice-over is their own voice, sound only.",
+              "hints": [
+                "Read each caption aloud twice at normal speed. That is how long it should stay on screen.",
+                "White text with a dark outline or a solid box behind it is readable over almost anything.",
+                "If you can hear the music more than you notice the captions, it is too loud."
+              ]
+            },
+            {
+              "id": "s19",
+              "type": "external_task",
+              "title": "Design the end card",
+              "order": 3,
+              "estimatedMinutes": 8,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Back in Canva, add a final page for your end card. It needs your brand name and logo, one call to action (for example \"Find us at the summer fair\" or a made-up web address ending in .example), and a small honesty line that says which parts used AI, or that none did. Use your two brand colours. Download that page as an image or a short MP4 and add it to the end of your CapCut timeline for three to four seconds.",
+                "clicks": [
+                  "Open your Canva design",
+                  "Add a page at the end",
+                  "Add brand name, call to action and honesty line",
+                  "Share, then Download that page",
+                  "Upload it to CapCut and place it at the end"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "One call to action, not three. Nothing real: no phone numbers, social handles, real prices or real addresses. The honesty line is required even if the answer is 'no AI used'. Auto captions count as AI.",
+              "hints": [
+                "One ask only. If the viewer has to choose between three things to do, they do none.",
+                "A made-up address ending in .example can never belong to a real website, so it is safe to show.",
+                "Auto captions count as AI. If you used them, your honesty line should say so."
+              ]
+            },
+            {
+              "id": "s20",
+              "type": "checkpoint",
+              "title": "Picture locked",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "Thirty seconds, five beats, captions, music and an end card. One job left: get it out safely.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        },
+        {
+          "id": "m4l2",
+          "title": "Export and submit",
+          "order": 2,
+          "estimatedMinutes": 16,
+          "steps": [
+            {
+              "id": "s21",
+              "type": "external_task",
+              "title": "Export and watch it back",
+              "order": 1,
+              "estimatedMinutes": 6,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Check the export panel for a warning about Pro features and remove anything it flags. Export the advert as an MP4 at 1080p and download it. Watch the downloaded file from start to finish with the sound on, then again with the sound off. Check the length, the spelling of every caption, and that nobody and no real logo appears anywhere.",
+                "clicks": [
+                  "Export",
+                  "Check for a Pro features warning",
+                  "Choose 1080p and MP4",
+                  "Download",
+                  "Watch the file twice: sound on, then sound off"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Final checks: 25 to 35 seconds, captions spelled correctly, no people, no reflections, no real brands, no personal details, music from the course or their own. They should download rather than post it anywhere. If the file is too large to upload, 720p is fine.",
+              "hints": [
+                "Watch the exported file, not the timeline. Exports sometimes cut the last second off.",
+                "Pause on every caption and read it letter by letter. Typos hide in plain sight.",
+                "Is the file huge? Export again at 720p. It will still look sharp on a phone."
+              ]
+            },
+            {
+              "id": "s22",
+              "type": "reflection",
+              "title": "What made the cut?",
+              "order": 2,
+              "estimatedMinutes": 4,
+              "config": {
+                "prompt": "Which shot or line did you cut that you liked, and why is the advert better without it?"
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "hints": []
+            },
+            {
+              "id": "s23",
+              "type": "checkpoint",
+              "title": "Ready to submit",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "body": "Agency of one, deadline met. Check your advert against the rubric and send it in.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s24",
+              "type": "submit",
+              "title": "Submit your advert",
+              "order": 4,
+              "estimatedMinutes": 5,
+              "config": {
+                "artefactTypes": [
+                  "video",
+                  "external_link"
+                ],
+                "evidence": [
+                  "link",
+                  "video"
+                ],
+                "requireRubricSelfCheck": true,
+                "evidenceHint": "Upload your advert as an MP4 file of 25 to 35 seconds, or paste a view-only or unlisted link to it. Before you submit, watch it once more and confirm it shows only objects, graphics and text. Do not upload images or video of real people, and do not submit a public post."
+              },
+              "completion": {
+                "rule": "submit"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "q-promo-advert-1",
+      "title": "Plan before you shoot",
+      "passMark": 0.75,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "order",
+          "prompt": "Put the five beats of a 30-second advert in order.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Hook: something that stops the scroll",
+              "correct": true,
+              "feedback": "First. You have about three seconds."
+            },
+            {
+              "id": "b",
+              "text": "Problem: the annoyance your viewer recognises",
+              "correct": true,
+              "feedback": "Second. Make them nod."
+            },
+            {
+              "id": "c",
+              "text": "Product: what it is and what it does",
+              "correct": true,
+              "feedback": "Third. Now they are ready to care."
+            },
+            {
+              "id": "d",
+              "text": "Proof: one reason to believe you",
+              "correct": true,
+              "feedback": "Fourth. A demonstration beats an adjective."
+            },
+            {
+              "id": "e",
+              "text": "Ask: what to do next",
+              "correct": true,
+              "feedback": "Last. One clear action, on the end card."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "single",
+          "prompt": "Which is the strongest hook for an advert about a trainer-cleaning kit?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Our company was founded with a passion for footwear care",
+              "correct": false,
+              "feedback": "That is about you, and it takes three seconds to say nothing."
+            },
+            {
+              "id": "b",
+              "text": "A muddy trainer drops onto a white table. Text: \"School photo is tomorrow.\"",
+              "correct": true,
+              "feedback": "Yes. A picture and a problem, at once, with no explaining."
+            },
+            {
+              "id": "c",
+              "text": "The logo, slowly fading in over four seconds",
+              "correct": false,
+              "feedback": "Nobody knows the brand yet, so the logo gives them no reason to stay."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "multi",
+          "prompt": "Which of these could go in your advert honestly? Choose all that apply.",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"Cleans a muddy trainer in two minutes\", after you timed it yourself",
+              "correct": true,
+              "feedback": "Fine. You tested it and can back it up."
+            },
+            {
+              "id": "b",
+              "text": "\"Rated five stars by 10,000 customers\" for a product you invented this afternoon",
+              "correct": false,
+              "feedback": "No. Those customers do not exist, so it is a fake statistic."
+            },
+            {
+              "id": "c",
+              "text": "\"Our favourite way to rescue white trainers\"",
+              "correct": true,
+              "feedback": "Fine. It is clearly an opinion, and it is yours."
+            },
+            {
+              "id": "d",
+              "text": "A quote from a made-up \"Dr Patel, shoe scientist\"",
+              "correct": false,
+              "feedback": "No. An invented expert is there to mislead."
+            }
+          ]
+        },
+        {
+          "id": "q4",
+          "kind": "spot_the_problem",
+          "prompt": "A storyboard frame says: \"Close-up of a well-known energy drink can, logo to camera, with our brand name added underneath.\" What is the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It uses a real brand's logo and packaging as if it were yours",
+              "correct": true,
+              "feedback": "Right. Use a plain object, turn the label away, or stick your own label on."
+            },
+            {
+              "id": "b",
+              "text": "Close-ups are boring",
+              "correct": false,
+              "feedback": "Close-ups are some of the best product shots. Look at what is in this one."
+            },
+            {
+              "id": "c",
+              "text": "Cans are hard to light",
+              "correct": false,
+              "feedback": "They can be shiny, but that is not the real issue here."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rubric": {
+    "criteria": [
+      {
+        "id": "r1",
+        "name": "It sells the idea",
+        "description": "Hook, clear product, one ask, inside 30 seconds",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "No clear hook or ask, or the length is well outside 25 to 35 seconds"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "All five beats are there, but the hook is slow or the ask is muddled"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Hook lands in three seconds, the product and proof are clear, and it ends on one ask inside the time limit"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "name": "Looks and sounds made on purpose",
+        "description": "Steady shots, readable captions, balanced sound",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Shaky or dark shots, missing captions, or music drowning everything"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Mostly steady and readable, with some rough cuts or captions that vanish too fast"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Clean, steady shots, captions you can read twice, music that supports the pictures, and it works with the sound off"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "name": "Your own brand",
+        "description": "An invented brand with a consistent look",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "A real brand's name, logo or packaging appears"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "An invented name, but the colours and logo change from card to card"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "An invented name, logo and two colours used consistently from title card to end card"
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "name": "Honest and safe",
+        "description": "Claims you can back up, nobody in shot, nothing personal, AI labelled",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "A person appears, a claim is invented, or personal details are shown"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Nobody in shot and no personal details, but a claim is shaky or the AI line is missing"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Every claim can be backed up, nobody and nothing personal appears, music is cleared, and the end card says what AI did"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0",
+  "editorNotes": "Drafted from the vendors' published pages, not from a walk-through on live accounts. Canva's terms page could not be fetched (HTTP 403), so Canva's age and consent rules are NOT verified; the guide tells learners to sign up with a parent. Before publishing: a reviewer must follow guide-canva and guide-capcut on new free accounts, confirm every click path and set each guide's lastVerifiedAt. The two course music tracks and the storyboard template are placeholders and must be produced or licensed. Filming steps are 'read' steps with a self-tick because they happen away from any tool. AI use is deliberately light here (optional auto captions); the craft is the lesson.",
+  "verifyFlags": [
+    {
+      "path": "setupGuides.0.steps.0.body",
+      "claim": "Canva allows a 13-year-old to hold a personal account with a parent's agreement. Canva's terms could not be read; no age rule is recorded in the Tool Register."
+    },
+    {
+      "path": "setupGuides.0.steps.2.body",
+      "claim": "Canva marks paid elements with a crown and offers a free trial of its paid plan at sign-up."
+    },
+    {
+      "path": "setupGuides.0.steps.3.body",
+      "claim": "Canva's Share panel defaults to 'Only you can access', and Settings has a switch for AI training on user content."
+    },
+    {
+      "path": "setupGuides.1.steps.2.body",
+      "claim": "CapCut web marks paid features with a Pro badge and warns before export when a project uses them.",
+      "evidenceUrl": "https://www.capcut.com/pricing"
+    },
+    {
+      "path": "modules.3.lessons.0.steps.1.config.task",
+      "claim": "Auto captions are available on CapCut's free plan in the browser. If they are Pro-only, the hand-typed route in the step still works."
+    }
+  ],
+  "ideaId": "IDEA-058"
+}

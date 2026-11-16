@@ -1,0 +1,61 @@
+[
+  {
+    "id": "vid-prompt-gym-trailer",
+    "kind": "video",
+    "storageKey": "courses/prompt-gym/trailer.mp4",
+    "licence": "owned",
+    "durationSec": 90,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-prompt-gym-trailer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/prompt-gym/trailer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-prompt-gym-trailer",
+    "kind": "transcript_md",
+    "storageKey": "courses/prompt-gym/trailer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "img-prompt-gym-trailer-poster",
+    "kind": "image",
+    "storageKey": "courses/prompt-gym/trailer-poster.png",
+    "licence": "owned",
+    "altText": "Title card for the course: Prompt Gym: From Vague to Laser-Sharp.",
+    "placeholder": true
+  },
+  {
+    "id": "vid-prompt-gym-same-prompt-different-answer",
+    "kind": "video",
+    "storageKey": "courses/prompt-gym/same-prompt-different-answer.mp4",
+    "licence": "owned",
+    "durationSec": 120,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-prompt-gym-same-prompt-different-answer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/prompt-gym/same-prompt-different-answer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-prompt-gym-same-prompt-different-answer",
+    "kind": "transcript_md",
+    "storageKey": "courses/prompt-gym/same-prompt-different-answer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tpl-prompt-gym-library-cards",
+    "kind": "template_zip",
+    "storageKey": "courses/prompt-gym/library-card-template.zip",
+    "licence": "owned",
+    "placeholder": true
+  }
+]

@@ -1,0 +1,1128 @@
+{
+  "slug": "make-your-own-ai-music-video",
+  "title": "Make Your Own AI Music Video",
+  "tagline": "Direct a 45 to 60 second music video: AI-assisted illustrated scenes, cut to the beat, with credits that tell the truth.",
+  "category": "video-film",
+  "interests": [
+    "music",
+    "film",
+    "art",
+    "design"
+  ],
+  "difficulty": "builder",
+  "pathways": [
+    "ks4",
+    "sixth_form"
+  ],
+  "minAge": 13,
+  "estimatedMinutes": 179,
+  "sessions": 7,
+  "isFree": false,
+  "careers": [
+    "music-video-direction",
+    "video-editing",
+    "content-creation"
+  ],
+  "skills": [
+    "storyboarding",
+    "prompting-for-images",
+    "visual-consistency",
+    "editing-to-the-beat",
+    "music-rights-basics"
+  ],
+  "trailer": {
+    "assetId": "vid-music-video-trailer",
+    "posterAssetId": "img-music-video-trailer-poster",
+    "captionsAssetId": "vtt-music-video-trailer"
+  },
+  "whatYouMake": "A 45 to 60 second music video in the style of an animated visualiser. You plan it against the track, make illustrated scenes in Canva (with its AI image tool where your account has it, and with graphics and animation where it does not), cut them to the beat in CapCut, and finish with a \"Made with AI\" end card and honest credits. The music is a rights-cleared course track or a track you made yourself. Nobody real appears in it. You submit the video as a file or a view-only link, plus a screenshot of the end card.",
+  "ethicsNote": "We look at what image generators learned from and whose style they can imitate, why you never generate a real person's likeness, why music needs permission, and how to label AI-made work so that nobody is misled about how it was made.",
+  "safeguardingSensitive": false,
+  "watchOut": {
+    "type": "age18_tools",
+    "note": "Many AI video and image generators are for over-18s only. This course does not need one: everything is made in Canva and CapCut. If your family wants to add clips from an 18+ generator, a parent has to run it on their own account, and it is an optional extra. Never generate a real person, and never use music you do not have the rights to."
+  },
+  "toolRequirements": [
+    {
+      "toolSlug": "canva",
+      "purpose": "Storyboard, generate and animate the illustrated scenes, and design the end card",
+      "required": true
+    },
+    {
+      "toolSlug": "capcut",
+      "purpose": "Cut the scenes to the beat, add text and export the video",
+      "required": true
+    }
+  ],
+  "setupGuides": [
+    {
+      "id": "guide-canva",
+      "toolSlug": "canva",
+      "title": "Set up Canva (free plan)",
+      "lastVerifiedAt": "2026-11-16",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account, with a parent's OK",
+          "order": 1,
+          "kind": "create_account",
+          "body": "Sign up with a parent or carer nearby: under-18s should have an adult agree to a tool's terms with them, and Canva's own terms set the exact age rules.\n\n1. Open the Canva link from this course and choose **Sign up**.\n2. Choose **Continue with email** (rather than a social media account) and enter an email address you can open today.\n3. If Canva asks what you will use it for, choose **Personal** or **Student**.\n4. For your display name, use a first name or a nickname, not your full name.\n\nIf your school already gives you Canva through a school account, ask a parent or teacher before using it for a project outside school."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "Canva emails you a short code. Type it into the sign-up screen to finish. The code is for that screen only: never share it or paste it anywhere else.\n\nNo email? Check spam, wait a couple of minutes, then choose **Resend code**."
+        },
+        {
+          "id": "g3",
+          "title": "Stay on Canva Free",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "Canva will offer a free trial of its paid plan. Close the offer or choose **Maybe later**. You do not need to enter a card for anything in this course.\n\nPaid extras are marked with a small crown. In this course, stick to graphics, fonts and animations without the crown. Canva's AI image tool gives free accounts a limited number of goes, so plan your prompts before you spend them. If a download screen ever asks you to pay, a paid element has crept into your design: find the item with the crown and swap it for a free one."
+        },
+        {
+          "id": "g4",
+          "title": "Keep your designs private",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "Canva designs are private until you share them. Keep it that way.\n\n1. In a design, press **Share**. Check that link access says **Only you can access**. Leave it there until this course tells you to make a view-only link.\n2. Open **Settings** (the cog) and look through the privacy and message options: switch off marketing emails, and switch off any option that lets your designs be used to train AI.\n3. Do not connect social media accounts, and do not use any button that publishes a design straight to a social platform or to a public website.\n\nKeep real names, addresses, phone numbers and school names out of anything you design."
+        },
+        {
+          "id": "g5",
+          "title": "Download or share a view-only link",
+          "order": 5,
+          "kind": "export",
+          "body": "To hand work in you have two safe options.\n\n**Download:** press **Share → Download**, choose the file type the step asks for, then **Download**.\n\n**View-only link:** press **Share**, change link access to **Anyone with the link**, set the role to **Can view**, then **Copy link**. Only people you give the link to can open it. Do not choose a public website or social option."
+        }
+      ]
+    },
+    {
+      "id": "guide-capcut",
+      "toolSlug": "capcut",
+      "title": "Set up CapCut (free plan)",
+      "lastVerifiedAt": "2026-11-16",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account, with a parent's OK",
+          "order": 1,
+          "kind": "create_account",
+          "body": "CapCut's terms say it is only for people aged 13 and over, and that under-18s need a parent or guardian's consent. Do this step with a parent nearby.\n\n1. Open the CapCut link from this course in Chrome or Edge on a laptop or Chromebook and choose **Sign up**.\n2. Choose **Continue with email** rather than a social media account, so nothing is linked to a social profile.\n3. Enter an email address you can open today, create a password you do not use anywhere else, and give your real date of birth.\n4. Use a nickname, not your full name.\n\nThe course uses CapCut in the browser. The phone app works too, but the buttons sit in different places."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "CapCut emails you a code. Type it into the sign-up screen. Never paste that code anywhere else or read it out to anyone.\n\nNo email after two minutes? Check spam, then choose **Resend**."
+        },
+        {
+          "id": "g3",
+          "title": "Stay on the free plan",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "CapCut shows offers for its paid plans and puts a **Pro** badge on paid effects, fonts and templates. Skip every offer: this course only uses free tools, and you never need to enter a card.\n\nBefore you export, look for a warning that your project uses Pro features. If you see one, remove the items with the Pro badge. Anything that costs money needs a parent, and nothing here does."
+        },
+        {
+          "id": "g4",
+          "title": "Keep your project to yourself",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "1. When you finish a video, choose **Download** (or **Export**), not a button that posts it to TikTok, YouTube or anywhere else.\n2. Do not publish your project as a template.\n3. If the browser asks to use your camera or microphone, choose **Block**. In this course you bring in files you have already made; you do not record inside CapCut.\n4. In your account settings, switch off marketing emails and any option that shares your activity.\n\nOnly bring in files you made or that this course gave you."
+        },
+        {
+          "id": "g5",
+          "title": "Export your video",
+          "order": 5,
+          "kind": "export",
+          "body": "Press **Export**, choose **Download**, set the resolution to 1080p (or 720p on a slow connection) and the format to MP4. The file lands in your Downloads folder. Watch it once all the way through before you submit it."
+        }
+      ]
+    }
+  ],
+  "projectBrief": {
+    "scenario": "An unsigned artist called Lumen (made up, unless you are releasing your own track) drops a single next Friday and needs a video for it. There is no film crew and no cast. The label wants an animated visualiser: illustrated scenes that move with the music, 45 to 60 seconds long, ready to premiere. You are the director, the art department and the editor.",
+    "deliverables": [
+      "A beat sheet: the track mapped into sections with timestamps, and one visual idea per section",
+      "A storyboard of eight scenes in Canva",
+      "Eight illustrated scenes in one consistent look: a shared palette, style and aspect ratio",
+      "A 45 to 60 second video in which the picture changes on the beat and builds with the track",
+      "A title card with the artist and track name, in your own lettering",
+      "A \"Made with AI\" end card with honest credits: which tools made what, the track and its licence, and your nickname as director",
+      "The exported video, as an MP4 file or a view-only link, plus a screenshot of the end card"
+    ],
+    "constraints": [
+      "Nobody real appears, in any form: no photos or footage of people, and no generated image of a real or realistic-looking person. Use places, objects, shapes, lettering and clearly stylised non-human characters",
+      "No prompt names a real person, a celebrity, a band, a brand or a living artist's style",
+      "The music is one of the three course tracks or a track you made yourself. No chart music, and no singing voice that imitates a real artist",
+      "No real logos, album art or characters that belong to someone else",
+      "The \"Made with AI\" end card stays in the final cut for at least three seconds",
+      "The video is shared privately: a file or a view-only link, never a public post",
+      "No personal details anywhere in the video or the credits: a nickname is enough"
+    ],
+    "stretchGoals": [
+      "A recurring symbol that changes a little each time it appears and pays off in the last shot",
+      "Lyric or keyword typography that lands exactly on the beat",
+      "A second cut for a tall screen (9:16)",
+      "A clip from an AI video generator, only if a parent runs the generator on their own account and it follows every rule above"
+    ],
+    "artefactTypes": [
+      "video",
+      "external_link"
+    ],
+    "evidence": [
+      "link",
+      "video",
+      "screenshot"
+    ]
+  },
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Track and first frame",
+      "summary": "Set up Canva, make your title frame, then choose the track you will direct.",
+      "order": 1,
+      "lessons": [
+        {
+          "id": "m1l1",
+          "title": "First win",
+          "order": 1,
+          "estimatedMinutes": 13,
+          "steps": [
+            {
+              "id": "s1",
+              "type": "video",
+              "title": "From a track to a video",
+              "order": 1,
+              "estimatedMinutes": 2,
+              "assetIds": [
+                "vid-music-video-trailer",
+                "vtt-music-video-trailer",
+                "tx-music-video-trailer"
+              ],
+              "completion": {
+                "rule": "view",
+                "threshold": 0.8
+              },
+              "hints": []
+            },
+            {
+              "id": "s2",
+              "type": "setup_guide",
+              "title": "Set up Canva on the free plan",
+              "order": 2,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "canva",
+                "guideId": "guide-canva",
+                "throughStepIds": [
+                  "g1",
+                  "g2",
+                  "g3",
+                  "g4"
+                ]
+              },
+              "completion": {
+                "rule": "setup_acknowledged"
+              },
+              "coachContext": "Talk them through the setup step they are on, one click at a time. Never ask for a password, a verification code or card details, and stop them if they start to type one. If the screen they describe does not match the guide, say the tool may have changed and ask them to use Report so the guide can be updated.",
+              "hints": [
+                "Sign up with a parent nearby and use email rather than a social account.",
+                "Find the code in your inbox (check spam) and type it into the sign-up screen.",
+                "Skip the paid trial, avoid anything with a crown, and leave sharing on Only you can access."
+              ]
+            },
+            {
+              "id": "s3",
+              "type": "external_task",
+              "title": "First win: make your title frame",
+              "order": 3,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Create a new video design in Canva (wide, 16:9). Make up a track title for now. Build a title frame with the artist name Lumen (or your own artist name) and the track title in a typeface that fits the mood, on a background colour or gradient. Add one moving element with Animate. Press play and watch it.",
+                "clicks": [
+                  "Create a design",
+                  "Choose Video",
+                  "Add a heading for the artist and a subheading for the track",
+                  "Pick a typeface and a background",
+                  "Select the text and choose Animate",
+                  "Press play"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Quick win: one moving frame. Keep them off real artist names and real logos; Lumen or their own invented name. If they start hunting through hundreds of fonts, suggest picking a mood word first (dreamy, heavy, bright) and choosing the first typeface that fits.",
+              "hints": [
+                "Choose a mood word first, such as dreamy, heavy or bright, then pick lettering to match.",
+                "Big and simple reads best. Two typefaces are plenty.",
+                "Animate has styles for whole pages and for single items. Try one on just the title."
+              ]
+            },
+            {
+              "id": "s4",
+              "type": "checkpoint",
+              "title": "Your first frame moves",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "A title, a mood and some movement. That is a music video in miniature.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        },
+        {
+          "id": "m1l2",
+          "title": "The brief and the track",
+          "order": 2,
+          "estimatedMinutes": 8,
+          "steps": [
+            {
+              "id": "s5",
+              "type": "read",
+              "title": "The brief and the rules of the set",
+              "order": 1,
+              "estimatedMinutes": 3,
+              "body": "**The job:** a 45 to 60 second animated visualiser for an artist called Lumen, or for your own track.\n\n**The style:** illustrated scenes that move with the music. No film crew and no cast.\n\nRules of the set, and they are not negotiable:\n\n- **Nobody real appears.** No photos or footage of people, and no generated image of a real or realistic-looking person. Places, objects, shapes, lettering and clearly stylised non-human characters are all fair game.\n- **Rights-cleared music only.** A course track, or a track you made.\n- **Your own look.** No real logos, no album art, no \"in the style of\" a living artist.\n- **Honest credits.** The video ends on a \"Made with AI\" card that says who and what made it.\n\nAbout AI generators: a lot of AI video tools are for over-18s only. You do not need one. Everything here is made in Canva and CapCut.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s6",
+              "type": "read",
+              "title": "Choose your track",
+              "order": 2,
+              "estimatedMinutes": 5,
+              "body": "Listen to the three course tracks below, with headphones if you can. Each is 60 seconds long and was made for this course, so you have the right to use it in your video.\n\n- **Night Drive:** steady and electronic, with a big lift half way through.\n- **Sunrise:** slow and warm, building gently from start to finish.\n- **Glitch:** fast, choppy and full of sudden stops.\n\nPick the one that puts pictures in your head. Download it and keep it somewhere you can find it.\n\n**Using your own track instead?** You can, if you made every part of it or made it in a tool that lets you use what you make. If you took the *Make a Track with an AI Bandmate* course, that track is ideal. Chart music is out, however short the clip.",
+              "assetIds": [
+                "aud-music-video-track-night-drive",
+                "aud-music-video-track-sunrise",
+                "aud-music-video-track-glitch"
+              ],
+              "completion": {
+                "rule": "self_tick"
+              },
+              "hints": [
+                "Close your eyes on the first listen. Which track gives you colours or places straight away?"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "Plan like a director",
+      "summary": "Map the track, storyboard eight scenes and settle the ethics before you generate anything.",
+      "order": 2,
+      "lessons": [
+        {
+          "id": "m2l1",
+          "title": "Beat sheet and storyboard",
+          "order": 1,
+          "estimatedMinutes": 34,
+          "steps": [
+            {
+              "id": "s7",
+              "type": "read",
+              "title": "Listen like a director",
+              "order": 1,
+              "estimatedMinutes": 4,
+              "body": "Directors do not start with pictures. They start with the track.\n\nPlay your track three times with a timer running and fill in a **beat sheet** (download the template below, or draw four columns):\n\n| Section | Starts at | Energy (1 to 5) | What it feels like |\n|---|---|---|---|\n\nMost tracks have an **intro**, a **build**, a **peak** (the drop or the chorus) and an **outro**. Write down the second each one starts. Then, next to each section, one visual idea: a place, an object, a colour, a kind of movement.\n\nTwo rules of thumb:\n\n- **Energy up, picture busier.** Quiet sections get slow, wide, simple scenes. Loud sections get fast cuts, bold colour and close-ups.\n- **Save something.** If your best image appears in the first five seconds, there is nowhere left to go.",
+              "assetIds": [
+                "tpl-music-video-beat-sheet"
+              ],
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s8",
+              "type": "external_task",
+              "title": "Storyboard eight scenes",
+              "order": 2,
+              "estimatedMinutes": 15,
+              "config": {
+                "toolSlug": "canva",
+                "task": "In your Canva video design, add pages until you have ten: a title page, eight scene pages and an end card. On each scene page, write three short notes as text: what is in the scene, which section of the track it belongs to, and how it moves. Rough each one out with shapes and graphics so you can see the composition. Spread the eight scenes across your beat sheet: more scenes where the energy is high.",
+                "clicks": [
+                  "Open your video design",
+                  "Add pages until you have ten",
+                  "Label each scene page with its track section",
+                  "Write what is in the scene and how it moves",
+                  "Rough out the layout with shapes and graphics"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Eight scenes with a build, not eight unrelated pictures. Ask what ties them together: a place, a colour, a recurring object. Check there are no scenes that need a person; steer towards places, objects, shapes and stylised non-human characters. Do not design the scenes for them.",
+              "hints": [
+                "Pick one thread that runs through all eight scenes: a journey, a colour that spreads, an object that keeps returning.",
+                "Count the seconds in each section. A 20-second peak can take four quick scenes; a 10-second intro needs one.",
+                "If a scene idea needs a person, ask what object or place could stand in for the feeling instead."
+              ]
+            },
+            {
+              "id": "s9",
+              "type": "video",
+              "title": "How image generators work, and what they borrow",
+              "order": 3,
+              "estimatedMinutes": 3,
+              "assetIds": [
+                "vid-music-video-how-image-generators-work",
+                "vtt-music-video-how-image-generators-work",
+                "tx-music-video-how-image-generators-work"
+              ],
+              "completion": {
+                "rule": "view",
+                "threshold": 0.8
+              },
+              "hints": []
+            },
+            {
+              "id": "s10",
+              "type": "ethics_checkpoint",
+              "title": "Whose face, whose style, whose song?",
+              "order": 4,
+              "estimatedMinutes": 7,
+              "body": "Three questions before you generate a single image.\n\n**Whose face?** An image generator can invent a convincing human being, and that invention can look just like somebody real who never agreed to any of it. That is why this project has no real or realistic people in it at all. A generated \"nobody\" can still look like a real somebody.\n\n**Whose style?** These tools learned from millions of images made by working artists, most of whom were never asked. Typing a living illustrator's name to copy their look takes the thing they earn a living from. Describing a look in your own words (flat colours, thick outlines, paper texture) is how you build a style of your own.\n\n**Whose song?** Music belongs to the people who wrote and recorded it. Using it in a video needs their permission, even for ten seconds, even with a credit.\n\nAnd one more: **who made this?** If a viewer would be surprised to learn that AI made the pictures, they should not have to find out by accident. Hence the end card.",
+              "config": {
+                "prompt": "Write your own style recipe in one or two sentences, using only describing words: colours, shapes, textures, mood. No artist names. Then write the one-line credit for your end card that tells a viewer honestly how the pictures were made."
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "The style recipe must not contain artist, brand or celebrity names. If they ask whether they can make a character that looks like a real singer, the answer is no, and say why briefly. Do not supply a recipe: ask what they like about the looks they admire and help them turn that into describing words.",
+              "hints": []
+            },
+            {
+              "id": "s11",
+              "type": "quiz",
+              "title": "Quick check: rights and wrongs",
+              "order": 5,
+              "estimatedMinutes": 4,
+              "config": {
+                "quizId": "q-music-video-1"
+              },
+              "completion": {
+                "rule": "quiz_pass",
+                "threshold": 0.75
+              },
+              "hints": []
+            },
+            {
+              "id": "s12",
+              "type": "checkpoint",
+              "title": "Plan approved",
+              "order": 6,
+              "estimatedMinutes": 1,
+              "body": "Track mapped, eight scenes boarded, style recipe written. You know what you are making before you spend a single AI credit.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Make the visuals",
+      "summary": "Generate or build eight scenes in one consistent look, then animate and export them.",
+      "order": 3,
+      "lessons": [
+        {
+          "id": "m3l1",
+          "title": "Scenes",
+          "order": 1,
+          "estimatedMinutes": 45,
+          "steps": [
+            {
+              "id": "s13",
+              "type": "external_task",
+              "title": "Write scene prompts and generate",
+              "order": 1,
+              "estimatedMinutes": 20,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Open Canva's AI image generator from the Apps panel. For each scene, write a prompt with four parts: what is in the frame, your style recipe, your palette, and the shape (wide). Add that there are no people in the scene. Generate, pick the best result and place it on its scene page. Free accounts get a limited number of generations, so write all eight prompts in a document first and only then start generating. If the AI tool is not available on your account, build each scene from Canva's free illustrations, shapes and gradients instead: that is a fully accepted route.",
+                "clicks": [
+                  "Write all eight prompts in a document first",
+                  "Apps, then search for the AI image generator",
+                  "Paste a prompt and choose the wide shape",
+                  "Generate and pick the best result",
+                  "Add it to the matching scene page",
+                  "No AI tool on your account: build the scene from Elements"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Check prompts before they spend credits: no people, no real names, no brands, no living artists' names. If a result contains a realistic person or a real logo, it must not be used; they should reword and regenerate. If the AI tool is missing or blocked on their account (it may be limited by age or plan), reassure them that the Elements route meets the brief. Do not write their prompts.",
+              "hints": [
+                "Put the subject first, then the style, then the colours. Generators weigh the start of a prompt most.",
+                "Use the exact same style recipe and palette words in every prompt. That is what makes eight images look like one video.",
+                "Unwanted figure in the picture? Describe what fills the space instead, such as an empty street, and say the scene has nobody in it."
+              ]
+            },
+            {
+              "id": "s14",
+              "type": "external_task",
+              "title": "Make them belong together",
+              "order": 2,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Lay your eight scenes side by side in grid view and squint. Find the ones that do not belong: wrong colours, different style, different level of detail. Fix each one, either by regenerating with the style words tightened or by adjusting it in Canva so its colours match. Then add one shared element to every scene, such as a border, a grain texture, a small symbol or a colour wash, to tie the set together.",
+                "clicks": [
+                  "Open grid view",
+                  "Spot the scenes that do not match",
+                  "Regenerate or adjust the colours of the odd ones out",
+                  "Add one shared element to a scene",
+                  "Copy that element onto every scene page"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Consistency is the difference between a video and a slideshow. Ask what the odd one out has that the others do not. A simple shared overlay (colour wash, border, texture) fixes a lot. If they are out of AI generations, colour adjustment and overlays are the way forward.",
+              "hints": [
+                "Squinting blurs the detail and leaves colour and brightness. The odd ones out jump forward.",
+                "A transparent colour wash over every scene pulls mismatched images towards one palette.",
+                "Out of generations? Adjusting, cropping and layering what you have costs nothing."
+              ]
+            },
+            {
+              "id": "s15",
+              "type": "external_task",
+              "title": "Add movement and export the scenes",
+              "order": 3,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "canva",
+                "task": "Give each scene some movement that suits its section of the track: a slow push-in for calm parts, quicker motion for the peak. Use Animate on the page or on single elements, and keep it subtle. Set each page to about five seconds. Add any lyric or keyword text you planned, in your title typeface. Then download the whole design as an MP4, and also download your end card page on its own later when it is finished.",
+                "clicks": [
+                  "Select a scene page",
+                  "Animate, then choose a gentle page animation",
+                  "Set the page duration",
+                  "Add any keyword text",
+                  "Share, Download, MP4 Video"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Subtle beats flashy: one kind of motion per scene. If every scene uses a different wild animation, ask what the music is doing at that point. Remind them the real timing happens in CapCut, so pages only need to be long enough to cut from. Check that nothing with a crown has crept in before download.",
+              "hints": [
+                "Match movement to energy: slow drift for the intro, faster motion at the peak.",
+                "Make each page a little longer than you need. You can trim in the edit; you cannot stretch.",
+                "If the download asks for payment, a crowned element is in the design. Find it and swap it."
+              ]
+            },
+            {
+              "id": "s16",
+              "type": "checkpoint",
+              "title": "Eight scenes, one look",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "You have a set of moving scenes that clearly belong to the same video. Now the edit, where it becomes music.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "title": "Cut to the beat",
+      "summary": "Assemble the video in CapCut so that the picture moves with the music.",
+      "order": 4,
+      "lessons": [
+        {
+          "id": "m4l1",
+          "title": "The edit",
+          "order": 1,
+          "estimatedMinutes": 52,
+          "steps": [
+            {
+              "id": "s17",
+              "type": "setup_guide",
+              "title": "Set up CapCut on the free plan",
+              "order": 1,
+              "estimatedMinutes": 5,
+              "config": {
+                "toolSlug": "capcut",
+                "guideId": "guide-capcut",
+                "throughStepIds": [
+                  "g1",
+                  "g2",
+                  "g3",
+                  "g4"
+                ]
+              },
+              "completion": {
+                "rule": "setup_acknowledged"
+              },
+              "coachContext": "Talk them through the setup step they are on, one click at a time. Never ask for a password, a verification code or card details, and stop them if they start to type one. If the screen they describe does not match the guide, say the tool may have changed and ask them to use Report so the guide can be updated.",
+              "hints": [
+                "Sign up with a parent nearby and use email rather than a social account.",
+                "Type the emailed code into the sign-up screen and nowhere else.",
+                "Skip every Pro offer and block the camera and microphone request: you only bring in files."
+              ]
+            },
+            {
+              "id": "s18",
+              "type": "external_task",
+              "title": "Lay the track and mark the beats",
+              "order": 2,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Create a new 16:9 project. Upload your track and your scenes. Put the track on the audio layer first. Play it and find the main beats: look at the waveform for the regular tall spikes and listen for the kick. Mark the important ones: the start of each section from your beat sheet, and the beats in the peak. If your CapCut has a free marker or beat tool, use it; if not, split a spare text clip on a layer above at each beat to act as markers.",
+                "clicks": [
+                  "Create new project in 16:9",
+                  "Media, Upload: add the track and the scenes",
+                  "Drag the track to the timeline",
+                  "Zoom in on the waveform",
+                  "Mark the section starts and the main beats"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Music first, pictures second. If they cannot hear the beat, suggest tapping along and watching for the repeating spikes in the waveform. Automatic beat detection may carry a Pro badge; the manual marker method works on the free plan. Confirm the track is a course track or their own.",
+              "hints": [
+                "Tap your finger along as it plays. The taps that feel strongest are your cut points.",
+                "Zoom the timeline in until you can see individual spikes in the waveform.",
+                "You do not need every beat marked. Section starts and the beats in the peak are enough."
+              ]
+            },
+            {
+              "id": "s19",
+              "type": "external_task",
+              "title": "Cut on the beat",
+              "order": 3,
+              "estimatedMinutes": 18,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Place your title frame, then your eight scenes, on the video layer in storyboard order. Trim each scene so that every cut lands exactly on one of your markers. Hold scenes for longer in quiet sections (four to eight beats) and cut faster at the peak (one or two beats). You can reuse a scene, or a cropped part of one, to fill the peak. Watch the whole thing and nudge any cut that feels early or late.",
+                "clicks": [
+                  "Drag the title frame and scenes to the timeline in order",
+                  "Trim the end of each scene to a marker",
+                  "Shorten the scenes in the peak",
+                  "Duplicate or crop scenes to fill gaps",
+                  "Play it through and nudge late cuts"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "A cut that is two frames late feels wrong even if they cannot say why. Have them zoom in and line cuts up with the markers. Encourage variety in pace: slow in the intro, fast at the peak. Do not tell them where to cut; ask where the music changes.",
+              "hints": [
+                "If a cut feels off, zoom right in. It is usually a fraction after the beat; drag it earlier.",
+                "Pace is your volume control. Longer shots feel calm, shorter shots feel loud.",
+                "Short of scenes for the peak? Crop into a detail of an existing scene. It reads as a new shot."
+              ]
+            },
+            {
+              "id": "s20",
+              "type": "external_task",
+              "title": "Transitions, text and colour: less is more",
+              "order": 4,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Watch the cut and choose the single biggest moment in the track. Give that moment one effect: a transition, a flash or a zoom. Leave every other cut as a plain hard cut. Add the track title and artist as text over the opening seconds. If the scenes still look uneven, apply one gentle colour adjustment to all of them. Check nothing you added carries a Pro badge.",
+                "clicks": [
+                  "Find the biggest moment in the track",
+                  "Add one transition or effect there",
+                  "Add title text over the opening",
+                  "Apply one colour adjustment across all clips",
+                  "Check for Pro badges"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Restraint is the lesson. If they have added six transitions, ask which one they would keep if they could only keep one. Hard cuts on the beat are what professionals use most. Text should be on screen long enough to read.",
+              "hints": [
+                "Ask yourself where a crowd would cheer. That is the one place an effect has earned its spot.",
+                "A plain cut that lands on the beat feels better than a fancy transition that lands near it.",
+                "Keep title text clear of the edges of the frame so it is not cropped on other screens."
+              ]
+            },
+            {
+              "id": "s21",
+              "type": "quiz",
+              "title": "Quick check: in the edit",
+              "order": 5,
+              "estimatedMinutes": 4,
+              "config": {
+                "quizId": "q-music-video-2"
+              },
+              "completion": {
+                "rule": "quiz_pass",
+                "threshold": 0.66
+              },
+              "hints": []
+            },
+            {
+              "id": "s22",
+              "type": "checkpoint",
+              "title": "Picture locked",
+              "order": 6,
+              "estimatedMinutes": 1,
+              "body": "The video moves with the music. All it needs now is the truth about how it was made.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m5",
+      "title": "Credits and release",
+      "summary": "Add the Made with AI end card, export, check everything and submit.",
+      "order": 5,
+      "lessons": [
+        {
+          "id": "m5l1",
+          "title": "Finish and submit",
+          "order": 1,
+          "estimatedMinutes": 27,
+          "steps": [
+            {
+              "id": "s23",
+              "type": "external_task",
+              "title": "Design the Made with AI end card",
+              "order": 1,
+              "estimatedMinutes": 8,
+              "config": {
+                "toolSlug": "canva",
+                "task": "On the last page of your Canva design, build the end card in your video's style. It must include the words \"Made with AI\", then credits in plain language: which tool made the images (or \"illustrations from Canva's library\" if you did not use AI), what you did yourself (direction, storyboard, edit), the track name and that it is used with permission, and your nickname. Download that page as an image. Add it to the end of your CapCut timeline for at least three seconds, and take a screenshot of it for your submission.",
+                "clicks": [
+                  "Open the last page of your Canva design",
+                  "Add the Made with AI heading and the credits",
+                  "Share, Download, PNG, this page only",
+                  "Upload it to CapCut and place it at the end",
+                  "Take a screenshot of the end card"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "The card must be accurate. If they did not use AI images, it should say so plainly rather than claiming AI. If they did, it should not claim the images as hand-drawn. A nickname only: no full name, school or social handle. Check the track credit matches the track they used.",
+              "hints": [
+                "Credits answer three questions: what did the tools make, what did you make, and whose music is it?",
+                "Use your video's own typeface and colours so the card feels like part of the film.",
+                "Three seconds is the minimum. Read the card aloud at normal speed and check you finish in time."
+              ]
+            },
+            {
+              "id": "s24",
+              "type": "external_task",
+              "title": "Export and run the release check",
+              "order": 2,
+              "estimatedMinutes": 8,
+              "config": {
+                "toolSlug": "capcut",
+                "task": "Export the video as an MP4 at 1080p and download it. Watch the file from start to finish and tick off: length between 45 and 60 seconds; nobody real or realistic in any frame; no real logos or album art; only your chosen track on the soundtrack; cuts on the beat; end card readable for at least three seconds; no personal details. Fix anything that fails and export again.",
+                "clicks": [
+                  "Export",
+                  "Check for a Pro features warning",
+                  "Choose 1080p and MP4, then Download",
+                  "Watch the downloaded file start to finish",
+                  "Tick off the release checklist"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "This is the final safety pass. If any frame contains a realistic person, a real logo or personal details, it must be fixed before submission. The video should be downloaded, not posted. 720p is fine if the file is too large.",
+              "hints": [
+                "Pause on each scene for a second and look at the corners. Odd details hide at the edges of generated images.",
+                "Check the last second: exports sometimes clip the end card short.",
+                "File too big to upload? Export again at 720p."
+              ]
+            },
+            {
+              "id": "s25",
+              "type": "reflection",
+              "title": "Director's commentary",
+              "order": 3,
+              "estimatedMinutes": 4,
+              "config": {
+                "prompt": "Which cut or scene are you proudest of, and what did the AI get wrong that you had to fix or work around?"
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "hints": []
+            },
+            {
+              "id": "s26",
+              "type": "checkpoint",
+              "title": "Ready for the premiere",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "A finished music video with honest credits. Check it against the rubric and send it in.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s27",
+              "type": "submit",
+              "title": "Submit your music video",
+              "order": 5,
+              "estimatedMinutes": 6,
+              "config": {
+                "artefactTypes": [
+                  "video",
+                  "external_link"
+                ],
+                "evidence": [
+                  "link",
+                  "video",
+                  "screenshot"
+                ],
+                "requireRubricSelfCheck": true,
+                "evidenceHint": "Upload your video as an MP4 file (45 to 60 seconds), or paste a view-only or unlisted link to it. Add one screenshot of your \"Made with AI\" end card. The video and the screenshot must show only illustrated or generated scenes, objects and text, with nobody real in them. Do not upload images or video of real people, and do not submit a public post."
+              },
+              "completion": {
+                "rule": "submit"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "q-music-video-1",
+      "title": "Rights and wrongs",
+      "passMark": 0.75,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "single",
+          "prompt": "Which soundtrack can you use for this project?",
+          "options": [
+            {
+              "id": "a",
+              "text": "A chart song, as long as you only use 30 seconds",
+              "correct": false,
+              "feedback": "There is no \"30-second rule\". Any amount of a commercial song needs permission."
+            },
+            {
+              "id": "b",
+              "text": "One of the course tracks, or a track you made yourself",
+              "correct": true,
+              "feedback": "Yes. You have the rights to both."
+            },
+            {
+              "id": "c",
+              "text": "A chart song, with a credit to the artist on the end card",
+              "correct": false,
+              "feedback": "A credit is polite, and it is not permission."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "multi",
+          "prompt": "Which prompts break the rules of this project? Choose all that apply.",
+          "options": [
+            {
+              "id": "a",
+              "text": "\"A neon city street at night in the rain, flat illustration, purple and teal\"",
+              "correct": false,
+              "feedback": "Fine. A place, a style in general terms and a palette."
+            },
+            {
+              "id": "b",
+              "text": "\"A famous pop star on stage, photorealistic\"",
+              "correct": true,
+              "feedback": "Breaks the rules. It asks for a real person's likeness."
+            },
+            {
+              "id": "c",
+              "text": "\"A paper-cut fox running across rooftops, in the style of a named living illustrator\"",
+              "correct": true,
+              "feedback": "Breaks the rules. Describe the look instead of borrowing a living artist's name."
+            },
+            {
+              "id": "d",
+              "text": "\"Glowing geometric shapes pulsing outwards, dark background\"",
+              "correct": false,
+              "feedback": "Fine. Abstract shapes are ideal for a visualiser."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "spot_the_problem",
+          "prompt": "An end card reads: \"Directed, illustrated and animated by Jay.\" Every scene was generated with an AI image tool. What is the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It claims the illustrations as hand-made when a tool generated them",
+              "correct": true,
+              "feedback": "Right. Jay directed and edited. The card should say the images were made with AI."
+            },
+            {
+              "id": "b",
+              "text": "It should list Jay's full name and school",
+              "correct": false,
+              "feedback": "No. A nickname is exactly right. The problem is what the card claims."
+            },
+            {
+              "id": "c",
+              "text": "End cards should not have credits on them",
+              "correct": false,
+              "feedback": "Credits are the point of the end card. Look at what these ones say."
+            }
+          ]
+        },
+        {
+          "id": "q4",
+          "kind": "single",
+          "prompt": "Your generated scene has turned out to contain a realistic human face that you did not ask for. What do you do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Keep it: you did not ask for it, so it is not your fault",
+              "correct": false,
+              "feedback": "Whatever you asked for, the video would still show a realistic person. It cannot stay in."
+            },
+            {
+              "id": "b",
+              "text": "Do not use it. Reword the prompt to rule people out and generate the scene again",
+              "correct": true,
+              "feedback": "Yes. Say what you do want in the frame, and add that there should be nobody in the scene."
+            },
+            {
+              "id": "c",
+              "text": "Blur the face a little and use it",
+              "correct": false,
+              "feedback": "A blurred realistic person is still a realistic person. Make a new scene."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q-music-video-2",
+      "title": "In the edit",
+      "passMark": 0.66,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "order",
+          "prompt": "Put these editing jobs in the order that wastes the least time.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Lay the music on the timeline and mark the beats",
+              "correct": true,
+              "feedback": "First. The track is the ruler everything else is measured against."
+            },
+            {
+              "id": "b",
+              "text": "Place the scenes in story order",
+              "correct": true,
+              "feedback": "Second. Get the order right while it is still rough."
+            },
+            {
+              "id": "c",
+              "text": "Trim each cut so it lands on a beat",
+              "correct": true,
+              "feedback": "Third. Now make it tight."
+            },
+            {
+              "id": "d",
+              "text": "Add transitions, text and colour tweaks",
+              "correct": true,
+              "feedback": "Last. Polish only what you are sure is staying."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "single",
+          "prompt": "The chorus arrives and the track gets louder and busier. What should the picture do?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Stay exactly the same, so the viewer is not distracted",
+              "correct": false,
+              "feedback": "The picture would feel disconnected from the music."
+            },
+            {
+              "id": "b",
+              "text": "Change with it: faster cuts, bolder colour or more movement",
+              "correct": true,
+              "feedback": "Yes. When the energy goes up, the picture goes with it."
+            },
+            {
+              "id": "c",
+              "text": "Cut to black until the chorus is over",
+              "correct": false,
+              "feedback": "That throws away the best part of the track."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "spot_the_problem",
+          "prompt": "A video has a different flashy transition on every single cut: spins, zooms, glitches and page-turns. What is the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The transitions fight the music and each other, so nothing feels special",
+              "correct": true,
+              "feedback": "Right. Hard cuts on the beat do most of the work. Save one effect for one big moment."
+            },
+            {
+              "id": "b",
+              "text": "It needs more transitions to feel professional",
+              "correct": false,
+              "feedback": "More is not better. Watch a few official videos: most cuts are plain."
+            },
+            {
+              "id": "c",
+              "text": "Transitions are not allowed in music videos",
+              "correct": false,
+              "feedback": "They are allowed. The issue is using all of them at once."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rubric": {
+    "criteria": [
+      {
+        "id": "r1",
+        "name": "Moves with the music",
+        "description": "Cuts land on the beat and the picture builds with the track",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Cuts ignore the beat, or the length is well outside 45 to 60 seconds"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Most cuts land on the beat, but the pace stays the same from start to finish"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Cuts land on the beat, the pace follows the energy of the track, and the biggest moment gets the biggest picture"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "name": "One world",
+        "description": "Eight scenes that clearly belong to the same video",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Scenes look like they came from different videos"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "A shared palette, but the style or level of detail jumps about"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Palette, style and lettering are consistent from title frame to end card, with a thread running through the scenes"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "name": "Directed by you",
+        "description": "Planning and choices that are yours, not the tool's defaults",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "No beat sheet or storyboard; scenes are whatever the tool produced first"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "A storyboard exists and was mostly followed"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Beat sheet and storyboard drove the video, prompts use your own style recipe, and weak results were fixed or replaced"
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "name": "Rights and honesty",
+        "description": "Nobody real, cleared music, no borrowed names, honest end card",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "A real or realistic person, uncleared music or a real logo appears, or there is no end card"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Rules followed, but the end card is vague about what AI made"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Nobody real appears, the music is cleared, no names were borrowed, and the end card says exactly who and what made it"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0",
+  "editorNotes": "Drafted from the vendors' published pages, not from a walk-through on live accounts. Canva's terms page could not be fetched (HTTP 403), so Canva's age and consent rules, and whether its AI image tool is open to under-18s, are NOT verified. The course is therefore written so that the AI image tool is optional: every scene can be built from Canva's free elements, and the end card must then say so. No 18+ generator is named or required; a parent-run generator appears only as a stretch goal. Before publishing: a reviewer must follow guide-canva and guide-capcut on new free accounts, confirm every click path and set each guide's lastVerifiedAt. The three course tracks and the beat-sheet template are placeholders and must be produced or licensed with rights that cover learner videos.",
+  "verifyFlags": [
+    {
+      "path": "setupGuides.0.steps.0.body",
+      "claim": "Canva allows a 13-year-old to hold a personal account with a parent's agreement. Canva's terms could not be read; no age rule is recorded in the Tool Register."
+    },
+    {
+      "path": "modules.2.lessons.0.steps.0.config.task",
+      "claim": "Canva's AI image generator is in the Apps panel, is available to under-18s on a free personal account, and gives a limited number of free generations."
+    },
+    {
+      "path": "modules.2.lessons.0.steps.2.config.task",
+      "claim": "A Canva video design can be downloaded as MP4 on the free plan, and single pages as PNG."
+    },
+    {
+      "path": "modules.3.lessons.0.steps.1.config.task",
+      "claim": "CapCut web shows an audio waveform and allows manual markers or split clips on the free plan; automatic beat detection may be Pro-only."
+    },
+    {
+      "path": "setupGuides.1.steps.2.body",
+      "claim": "CapCut web marks paid features with a Pro badge and warns before export when a project uses them.",
+      "evidenceUrl": "https://www.capcut.com/pricing"
+    }
+  ],
+  "ideaId": "IDEA-057"
+}

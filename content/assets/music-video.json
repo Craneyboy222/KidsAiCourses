@@ -1,0 +1,85 @@
+[
+  {
+    "id": "vid-music-video-trailer",
+    "kind": "video",
+    "storageKey": "courses/music-video/trailer.mp4",
+    "licence": "owned",
+    "durationSec": 90,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-music-video-trailer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/music-video/trailer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-music-video-trailer",
+    "kind": "transcript_md",
+    "storageKey": "courses/music-video/trailer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "img-music-video-trailer-poster",
+    "kind": "image",
+    "storageKey": "courses/music-video/trailer-poster.png",
+    "licence": "owned",
+    "altText": "Title card for the course: Make Your Own AI Music Video.",
+    "placeholder": true
+  },
+  {
+    "id": "vid-music-video-how-image-generators-work",
+    "kind": "video",
+    "storageKey": "courses/music-video/how-image-generators-work.mp4",
+    "licence": "owned",
+    "durationSec": 180,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-music-video-how-image-generators-work",
+    "kind": "captions_vtt",
+    "storageKey": "courses/music-video/how-image-generators-work.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-music-video-how-image-generators-work",
+    "kind": "transcript_md",
+    "storageKey": "courses/music-video/how-image-generators-work.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "aud-music-video-track-night-drive",
+    "kind": "audio",
+    "storageKey": "courses/music-video/track-night-drive-60s.mp3",
+    "licence": "owned",
+    "durationSec": 60,
+    "placeholder": true
+  },
+  {
+    "id": "aud-music-video-track-sunrise",
+    "kind": "audio",
+    "storageKey": "courses/music-video/track-sunrise-60s.mp3",
+    "licence": "owned",
+    "durationSec": 60,
+    "placeholder": true
+  },
+  {
+    "id": "aud-music-video-track-glitch",
+    "kind": "audio",
+    "storageKey": "courses/music-video/track-glitch-60s.mp3",
+    "licence": "owned",
+    "durationSec": 60,
+    "placeholder": true
+  },
+  {
+    "id": "tpl-music-video-beat-sheet",
+    "kind": "template_zip",
+    "storageKey": "courses/music-video/beat-sheet-template.zip",
+    "licence": "owned",
+    "placeholder": true
+  }
+]

@@ -1,0 +1,996 @@
+{
+  "slug": "prompt-gym-from-vague-to-laser-sharp",
+  "title": "Prompt Gym: From Vague to Laser-Sharp",
+  "tagline": "Train four prompt moves, build a library of six prompts you will reuse, and prove the difference with before-and-afters.",
+  "category": "prompt-engineering",
+  "interests": [
+    "writing",
+    "study",
+    "careers"
+  ],
+  "difficulty": "starter",
+  "pathways": [
+    "ks3",
+    "ks4",
+    "sixth_form"
+  ],
+  "minAge": 13,
+  "estimatedMinutes": 141,
+  "sessions": 4,
+  "isFree": true,
+  "careers": [
+    "ai-operations",
+    "content-writing",
+    "product-management"
+  ],
+  "skills": [
+    "prompt-writing",
+    "giving-context",
+    "iterating",
+    "judging-ai-output",
+    "fact-checking"
+  ],
+  "trailer": {
+    "assetId": "vid-prompt-gym-trailer",
+    "posterAssetId": "img-prompt-gym-trailer-poster",
+    "captionsAssetId": "vtt-prompt-gym-trailer"
+  },
+  "whatYouMake": "A personal prompt library: six reusable prompt cards, each with a name, when to use it, the prompt itself with gaps to fill in, and what a good answer looks like. Alongside it, a before-and-after gallery of three pairs of screenshots that prove a sharper prompt gets better work. You build it in ChatGPT on the free plan and submit the library as a document plus the screenshots.",
+  "ethicsNote": "A sharp prompt can get a chatbot to produce almost anything, so we ask whose work the answer is. You decide which of your prompts help you think and which would do your thinking for you, and you practise checking confident answers before trusting them.",
+  "safeguardingSensitive": false,
+  "watchOut": {
+    "type": "data",
+    "note": "Keep personal details out of your prompts: no full names, school, address, phone number or passwords, and nothing private about other people. The prompts you build are for learning, planning and making things, not for producing work to hand in as your own."
+  },
+  "toolRequirements": [
+    {
+      "toolSlug": "chatgpt",
+      "purpose": "Try prompts, compare the answers and build your library",
+      "required": true
+    }
+  ],
+  "setupGuides": [
+    {
+      "id": "guide-chatgpt",
+      "toolSlug": "chatgpt",
+      "title": "Set up ChatGPT (free plan)",
+      "lastVerifiedAt": "2026-11-16",
+      "steps": [
+        {
+          "id": "g1",
+          "title": "Create your account, with a parent's OK",
+          "order": 1,
+          "kind": "create_account",
+          "body": "ChatGPT's terms say you must be at least 13, and that anyone under 18 needs a parent or guardian's permission. So do this step with a parent nearby.\n\n1. Open the ChatGPT link from this course and choose **Sign up**.\n2. Enter an email address you can open today. A parent's address is fine if you do not have your own.\n3. Create a password you do not use anywhere else. Never share it with anyone, Coach included.\n4. If it asks for a name, a first name or nickname is enough. Give your real date of birth: the age check decides which protections your account gets.\n\nScreens change. If yours looks different from the screenshots, follow the same order: email, password, name, date of birth."
+        },
+        {
+          "id": "g2",
+          "title": "Verify your email",
+          "order": 2,
+          "kind": "verify_email",
+          "body": "Open your inbox and find the message from OpenAI. Click the verify button, or type the code it gives you into the sign-up screen. That code belongs on the sign-up screen only: never paste it into a chat, a form somebody sends you, or Coach.\n\nNothing arrived? Check the spam folder, wait two minutes, then choose **Resend email**."
+        },
+        {
+          "id": "g3",
+          "title": "Stay on the Free plan",
+          "order": 3,
+          "kind": "choose_free_plan",
+          "body": "This course is written for the **Free** plan. If a screen offers an upgrade, close it or choose the free option. You never need to enter a card, and if a screen asks for one, stop and ask a parent.\n\nThe Free plan limits how many messages you can send to the newest model in a few hours. If you hit the limit, ChatGPT either carries on with a lighter model or asks you to wait. Both are fine for this project: take a break or carry on with what you have."
+        },
+        {
+          "id": "g4",
+          "title": "Privacy settings before your first chat",
+          "order": 4,
+          "kind": "privacy_settings",
+          "body": "1. Open your profile menu (your initial, in a corner of the screen) and choose **Settings**.\n2. Open **Data controls** and switch off **Improve the model for everyone**, so your chats are not used to train future models.\n3. Ask your parent whether they want to link their own ChatGPT account to yours with **Parental controls**. They send an invite, you accept, and they can then manage settings such as memory and quiet hours with you.\n\nHouse rules for every chat: no full name, home address, school name, phone number or passwords, and nothing about other people that they would not want shared. If the setting names have moved, search Settings for the word *data*."
+        },
+        {
+          "id": "g5",
+          "title": "Share your work safely",
+          "order": 5,
+          "kind": "export",
+          "body": "For this course you share by **screenshot**: capture the chat window only, with no other tabs, names or notifications showing.\n\nIf your version of ChatGPT has a **Share** button on a chat, it makes a link that anyone who has it can open, so read the chat first and only share one with no personal details in it. You can delete shared links later from **Settings → Data controls**."
+        }
+      ]
+    }
+  ],
+  "projectBrief": {
+    "scenario": "You have just joined Prompt Gym as a trainee coach. New members keep typing things like \"write something about football\" and then complaining that AI is rubbish. The head coach wants a starter library of prompts that really work, with before-and-after proof to pin on the gym wall. Six cards, three proofs, by the end of the week.",
+    "deliverables": [
+      "Six prompt cards in one document, each with: a name, when to use it, the prompt with [gaps] to fill in, what a good answer looks like, and one watch-out",
+      "At least two cards for studying that keep you doing the thinking (for example quiz me, explain it another way, or give feedback on my own draft)",
+      "At least one card that makes the chatbot ask you questions before it answers",
+      "A before-and-after gallery: three pairs of screenshots (vague prompt and answer, sharp prompt and answer), each with a one-line verdict in your own words",
+      "A fact-check line on one answer: what you checked, where, and whether the chatbot was right"
+    ],
+    "constraints": [
+      "No card asks the chatbot to produce work you would hand in as your own",
+      "No personal details in any prompt or screenshot: no full names, school, address, phone number or passwords",
+      "Every card must be reusable: someone else could fill in the gaps and use it",
+      "Screenshots show the chat window only",
+      "Verdicts and card notes are written by you, not by the chatbot"
+    ],
+    "stretchGoals": [
+      "A card that uses an example of the style you want (a few-shot prompt)",
+      "Run one card three times and note how much the answers vary",
+      "A seventh card for a hobby: a training plan, a recipe tweak, or a game strategy",
+      "Swap one card with someone at home and improve it from their feedback"
+    ],
+    "artefactTypes": [
+      "document",
+      "image_set"
+    ],
+    "evidence": [
+      "file",
+      "screenshot"
+    ]
+  },
+  "modules": [
+    {
+      "id": "m1",
+      "title": "Warm-up",
+      "summary": "Set up ChatGPT safely and take your first before-and-after.",
+      "order": 1,
+      "lessons": [
+        {
+          "id": "m1l1",
+          "title": "First rep",
+          "order": 1,
+          "estimatedMinutes": 16,
+          "steps": [
+            {
+              "id": "s1",
+              "type": "video",
+              "title": "Vague in, vague out",
+              "order": 1,
+              "estimatedMinutes": 2,
+              "assetIds": [
+                "vid-prompt-gym-trailer",
+                "vtt-prompt-gym-trailer",
+                "tx-prompt-gym-trailer"
+              ],
+              "completion": {
+                "rule": "view",
+                "threshold": 0.8
+              },
+              "hints": []
+            },
+            {
+              "id": "s2",
+              "type": "setup_guide",
+              "title": "Set up ChatGPT on the free plan",
+              "order": 2,
+              "estimatedMinutes": 6,
+              "config": {
+                "toolSlug": "chatgpt",
+                "guideId": "guide-chatgpt",
+                "throughStepIds": [
+                  "g1",
+                  "g2",
+                  "g3",
+                  "g4"
+                ]
+              },
+              "completion": {
+                "rule": "setup_acknowledged"
+              },
+              "coachContext": "Talk them through the setup step they are on, one click at a time. Never ask for a password, a verification code or card details, and stop them if they start to type one. If the screen they describe does not match the guide, say the tool may have changed and ask them to use Report so the guide can be updated.",
+              "hints": [
+                "Is a parent nearby? Under-18s need a parent's permission for this tool.",
+                "Check your inbox (and spam) for the verification email before you go on.",
+                "Free plan, no card, and the model-training switch turned off in Data controls."
+              ]
+            },
+            {
+              "id": "s3",
+              "type": "external_task",
+              "title": "First win: one vague prompt, one sharper",
+              "order": 3,
+              "estimatedMinutes": 4,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Start a new chat and type a vague, four-word request about a topic you like. Screenshot the prompt and the start of the answer. Start another new chat and ask about the same topic, but this time add who the answer is for, exactly what you want and how long it should be. Screenshot that too. You now have your first before-and-after pair.",
+                "clicks": [
+                  "New chat",
+                  "Send a vague four-word prompt and screenshot it",
+                  "New chat",
+                  "Send a sharper prompt on the same topic and screenshot it",
+                  "Compare the two answers"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Keep it quick and fun: the point is to feel the difference. Do not write the sharper prompt for them. Ask: who is this for, what exactly do you want, how long? Check their screenshots show only the chat window.",
+              "hints": [
+                "Pick a topic you know well. You will spot a weak answer straight away.",
+                "For the sharper version, answer three questions inside the prompt: for whom, what exactly, how long.",
+                "Use a new chat for the second prompt, or the chatbot will lean on the first one."
+              ]
+            },
+            {
+              "id": "s4",
+              "type": "checkpoint",
+              "title": "First before-and-after done",
+              "order": 4,
+              "estimatedMinutes": 1,
+              "body": "Same chatbot, same topic, different result. The only thing that changed was you. That is the whole course in two screenshots.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s5",
+              "type": "read",
+              "title": "The brief: six cards, three proofs",
+              "order": 5,
+              "estimatedMinutes": 3,
+              "body": "**Your job:** trainee coach at Prompt Gym.\n\n**What the head coach wants:** a starter library of six prompt cards that really work, and three before-and-after pairs to prove it.\n\nA **prompt card** is a prompt you can use again and again. It has gaps in [square brackets] that you fill in each time, like \"Explain [topic] to a [year group] student\".\n\nYou will train four moves, called reps:\n\n- **Who:** who the answer is for, and what role the chatbot plays\n- **What:** the exact task\n- **How:** format, length and tone\n- **Proof:** how sure it is, and how you check\n\nKeep a document open from now on. Every prompt that works goes into it.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "title": "The four reps",
+      "summary": "Train Who, What, How and Proof, one at a time, on real tasks.",
+      "order": 2,
+      "lessons": [
+        {
+          "id": "m2l1",
+          "title": "Who and What",
+          "order": 1,
+          "estimatedMinutes": 15,
+          "steps": [
+            {
+              "id": "s6",
+              "type": "read",
+              "title": "Reps one and two",
+              "order": 1,
+              "estimatedMinutes": 4,
+              "body": "**Who.** A chatbot does not know who is asking. Tell it, in general terms: \"a Year 9 student\", \"someone who has never played chess\", \"a nervous first-time baker\". You can also give *it* a role: \"Act as a patient football coach.\" Roles change the vocabulary, the level and what gets left out.\n\nNotice what Who does **not** include: your name, your school, where you live. \"A Year 9 student\" does the job.\n\n**What.** Vague verbs get vague answers. \"Help with my science\" could mean anything. Swap it for a task with an edge: *list*, *compare*, *explain in steps*, *find the mistake in*, *ask me questions about*.\n\nA handy test: could two different people read your prompt and expect the same kind of answer? If not, the What is still blurry.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s7",
+              "type": "external_task",
+              "title": "Train Who and What",
+              "order": 2,
+              "estimatedMinutes": 10,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Pick one topic from school and one from a hobby. For each, write a prompt with a clear Who (who it is for and, if useful, a role for the chatbot) and a clear What (one exact task). Run each in a new chat. Then change only the Who, for example from a Year 7 student to an expert, run it again and note how the answer changed. Save the prompts that worked in your document.",
+                "clicks": [
+                  "Write two prompts with a clear Who and What",
+                  "New chat for each and send",
+                  "Change only the Who and run again",
+                  "Note the differences",
+                  "Save the good ones in your document"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Look for prompts with two tasks crammed in, or with no audience. Nudge them to change one thing at a time so they can see what caused the difference. If they put personal details in the Who, ask whether the chatbot needs them.",
+              "hints": [
+                "One task per prompt. If your prompt has the word \"and\" in the middle, it may be two prompts.",
+                "Try a role for the chatbot as well as an audience: a coach explains differently from a textbook.",
+                "Changing only the Who is a fair test. Change two things and you will not know which one mattered."
+              ]
+            },
+            {
+              "id": "s8",
+              "type": "checkpoint",
+              "title": "Two reps down",
+              "order": 3,
+              "estimatedMinutes": 1,
+              "body": "Your prompts now say who and what. Next: what the answer should look like, and whether to believe it.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        },
+        {
+          "id": "m2l2",
+          "title": "How and Proof",
+          "order": 2,
+          "estimatedMinutes": 28,
+          "steps": [
+            {
+              "id": "s9",
+              "type": "read",
+              "title": "Reps three and four",
+              "order": 1,
+              "estimatedMinutes": 3,
+              "body": "**How.** Say what shape you want: a table, five bullet points, a step-by-step list, three options with a pro and a con each. Say how long. Say the tone: plain, funny, formal. If you do not, you get the default: several polite paragraphs.\n\n**Proof.** Chatbots write fluent sentences whether or not the content is right. So the fourth rep has two halves.\n\n1. *In the prompt:* ask it to say how confident it is, to mark anything it is unsure of, or to tell you what to double-check.\n2. *Outside the chat:* check one thing that matters against a source you trust, such as a textbook, your class notes or an official website.\n\nAsking \"are you sure?\" is not a check. The chatbot marking its own homework tells you very little.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s10",
+              "type": "external_task",
+              "title": "Train How",
+              "order": 2,
+              "estimatedMinutes": 10,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Take one of your saved prompts and run it three times in new chats, changing only the How: once as a table, once as five bullet points, once as a short explanation for a ten-year-old. Decide which format was most useful for that task and why. Add the How to the saved prompt in your document.",
+                "clicks": [
+                  "Pick a saved prompt",
+                  "New chat: ask for a table",
+                  "New chat: ask for five bullet points",
+                  "New chat: ask for a version for a ten-year-old",
+                  "Choose the best format and update your document"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "There is no single best format: the right one depends on the task. Ask what they would do with the answer next (revise from it, read it out, compare options) and let that decide. Keep them changing only the format.",
+              "hints": [
+                "Think about what you will do with the answer. Revising from it and reading it once need different shapes.",
+                "Add a length. \"Short\" means different things to you and to a chatbot, so give a number.",
+                "If the table is messy, name the columns you want in the prompt."
+              ]
+            },
+            {
+              "id": "s11",
+              "type": "external_task",
+              "title": "Train Proof",
+              "order": 3,
+              "estimatedMinutes": 10,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Ask the chatbot a factual question that has an answer you can look up, and add a Proof line that makes it flag anything it is unsure about and say what you should double-check. Then check one fact from its answer in a source you trust. In your document, write a fact-check line: what you checked, where you checked it, and whether the chatbot was right.",
+                "clicks": [
+                  "Write a factual prompt with a Proof line",
+                  "New chat and send it",
+                  "Pick one fact from the answer",
+                  "Check it in a trusted source",
+                  "Write your fact-check line"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "The check must happen outside the chat. If they ask you whether the fact is right, send them to a source instead. If the chatbot was right, that is still a valid result to record. Dates, figures and quotations are good things to check.",
+              "hints": [
+                "Choose a fact with a clear right answer: a date, a figure, a definition.",
+                "A trusted source is one with a name behind it: a textbook, an exam board, a museum, a national statistics site.",
+                "Write down where you checked. \"I looked it up\" is not a fact-check line; the source is."
+              ]
+            },
+            {
+              "id": "s12",
+              "type": "quiz",
+              "title": "Quick check: the four reps",
+              "order": 4,
+              "estimatedMinutes": 4,
+              "config": {
+                "quizId": "q-prompt-gym-1"
+              },
+              "completion": {
+                "rule": "quiz_pass",
+                "threshold": 0.75
+              },
+              "hints": []
+            },
+            {
+              "id": "s13",
+              "type": "checkpoint",
+              "title": "All four reps trained",
+              "order": 5,
+              "estimatedMinutes": 1,
+              "body": "Who, What, How, Proof. You can now write a prompt on purpose instead of by luck. Time to add weight.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m3",
+      "title": "Heavier weights",
+      "summary": "Use examples, let the chatbot interview you, and improve a prompt over three rounds.",
+      "order": 3,
+      "lessons": [
+        {
+          "id": "m3l1",
+          "title": "Three stronger moves",
+          "order": 1,
+          "estimatedMinutes": 39,
+          "steps": [
+            {
+              "id": "s14",
+              "type": "video",
+              "title": "Why the same prompt gives different answers",
+              "order": 1,
+              "estimatedMinutes": 2,
+              "assetIds": [
+                "vid-prompt-gym-same-prompt-different-answer",
+                "vtt-prompt-gym-same-prompt-different-answer",
+                "tx-prompt-gym-same-prompt-different-answer"
+              ],
+              "completion": {
+                "rule": "view",
+                "threshold": 0.8
+              },
+              "hints": []
+            },
+            {
+              "id": "s15",
+              "type": "external_task",
+              "title": "Show it an example",
+              "order": 2,
+              "estimatedMinutes": 10,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Choose something with a style, such as a quiz question, a product description for a made-up item, or a revision flashcard. Write one example yourself in the style you want. Then write a prompt that includes your example and asks for three more like it on a different topic. Compare the result with what you get when you ask without an example.",
+                "clicks": [
+                  "Write one example yourself",
+                  "New chat: ask for three more with no example given",
+                  "New chat: ask again, including your example",
+                  "Compare the two results",
+                  "Save the stronger prompt"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "The example must be theirs, not a real person's writing copied in. If they want to imitate a named living writer or artist, steer them to describe the features they like instead (short sentences, dry humour). This is few-shot prompting; you can name it once they have seen it work.",
+              "hints": [
+                "Your example does the describing for you: length, layout and tone all come along with it.",
+                "Label it clearly in the prompt so the chatbot knows which part is the example and which is the request.",
+                "If the copies are too close to your example, ask for the same style on a clearly different topic."
+              ]
+            },
+            {
+              "id": "s16",
+              "type": "external_task",
+              "title": "Let it interview you",
+              "order": 3,
+              "estimatedMinutes": 8,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Write a prompt for a task where the chatbot cannot know enough about what you want, such as a training plan, a birthday idea or a revision timetable. Instead of asking for the answer, tell it to ask you up to five questions first, one at a time, and only then answer. Answer its questions without giving personal details. Save the prompt if the final answer beats what a one-line request would have got.",
+                "clicks": [
+                  "Choose a task with lots of unknowns",
+                  "Write a prompt that makes it ask questions first",
+                  "New chat and send it",
+                  "Answer the questions, keeping personal details out",
+                  "Judge the final answer and save the prompt"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Watch what they type in answer to the questions: general answers are fine (age range, time available, likes), identifying details are not. If the chatbot asks for something personal, they can say 'skip that one'. This prompt is one of the required cards in the library.",
+              "hints": [
+                "Set a limit on the number of questions, or the interview never ends.",
+                "You can answer in general terms: \"three evenings a week\" tells it enough.",
+                "If it answers before asking anything, make the instruction to ask first the opening line of the prompt."
+              ]
+            },
+            {
+              "id": "s17",
+              "type": "external_task",
+              "title": "Three rounds on one prompt",
+              "order": 4,
+              "estimatedMinutes": 12,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Pick the weakest prompt in your document. Round one: run it and write down the single biggest problem with the answer. Round two: change the prompt to fix that one problem, run it in a new chat, and find the next biggest problem. Round three: fix that and run it again. Screenshot round one and round three as a before-and-after pair and write a one-line verdict.",
+                "clicks": [
+                  "Choose your weakest prompt",
+                  "Run it and name the biggest problem",
+                  "Fix that one problem and run again in a new chat",
+                  "Fix the next problem and run again",
+                  "Screenshot round one and round three, then write your verdict"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "This is iteration: diagnose, change one thing, test. If they rewrite the whole prompt each round, bring them back to the single biggest problem. The verdict line is theirs to write. Do not rewrite their prompt for them; ask what the answer got wrong.",
+              "hints": [
+                "Name the problem before you touch the prompt: too long, too vague, wrong level, wrong format?",
+                "Fix one problem per round. It is slower, and you learn far more.",
+                "A verdict says what got better and why, in one line: not just \"the second one is better\"."
+              ]
+            },
+            {
+              "id": "s18",
+              "type": "ethics_checkpoint",
+              "title": "Sharp prompt, whose work?",
+              "order": 5,
+              "estimatedMinutes": 6,
+              "body": "You can now get a chatbot to produce good-looking work on almost anything. So here is the question every prompt writer has to answer: **whose work is it?**\n\nLook down the prompts in your document. Some make *you* better: they explain, quiz, question or give feedback, and you still do the thinking. Others would produce a finished thing with your name on it. Used for a hobby, that might be fine. Handed in at school as your own, it is not, and exam boards treat it as malpractice.\n\nThe same goes for other people's work. \"Write like [a named living author]\" leans on someone's real style without asking them.",
+              "config": {
+                "prompt": "Sort your saved prompts into two lists: ones that help you think, and ones that would do your thinking for you. Then write one sentence on where you would draw the line for schoolwork, and one sentence on how you would tell a teacher what you used AI for."
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Their answer is their own; do not supply one. If a prompt in their list is designed to produce work for assessment, say plainly that it cannot go in the library and help them turn it into a study prompt (quiz me, explain, feedback on my draft). Do not lecture.",
+              "hints": []
+            },
+            {
+              "id": "s19",
+              "type": "checkpoint",
+              "title": "Heavier weights lifted",
+              "order": 6,
+              "estimatedMinutes": 1,
+              "body": "Examples, interviews and iteration: these are the moves people use in real AI jobs. Now turn the best of your prompts into a library.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "m4",
+      "title": "Build the library",
+      "summary": "Turn your best prompts into six reusable cards and finish your gallery.",
+      "order": 4,
+      "lessons": [
+        {
+          "id": "m4l1",
+          "title": "Cards and gallery",
+          "order": 1,
+          "estimatedMinutes": 43,
+          "steps": [
+            {
+              "id": "s20",
+              "type": "read",
+              "title": "What goes on a prompt card",
+              "order": 1,
+              "estimatedMinutes": 3,
+              "body": "A prompt you can only use once is a message. A prompt someone else can pick up and use is a tool. Each card has five parts:\n\n1. **Name:** short and memorable, like *The Explainer* or *Quiz Me Hard*.\n2. **When to use it:** one line.\n3. **The prompt:** with [gaps] in square brackets for the bits that change.\n4. **What good looks like:** how you know the answer is worth keeping.\n5. **Watch-out:** what can go wrong, or what to check.\n\nDownload the card template below, or lay out the same five headings in your own document.",
+              "assetIds": [
+                "tpl-prompt-gym-library-cards"
+              ],
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s21",
+              "type": "external_task",
+              "title": "Write and test your six cards",
+              "order": 2,
+              "estimatedMinutes": 15,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "Choose your six best prompts and turn each one into a card with all five parts. At least two must be study cards that keep you doing the thinking, and one must make the chatbot ask you questions first. Replace the specific details with [gaps]. Test each card once in a new chat by filling the gaps with a topic you have not used yet, and fix any card that does not survive a new topic.",
+                "clicks": [
+                  "Pick six prompts from your document",
+                  "Rewrite each with [gaps] and the five card parts",
+                  "New chat: test a card with a fresh topic",
+                  "Fix cards that fail",
+                  "Repeat until all six pass"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Check the mix: two study cards, one interview card, none that produce work to hand in. The 'what good looks like' and 'watch-out' lines must be in their words. If a card only works for one topic, the gaps are in the wrong place. Do not write cards for them.",
+              "hints": [
+                "Find the words that would change next time you use the prompt. Those are your gaps.",
+                "\"What good looks like\" comes from your testing: what did the best answer have that the weak ones lacked?",
+                "A card that fails on a new topic usually has a detail from the old topic still hiding in it."
+              ]
+            },
+            {
+              "id": "s22",
+              "type": "external_task",
+              "title": "Finish the before-and-after gallery",
+              "order": 3,
+              "estimatedMinutes": 10,
+              "config": {
+                "toolSlug": "chatgpt",
+                "task": "You need three before-and-after pairs. You already have at least two from earlier steps. For each remaining pair, run a vague prompt and one of your cards on the same topic in separate new chats and screenshot both. Under each pair in your document, write a one-line verdict in your own words. Check every screenshot shows the chat window only.",
+                "clicks": [
+                  "Count the pairs you already have",
+                  "New chat: vague prompt, screenshot",
+                  "New chat: your card on the same topic, screenshot",
+                  "Write a one-line verdict for each pair",
+                  "Check every screenshot for personal details"
+                ]
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "coachContext": "Three pairs, six screenshots, three verdicts written by the learner. Check that no screenshot shows an account name, email address, other tabs or notifications. A verdict should say what improved, not only that it did.",
+              "hints": [
+                "Use the same topic for both halves of a pair, or the comparison is not fair.",
+                "Crop to the chat. An account name or email in the corner is a personal detail.",
+                "A strong verdict names the rep that made the difference: Who, What, How or Proof."
+              ]
+            },
+            {
+              "id": "s23",
+              "type": "quiz",
+              "title": "Spot the weak prompt",
+              "order": 4,
+              "estimatedMinutes": 4,
+              "config": {
+                "quizId": "q-prompt-gym-2"
+              },
+              "completion": {
+                "rule": "quiz_pass",
+                "threshold": 0.66
+              },
+              "hints": []
+            },
+            {
+              "id": "s24",
+              "type": "reflection",
+              "title": "Your strongest rep",
+              "order": 5,
+              "estimatedMinutes": 4,
+              "config": {
+                "prompt": "Which of the four reps made the biggest difference to your answers, and where outside this course will you use it first?"
+              },
+              "completion": {
+                "rule": "self_tick"
+              },
+              "hints": []
+            },
+            {
+              "id": "s25",
+              "type": "checkpoint",
+              "title": "Library built",
+              "order": 6,
+              "estimatedMinutes": 1,
+              "body": "Six cards, three proofs, one fact-check. Save the document as a PDF, look over the rubric and submit.",
+              "completion": {
+                "rule": "view"
+              },
+              "hints": []
+            },
+            {
+              "id": "s26",
+              "type": "submit",
+              "title": "Submit your prompt library",
+              "order": 7,
+              "estimatedMinutes": 6,
+              "config": {
+                "artefactTypes": [
+                  "document",
+                  "image_set"
+                ],
+                "evidence": [
+                  "file",
+                  "screenshot"
+                ],
+                "requireRubricSelfCheck": true,
+                "evidenceHint": "Upload your prompt library as one document (PDF is best): six cards, your three one-line verdicts and your fact-check line. Then add your six gallery screenshots, in pairs: vague first, sharp second. Screenshots must show the chat window only, with no names, email addresses or other tabs. Do not upload images or video of real people."
+              },
+              "completion": {
+                "rule": "submit"
+              },
+              "hints": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "quizzes": [
+    {
+      "id": "q-prompt-gym-1",
+      "title": "The four reps",
+      "passMark": 0.75,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "single",
+          "prompt": "Which prompt is most likely to get a useful answer first time?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Tell me about volcanoes",
+              "correct": false,
+              "feedback": "It will answer, but it has to guess who you are, how much you want and in what form."
+            },
+            {
+              "id": "b",
+              "text": "Explain how a volcano erupts to a Year 8 student in five short steps, then ask me two questions to check I understood",
+              "correct": true,
+              "feedback": "Yes. Who it is for, exactly what to do, and what form the answer takes."
+            },
+            {
+              "id": "c",
+              "text": "VOLCANOES!!! explain properly this time",
+              "correct": false,
+              "feedback": "Capital letters do not add information. The chatbot still has to guess what \"properly\" means."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "multi",
+          "prompt": "You want feedback on a paragraph you wrote. Which details would sharpen the prompt? Choose all that apply.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Who the paragraph is for and what it is meant to do",
+              "correct": true,
+              "feedback": "Yes. Feedback depends on the goal."
+            },
+            {
+              "id": "b",
+              "text": "That you want three specific suggestions, not a rewrite",
+              "correct": true,
+              "feedback": "Yes. Saying what form you want stops it rewriting your work."
+            },
+            {
+              "id": "c",
+              "text": "Your full name and school, so it knows who you are",
+              "correct": false,
+              "feedback": "No. Personal details do not improve the answer and should stay out of prompts."
+            },
+            {
+              "id": "d",
+              "text": "What you are least sure about in the paragraph",
+              "correct": true,
+              "feedback": "Yes. Pointing at the weak spot gets you sharper feedback."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "order",
+          "prompt": "Put the four reps in the order the course trains them.",
+          "options": [
+            {
+              "id": "a",
+              "text": "Who: say who the answer is for and what role the chatbot plays",
+              "correct": true,
+              "feedback": "First rep."
+            },
+            {
+              "id": "b",
+              "text": "What: name the exact task",
+              "correct": true,
+              "feedback": "Second rep."
+            },
+            {
+              "id": "c",
+              "text": "How: set the format, length and tone",
+              "correct": true,
+              "feedback": "Third rep."
+            },
+            {
+              "id": "d",
+              "text": "Proof: ask how sure it is, then check the answer yourself",
+              "correct": true,
+              "feedback": "Fourth rep, and the one people skip."
+            }
+          ]
+        },
+        {
+          "id": "q4",
+          "kind": "single",
+          "prompt": "The chatbot gives you a confident answer with a statistic in it. What is the Proof rep?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Ask it \"are you sure?\" and trust it if it says yes",
+              "correct": false,
+              "feedback": "It will often just agree with itself. That is not a check."
+            },
+            {
+              "id": "b",
+              "text": "Ask where the figure comes from, then look for it in a source you trust",
+              "correct": true,
+              "feedback": "Yes. The check happens outside the chat."
+            },
+            {
+              "id": "c",
+              "text": "Use it: a specific number must have come from somewhere",
+              "correct": false,
+              "feedback": "Chatbots can produce specific numbers that are simply wrong."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q-prompt-gym-2",
+      "title": "Spot the weak prompt",
+      "passMark": 0.66,
+      "questions": [
+        {
+          "id": "q1",
+          "kind": "spot_the_problem",
+          "prompt": "A prompt card says: \"Write my English essay on An Inspector Calls in the style of a Grade 9 student.\" What is the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It asks the chatbot to produce work to hand in as your own",
+              "correct": true,
+              "feedback": "Right. However sharp the prompt, the essay would not be yours. A study card asks for questions, feedback or explanations instead."
+            },
+            {
+              "id": "b",
+              "text": "It should say how many words the essay needs",
+              "correct": false,
+              "feedback": "A word count would make it sharper and no more honest."
+            },
+            {
+              "id": "c",
+              "text": "Nothing: it is specific, so it is a good prompt",
+              "correct": false,
+              "feedback": "Specific, yes. But a library card has to be one you can use fairly."
+            }
+          ]
+        },
+        {
+          "id": "q2",
+          "kind": "spot_the_problem",
+          "prompt": "A prompt reads: \"I'm Aisha Khan from Parkside Academy, 14 Elm Road. Plan my revision timetable.\" What is the problem?",
+          "options": [
+            {
+              "id": "a",
+              "text": "It includes a full name, school and address the chatbot does not need",
+              "correct": true,
+              "feedback": "Yes. \"A Year 10 student with six subjects\" gets the same help with no personal details."
+            },
+            {
+              "id": "b",
+              "text": "It does not say which subjects to revise",
+              "correct": false,
+              "feedback": "That is a gap, but it is not the serious problem here."
+            },
+            {
+              "id": "c",
+              "text": "It is too polite",
+              "correct": false,
+              "feedback": "Politeness is not the issue. Look at what it gives away."
+            }
+          ]
+        },
+        {
+          "id": "q3",
+          "kind": "single",
+          "prompt": "You run the same prompt twice and get two different answers. What does that tell you?",
+          "options": [
+            {
+              "id": "a",
+              "text": "The chatbot is broken",
+              "correct": false,
+              "feedback": "This is normal. These models do not produce one fixed answer."
+            },
+            {
+              "id": "b",
+              "text": "One answer must be a lie",
+              "correct": false,
+              "feedback": "Not necessarily. Both may be fine, or both may need checking."
+            },
+            {
+              "id": "c",
+              "text": "Answers vary, so a good prompt narrows what counts as a good answer, and you still judge the result",
+              "correct": true,
+              "feedback": "Exactly. That is why your cards say what good looks like."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "rubric": {
+    "criteria": [
+      {
+        "id": "r1",
+        "name": "Sharper every time",
+        "description": "The four reps show up in the prompts",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Most prompts are still one vague line"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Prompts usually say who and what, but format or checking is often missing"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Cards use Who, What and How on purpose, and at least one has a Proof line that was really checked"
+          }
+        ]
+      },
+      {
+        "id": "r2",
+        "name": "A library you can reuse",
+        "description": "Six complete cards with gaps that work on new topics",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Fewer than six cards, or cards missing most of their parts"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Six cards with all five parts, but some only work for the topic they were written on"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Six cards, each tested on a fresh topic, including two study cards and one that asks questions first"
+          }
+        ]
+      },
+      {
+        "id": "r3",
+        "name": "Proof on the wall",
+        "description": "Before-and-after pairs with verdicts in your own words",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "Fewer than three pairs, or no verdicts"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Three pairs with verdicts that say which answer is better"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Three fair pairs on matching topics, each with a verdict that says what improved and which rep caused it"
+          }
+        ]
+      },
+      {
+        "id": "r4",
+        "name": "Honest and careful",
+        "description": "No handed-in work, no personal details, facts checked",
+        "levels": [
+          {
+            "label": "Not yet",
+            "descriptor": "A card asks for work to hand in as your own, or personal details appear in prompts or screenshots"
+          },
+          {
+            "label": "Getting there",
+            "descriptor": "Cards are fair to use and free of personal details, but nothing was checked outside the chat"
+          },
+          {
+            "label": "Nailed it",
+            "descriptor": "Every card is one you could show a teacher, nothing personal appears anywhere, and one fact was checked against a named source"
+          }
+        ]
+      }
+    ]
+  },
+  "version": "1.0.0",
+  "editorNotes": "Drafted from the vendor's published terms and pages, not from a walk-through on a live account. Before publishing: a reviewer must follow guide-chatgpt on a new free account and confirm every click path, then set the guide's lastVerifiedAt. Steps that use many new chats may run into the Free plan's message limit; the guide tells learners what to do.",
+  "verifyFlags": [
+    {
+      "path": "setupGuides.0.steps.3.body",
+      "claim": "Settings → Data controls → 'Improve the model for everyone' is the current name and place of the training switch. OpenAI's help centre could not be fetched (HTTP 403) when this was drafted."
+    },
+    {
+      "path": "setupGuides.0.steps.2.body",
+      "claim": "The Free plan limits messages to the newest model and then falls back or asks the user to wait. The pricing page read lists a Free plan but not this behaviour.",
+      "evidenceUrl": "https://chatgpt.com/pricing/"
+    }
+  ],
+  "ideaId": "IDEA-042"
+}

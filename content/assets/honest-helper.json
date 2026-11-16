@@ -1,0 +1,61 @@
+[
+  {
+    "id": "vid-honest-helper-trailer",
+    "kind": "video",
+    "storageKey": "courses/honest-helper/trailer.mp4",
+    "licence": "owned",
+    "durationSec": 90,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-honest-helper-trailer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/honest-helper/trailer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-honest-helper-trailer",
+    "kind": "transcript_md",
+    "storageKey": "courses/honest-helper/trailer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "img-honest-helper-trailer-poster",
+    "kind": "image",
+    "storageKey": "courses/honest-helper/trailer-poster.png",
+    "licence": "owned",
+    "altText": "Title card for the course: Homework Helper Chatbot (The Honest Kind).",
+    "placeholder": true
+  },
+  {
+    "id": "vid-honest-helper-why-bots-slip",
+    "kind": "video",
+    "storageKey": "courses/honest-helper/why-bots-slip.mp4",
+    "licence": "owned",
+    "durationSec": 120,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-honest-helper-why-bots-slip",
+    "kind": "captions_vtt",
+    "storageKey": "courses/honest-helper/why-bots-slip.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-honest-helper-why-bots-slip",
+    "kind": "transcript_md",
+    "storageKey": "courses/honest-helper/why-bots-slip.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tpl-honest-helper-test-log",
+    "kind": "template_zip",
+    "storageKey": "courses/honest-helper/test-log-template.zip",
+    "licence": "owned",
+    "placeholder": true
+  }
+]

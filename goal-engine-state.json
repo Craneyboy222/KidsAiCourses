@@ -2,12 +2,12 @@
   "goal": "Build the launch platform specified in PLATFORM_SPEC.md in full, until complete.",
   "classification": "HYBRID (SAAS_TOOL + CONTENT_PLATFORM + AUTOMATION_SYSTEM)",
   "status": "IN_PROGRESS",
-  "current_phase": 1,
+  "current_phase": 2,
   "phases": [
     {
       "id": 1,
       "name": "Foundation",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "tasks": [
         {
           "id": "1.1",
@@ -42,8 +42,8 @@
         {
           "id": "1.6",
           "description": "Design system, UI kit, layout shells",
-          "status": "IN_PROGRESS",
-          "result": "57 kit files and 6 layout shells written; final verification pending (paused by usage limit)"
+          "status": "DONE",
+          "result": "57 kit components, 9 shells; 309 tests; axe clean in 54 headless runs"
         },
         {
           "id": "1.7",
@@ -54,8 +54,8 @@
         {
           "id": "1.8",
           "description": "Kernel services: audit, settings, flags, rate limit, email, storage, notifications, jobs, copy",
-          "status": "IN_PROGRESS",
-          "result": "audit and settings written by lead; rest paused by usage limit before any file landed"
+          "status": "DONE",
+          "result": "settings+launch readiness, flags, rate limit, email, storage, notifications, jobs, copy, processors; 282 tests"
         },
         {
           "id": "1.9",
@@ -68,36 +68,36 @@
     {
       "id": 2,
       "name": "Accounts, family and consent",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "tasks": [
         {
           "id": "2.1",
           "description": "Sign-up flows and under-13 block",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
           "id": "2.2",
           "description": "Family, children, invite codes",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
           "id": "2.3",
           "description": "Consent centre and age assurance",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
           "id": "2.4",
           "description": "Staff 2FA and roles",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
           "id": "2.5",
           "description": "Safety band daily job",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         }
       ]
@@ -265,7 +265,7 @@
           "id": "7.3",
           "description": "Review queue and publish service",
           "status": "PENDING",
-          "result": null
+          "result": "publish service core done (201 tests): refuses any version without a human approval record"
         },
         {
           "id": "7.4",
@@ -452,15 +452,9 @@
   "decisions": [
     "See docs/DECISIONS.md (D1\u2013D10)"
   ],
-  "blockers": [
-    {
-      "what": "Account usage limit reached at about 23:55 on 15 November 2026; six workstreams paused",
-      "resolves": "02:50 Europe/London, 16 November 2026",
-      "action": "Scheduled resume at 02:55; continue the same agents, two or three at a time"
-    }
-  ],
+  "blockers": [],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T00:01:48.908291+00:00",
+  "last_updated": "2026-11-16T01:05:44.984897+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",

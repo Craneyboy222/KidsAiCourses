@@ -1,0 +1,55 @@
+[
+  {
+    "id": "vid-promo-advert-trailer",
+    "kind": "video",
+    "storageKey": "courses/promo-advert/trailer.mp4",
+    "licence": "owned",
+    "durationSec": 90,
+    "placeholder": true
+  },
+  {
+    "id": "vtt-promo-advert-trailer",
+    "kind": "captions_vtt",
+    "storageKey": "courses/promo-advert/trailer.en.vtt",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "tx-promo-advert-trailer",
+    "kind": "transcript_md",
+    "storageKey": "courses/promo-advert/trailer.transcript.md",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "img-promo-advert-trailer-poster",
+    "kind": "image",
+    "storageKey": "courses/promo-advert/trailer-poster.png",
+    "licence": "owned",
+    "altText": "Title card for the course: Shoot a Promo Advert in an Afternoon.",
+    "placeholder": true
+  },
+  {
+    "id": "tpl-promo-advert-storyboard",
+    "kind": "template_zip",
+    "storageKey": "courses/promo-advert/storyboard-template.zip",
+    "licence": "owned",
+    "placeholder": true
+  },
+  {
+    "id": "aud-promo-advert-track-upbeat",
+    "kind": "audio",
+    "storageKey": "courses/promo-advert/track-upbeat-30s.mp3",
+    "licence": "owned",
+    "durationSec": 30,
+    "placeholder": true
+  },
+  {
+    "id": "aud-promo-advert-track-calm",
+    "kind": "audio",
+    "storageKey": "courses/promo-advert/track-calm-30s.mp3",
+    "licence": "owned",
+    "durationSec": 30,
+    "placeholder": true
+  }
+]

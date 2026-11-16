@@ -27,7 +27,7 @@ import { CRISIS_SCRIPT_VERSION, getCrisisScript, openCaseWithRetry, renderCrisis
 import { COACH_ROUTE_ALIAS } from "./gateway";
 import { detectLeak } from "./leak";
 import { detectCrisis, type CrisisSignal, type ModerationVerdict } from "./moderation";
-import { COACH_PROMPT_VERSION, assemblePrompt, correctiveReasons, type AssembledPrompt } from "./prompts";
+import { COACH_PROMPT_VERSION, CRISIS_SENTINEL, assemblePrompt, correctiveReasons, type AssembledPrompt } from "./prompts";
 import { redactInput, scrubForStorage } from "./redact";
 import {
   AI_LABEL,
@@ -343,6 +343,10 @@ const outputModerationStage: Stage = async (state, deps) => {
   const first = state.generations[state.generations.length - 1];
   if (!identity || !step || cleanText === undefined || !prompt || !first) throw new Error("output stage reached without a generation");
 
+  // Second layer of crisis detection: the model flags a disclosure the rules did not catch. Its
+  // words are thrown away; the learner gets the fixed script.
+  if (first.text.includes(CRISIS_SENTINEL)) return halt(state, crisisTerminal(MODEL_FLAG));
+
   const firstCheck = await checkOutput(first.text, state, deps);
   if (firstCheck.ok) return go({ ...state, reply: firstCheck.text, outputVerdict: firstCheck.verdict });
 
@@ -358,6 +362,7 @@ const outputModerationStage: Stage = async (state, deps) => {
     corrective,
   });
   const second = await deps.gateway.generate(ctx, { alias: COACH_ROUTE_ALIAS, instructions: retryPrompt.instructions, messages: retryPrompt.messages, maxOutputTokens: MAX_OUTPUT_TOKENS });
+  if (second.text.includes(CRISIS_SENTINEL)) return halt({ ...state, generations: [...state.generations, second], regenerated: true }, crisisTerminal(MODEL_FLAG));
   const retried: State = { ...state, generations: [...state.generations, second], regenerated: true, leakReasons: firstCheck.leakReasons, outputVerdict: firstCheck.verdict ?? undefined };
   const secondCheck = await checkOutput(second.text, retried, deps);
   if (secondCheck.ok) return go({ ...retried, reply: secondCheck.text, outputVerdict: secondCheck.verdict });
@@ -367,6 +372,8 @@ const outputModerationStage: Stage = async (state, deps) => {
     refusal("output_blocked", "blocked_output", COACH_COPY.outputBlocked),
   );
 };
+
+const MODEL_FLAG: CrisisSignal = { severity: "high", trigger: "crisis_classifier", categories: ["model_flag"] };
 
 const STAGES: Array<{ name: CoachStage; run: Stage }> = [
   { name: "authn_authz", run: authStage },
