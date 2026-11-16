@@ -32,6 +32,7 @@ import { JOBS } from "@/server/jobs/registry";
 import { DELETION_UNDO_DAYS } from "@/server/services/children";
 import { RETENTION_DEFAULTS, ensureRetentionPolicies, listRetentionPolicies, loadRetentionDays, runRetentionSweep, setRetentionDays } from "@/server/services/retention";
 import { PENDING_TEEN_DAYS } from "@/server/services/teen-signup";
+import { clearSentEmails, getSentEmails } from "@/server/email";
 import { createLocalStorage, getStorage, setStorage } from "@/server/storage";
 import { importContent } from "../../../scripts/import-courses";
 import { scriptCtx } from "../../../scripts/import-ideas";
@@ -53,7 +54,10 @@ afterAll(async () => {
   await rm(storageDir, { recursive: true, force: true });
   await closeDb();
 });
-beforeEach(resetDb);
+beforeEach(async () => {
+  await resetDb();
+  clearSentEmails();
+});
 
 const countOf = async (table: string): Promise<number> => (await db.execute<{ n: number }>(sql.raw(`select count(*)::int as n from "${table}"`)))[0]?.n ?? 0;
 
@@ -321,13 +325,18 @@ describe("accounts", () => {
 
     const first = await runRetentionSweep(system());
     expect(first).toMatchObject({ inactiveWarningsSent: 1, inactiveDeletionsScheduled: 0 });
+    // In the app AND by email: somebody who has not opened the site for two years will not see a notice inside it.
     const notices = await db.select().from(notification).where(eq(notification.type, "retention.inactive_warning"));
-    expect(notices.map((row) => row.userId)).toEqual([quiet.parentId]);
+    expect(notices.map((row) => `${row.userId}:${row.channel}`).sort()).toEqual([`${quiet.parentId}:email`, `${quiet.parentId}:in_app`].sort());
+    const emails = getSentEmails().filter((email) => email.template === "retention_inactive_warning");
+    expect(emails).toHaveLength(1);
+    expect(emails[0]?.subject).toMatch(/^An unused account will be deleted after \d{1,2} [A-Z][a-z]+ 20\d\d$/);
     const warnings = await db.select().from(auditLog).where(eq(auditLog.action, "retention.inactive_warning"));
     expect(warnings.map((row) => row.targetId)).toEqual([quiet.learnerId]);
 
     const second = await runRetentionSweep(system());
     expect(second).toMatchObject({ inactiveWarningsSent: 0, inactiveDeletionsScheduled: 0 });
+    expect(getSentEmails().filter((email) => email.template === "retention_inactive_warning")).toHaveLength(1);
     expect(await countOf("data_request")).toBe(0);
     for (const id of [quiet.learnerId, active.learnerId]) expect((await db.select({ status: user.status }).from(user).where(eq(user.id, id)))[0]?.status).toBe("active");
   });
@@ -354,6 +363,7 @@ describe("accounts", () => {
     expect(requests[0]?.undoUntil?.getTime()).toBe(NOW.getTime() + 14 * DAY);
     // Nothing is erased by this step: the account still exists until the undo window ends.
     expect(await countOf("learner_profile")).toBe(3);
+    expect(getSentEmails().filter((email) => email.template === "retention_inactive_deletion")).toHaveLength(1);
   });
 
   it("does not warn again or delete when the learner comes back after a warning", async () => {

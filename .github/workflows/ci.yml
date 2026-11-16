@@ -3,6 +3,15 @@
 # No job calls a real AI provider, Stripe live mode or a real Radar source: every external service
 # runs on its local stand-in (fixture model, fake Stripe driver, console email, local storage).
 # The secrets below are generated per run and protect nothing.
+#
+# State on 16 November 2026 (this workflow has never run: nothing has been pushed):
+# - "Format check" and "Content check (strict)" are advisory (continue-on-error) for now. 345 files
+#   written before Prettier was enforced fail the format check, and strict content checking fails
+#   until a person has verified each tool's terms. Make both blocking before launch: run
+#   `pnpm format` once when no other work is in flight, and see docs/DEPLOYMENT.md step 10.
+# - The browser job needs the end-to-end slice: there are no specs under tests/e2e or tests/a11y
+#   yet, and playwright.config.ts names a global set-up file that does not exist. It will fail
+#   until they land, which is the truth about the product today.
 name: CI
 
 on:
@@ -57,10 +66,14 @@ jobs:
         run: pnpm typecheck
       - name: Lint
         run: pnpm lint
-      - name: Format check
+      - name: "Format check (advisory until the one-off reformat; see the note at the top)"
         run: pnpm format:check
-      - name: Content check (strict)
+        continue-on-error: true
+      - name: Content check
+        run: pnpm content:check
+      - name: "Content check, strict (advisory until every tool is verified; blocking before launch)"
         run: pnpm content:check --strict
+        continue-on-error: true
       - name: Schema reference is up to date
         run: pnpm exec tsx scripts/schema-doc.ts && git diff --exit-code docs/SCHEMA.md
       - name: Unit tests

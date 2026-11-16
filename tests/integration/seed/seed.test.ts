@@ -110,6 +110,19 @@ describe("pnpm db:seed", () => {
     for (const row of staffRows) expect(row.notes).toContain(SEED_TOTP_SECRET);
   });
 
+  it("publishes the six legal pages (as drafts, for local use) and, when the marketing slice is present, its marketing and help pages", async () => {
+    const rows = await db.execute<{ kind: string; n: number; shown: number }>(sql`select kind::text as kind, count(*)::int as n, count(current_version_id)::int as shown from page group by kind`);
+    const of = (kind: string) => rows.find((row) => row.kind === kind) ?? { n: 0, shown: 0 };
+    expect(of("legal")).toMatchObject({ n: 6, shown: 6 });
+    const pagesSkipped = first.skipped.some((item) => item.includes("import-pages"));
+    if (!pagesSkipped) {
+      expect(of("marketing").shown).toBeGreaterThanOrEqual(1);
+      // Spec Section 15: "about 10 help articles".
+      expect(of("help").shown).toBeGreaterThanOrEqual(10);
+    }
+    expect(second.signupOpen).toBe(true);
+  });
+
   it("leaves realistic learning behind: progress, an accepted and a pending submission, a certificate, moderation examples", async () => {
     expect(afterFirst.enrolment).toBe(6);
     const projects = await db.execute<{ status: string; n: number }>(sql`select status::text as status, count(*)::int as n from project group by 1 order by 1`);

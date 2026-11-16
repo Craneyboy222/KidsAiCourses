@@ -11,3 +11,5 @@ One lesson per entry, summary first. Update rather than duplicate; delete anythi
 - **The spec copy in the repo (`PLATFORM_SPEC.md`) carries the lead's corrections** (D1, D2, D8, D11). The uploaded original does not.
 - **Chris works from goals, not step lists, and wants results first.** No pushing, deploying, spending or account creation without his explicit approval; local branch commits are fine.
 - **The owner uses the Goal Engine plugin.** Keep `goal-engine-state.json` and `goal-engine-plan.md` current so `/goal-engine:status` and `/goal-engine:resume` work.
+- **If every page reloads endlessly in `next dev`** (HMR hash mismatch, seen when two dev servers or an editing workstream share the checkout): restart; if it persists delete `.next/dev`. Never `pkill -f next-server` — it kills other workstreams' servers; kill by port.
+- **Seeded local accounts** are listed by `pnpm db:seed`; every password is `SEED_PASSWORD` from `.env.local`; staff two-factor uses the fixed local secret the seed prints.

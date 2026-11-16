@@ -220,6 +220,35 @@ export function notBuiltName(error: unknown): string | null {
   return typeof name === "string" ? name : "unknown";
 }
 
+type PageImporter = {
+  importPages: (ctx: Ctx, options: { publishDrafts?: boolean }) => Promise<unknown>;
+  formatImportPagesResult?: (result: unknown) => string;
+};
+
+/**
+ * The marketing slice's page importer, or null when that file is not in this checkout. Loaded
+ * through a variable so that neither TypeScript nor the bundler ties this script to another
+ * slice's file; what comes back is checked before it is used.
+ */
+async function loadPageImporter(): Promise<PageImporter | null> {
+  const file = "./import-pages";
+  let loaded: unknown;
+  try {
+    loaded = await import(file);
+  } catch (error) {
+    const code = (error as { code?: unknown } | null)?.code;
+    if (code === "ERR_MODULE_NOT_FOUND" || code === "MODULE_NOT_FOUND") return null;
+    throw error; // the file is there but does not load: that is a problem, not a skip
+  }
+  if (typeof loaded !== "object" || loaded === null) return null;
+  const { importPages, formatImportPagesResult } = loaded as Record<string, unknown>;
+  if (typeof importPages !== "function") return null;
+  return {
+    importPages: importPages as PageImporter["importPages"],
+    ...(typeof formatImportPagesResult === "function" ? { formatImportPagesResult: formatImportPagesResult as (result: unknown) => string } : {}),
+  };
+}
+
 const describe = (error: unknown): string => {
   if (!(error instanceof Error)) return String(error);
   const cause = error.cause instanceof Error ? ` (cause: ${error.cause.message})` : "";
@@ -439,7 +468,23 @@ export async function runSeed(options: SeedOptions = {}): Promise<SeedResult> {
     await setFlag(owner, { key: "dev.sample_flag", enabled: false, description: "Development sample. Nothing reads this flag: it is here so that the flags screen has a row to try." });
   });
 
-  // ── 5. Launch readiness (placeholders) and sign-up open ───────────────────
+  // ── 5. Pages, launch readiness (placeholders) and sign-up open ────────────
+  // Marketing, help and legal pages belong to the marketing slice (`scripts/import-pages.ts`,
+  // `content/pages`). It is loaded by name at run time so that this script still runs, and says
+  // "skipped", on a checkout where that slice has not landed. The legal pages are DRAFTS: they are
+  // published here with their draft banner, in local development and tests only, so that they can
+  // be read and local sign-up can open. That is not a legal sign-off.
+  await part("marketing, help and legal pages", async () => {
+    const importer = await loadPageImporter();
+    if (!importer) {
+      result.skipped.push("marketing, help and legal pages (scripts/import-pages.ts)");
+      log("skipped: marketing, help and legal pages, not built yet (scripts/import-pages.ts)");
+      return;
+    }
+    const pages = await importer.importPages(system("seed.pages"), { publishDrafts: true });
+    log(importer.formatImportPagesResult ? importer.formatImportPagesResult(pages) : "Pages: imported from content/pages.");
+  });
+
   const readiness = await markLaunchReadyForDev(system("seed.launch_readiness"));
   if (readiness.ready) {
     if (!(await getSetting(system("seed.signup"), "site.signup_open"))) await setSetting(owner, "site.signup_open", true, "Development seed: sign-up opened with placeholder readiness");
@@ -706,7 +751,7 @@ export async function runSeed(options: SeedOptions = {}): Promise<SeedResult> {
     for (const sample of samples) if (!have.has(sample.code)) await createPromo(owner, sample);
   });
 
-  for (const what of ["Radar source records (the Radar engine)", "marketing and help pages (the marketing slice owns content/help)", "drafting prompt templates (the course creation engine)"]) {
+  for (const what of ["Radar source records (the Radar engine)", "drafting prompt templates (the course creation engine)"]) {
     result.skipped.push(what);
     log(`skipped: ${what}, not built yet`);
   }

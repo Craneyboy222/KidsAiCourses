@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { LinkButton } from "@/components/ui/link-button";
 import { BRAND_NAME } from "@/lib/brand";
+import { LEGAL_PAGES } from "@/lib/marketing/site";
 import { BrandMark } from "./brand-mark";
 import { NavLink } from "./nav-link";
 
@@ -15,17 +16,15 @@ export const MARKETING_NAV: ShellLink[] = [
   { href: "/help", label: "Help" },
 ];
 
-export const MARKETING_LEGAL_LINKS: ShellLink[] = [
-  { href: "/legal/privacy", label: "Privacy" },
-  { href: "/legal/privacy-teens", label: "Privacy for teens" },
-  { href: "/legal/terms", label: "Terms" },
-  { href: "/legal/cookies", label: "Cookies" },
-  { href: "/legal/community-code", label: "Community code" },
-  { href: "/legal/ai-use", label: "How we use AI" },
-];
+/** The six legal pages, at the addresses fixed by decision D16. */
+export const MARKETING_LEGAL_LINKS: ShellLink[] = LEGAL_PAGES.map((page) => ({
+  href: `/legal/${page.slug}`,
+  label: page.label,
+}));
 
 export const MARKETING_HELP_LINKS: ShellLink[] = [
   { href: "/help", label: "Help centre" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/safety", label: "Staying safe" },
   { href: "/parents", label: "Information for parents" },
 ];
@@ -39,8 +38,15 @@ export type MarketingShellProps = {
   getStartedHref?: string;
   /** Year shown in the footer. Passed in by the layout so the shell never reads the clock. */
   year: number;
-  /** Optional strip above the header, for example a cookie banner or a service notice. */
+  /** Optional strip above the header, for example a service notice. */
   notice?: ReactNode;
+  /**
+   * For a signed-in visitor: one link to their own pages ("Go to your home"), shown in place of
+   * "Sign in" and "Get started". The layout decides; the shell never reads the session.
+   */
+  account?: ShellLink;
+  /** Small print under the footer links, for example the short cookie notice. */
+  footerNote?: ReactNode;
 };
 
 const navLink =
@@ -57,6 +63,8 @@ export function MarketingShell({
   getStartedHref = "/signup/parent",
   year,
   notice,
+  account,
+  footerNote,
 }: MarketingShellProps) {
   return (
     <div className="flex min-h-dvh flex-col">
@@ -65,10 +73,16 @@ export function MarketingShell({
         <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 py-3">
           <BrandMark href="/" />
           <div className="flex items-center gap-2 md:order-last">
-            <LinkButton href={signInHref} variant="ghost">
-              Sign in
-            </LinkButton>
-            <LinkButton href={getStartedHref}>Get started</LinkButton>
+            {account ? (
+              <LinkButton href={account.href}>{account.label}</LinkButton>
+            ) : (
+              <>
+                <LinkButton href={signInHref} variant="ghost">
+                  Sign in
+                </LinkButton>
+                <LinkButton href={getStartedHref}>Get started</LinkButton>
+              </>
+            )}
           </div>
           <nav aria-label="Main" className="w-full md:w-auto md:flex-1">
             <ul className="-mx-3 flex flex-wrap gap-x-1 md:mx-0">
@@ -99,9 +113,12 @@ export function MarketingShell({
           <FooterNav label="Help" links={helpLinks} />
           <FooterNav label="Legal" links={legalLinks} />
         </div>
-        <p className="text-ink-muted mx-auto w-full max-w-6xl px-4 pb-8 text-sm">
-          © {year} {BRAND_NAME}
-        </p>
+        <div className="text-ink-muted mx-auto flex w-full max-w-6xl flex-col gap-2 px-4 pb-8 text-sm">
+          {footerNote}
+          <p>
+            © {year} {BRAND_NAME}
+          </p>
+        </div>
       </footer>
     </div>
   );

@@ -20,6 +20,7 @@
  * This module does not import `server-only`, so that the seed script can run it with tsx.
  */
 import { and, eq, gte, inArray, isNull, lt, lte, ne, notInArray, or, sql } from "drizzle-orm";
+import { env } from "@/env";
 import { revokeAllSessions } from "@/server/auth/accounts";
 import { audit } from "@/server/audit";
 import { assertCan } from "@/server/authz";
@@ -42,6 +43,7 @@ import {
   user,
   withAppendOnlyMaintenance,
 } from "@/server/db";
+import { registerEmailTemplate } from "@/server/email";
 import { AppError } from "@/server/errors";
 import { logWarn } from "@/server/log";
 import { notify, notifyParentsOfLearner } from "@/server/notifications";
@@ -293,6 +295,40 @@ async function sweepDueDeletions(sweep: Sweep): Promise<void> {
 
 const INACTIVE_WARNING_ACTION = "retention.inactive_warning";
 
+// Someone who has not opened the site for nearly two years will not see a notice inside it, so
+// both warnings are also emailed to the parent (or to an 18-year-old who runs their own account).
+// A learner under 18 has no email address and is never emailed.
+registerEmailTemplate("retention_inactive_warning", {
+  audience: "parent",
+  category: "transactional",
+  description: "Warns that a learner account nobody has used for a long time will be deleted, and how to keep it.",
+  subject: "An unused account will be deleted after {{deleteOn}}",
+  body: `
+Nobody has used a learner account in your family for a long time.
+
+We don't keep accounts that aren't being used. To keep this one, sign in to the learner account and open a course before **{{deleteOn}}**. That is all it takes. Signing in to a parent account does not count.
+
+If the learner account isn't used by then, we will delete it and the work saved in it. You will then have {{undoDays}} days to undo that.
+
+[Go to my privacy page]({{url}})
+`,
+});
+registerEmailTemplate("retention_inactive_deletion", {
+  audience: "parent",
+  category: "transactional",
+  description: "Says that an unused learner account is now set to be deleted, and how to undo it.",
+  subject: "An unused account will be deleted in {{undoDays}} days",
+  body: `
+A learner account in your family that nobody has used for a long time is now set to be deleted in {{undoDays}} days.
+
+Until then nothing has been removed, and you can undo this.
+
+[Undo the deletion]({{url}})
+`,
+});
+
+const appUrl = (): string => env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
+
 /**
  * Inactive accounts (spec: "24 months after last activity, with a 30-day warning to the parent").
  * Two passes over learners who have not been active for the period less the warning:
@@ -301,7 +337,10 @@ const INACTIVE_WARNING_ACTION = "retention.inactive_warning";
  *  2. warned at least the warning period ago and still inactive past the full period → start a
  *     deletion request with the usual undo window. The account is closed now and deleted by the
  *     same code as any other deletion when the window ends.
- * Signing in again at any point moves `last_active_at` and the account drops out of both passes.
+ * Using the account again at any point moves `last_active_at` and the account drops out of both
+ * passes. That column is moved by the learner's own usage heartbeat (`recordHeartbeat` in
+ * `usage.ts`): the learner area being open while learning is allowed. Signing in alone does not
+ * move it, and neither does a parent signing in, which is why the notice says "open a course".
  */
 async function sweepInactiveAccounts(sweep: Sweep): Promise<void> {
   const { ctx } = sweep;
@@ -337,17 +376,20 @@ async function sweepInactiveAccounts(sweep: Sweep): Promise<void> {
       sweep.summary.inactiveWarningsSent += 1;
       if (sweep.dryRun) continue;
       const deleteOn = new Date(Math.max(since.getTime() + fullDays * DAY_MS, ctx.now.getTime() + warnDays * DAY_MS));
+      const deleteOnText = deleteOn.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/London" });
       const notice = {
         type: "retention.inactive_warning",
         title: "An account that hasn't been used will be deleted",
-        body: `Nobody has used this learner account for a long time. To keep it, sign in before ${deleteOn.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/London" })}. After that we will delete the account and its work. You will have ${undoDays} days to undo that.`,
+        body: `Nobody has used this learner account for a long time. To keep it, sign in to the learner account and open a course before ${deleteOnText}. After that we will delete the account and its work. You will have ${undoDays} days to undo that.`,
         href: "/parent/privacy",
         dedupeKey: `retention-inactive:${learner.id}:${since.toISOString().slice(0, 10)}`,
+        emailTemplate: "retention_inactive_warning",
+        emailData: { deleteOn: deleteOnText, undoDays: String(undoDays), url: `${appUrl()}/parent/privacy` },
       };
       try {
         const sent = await notifyParentsOfLearner(ctx, learner.id, notice);
         // An 18-year-old who runs their own account has no parent to tell: tell them.
-        if (sent.length === 0) await notify(ctx, { ...notice, userId: learner.id, href: "/settings" });
+        if (sent.length === 0) await notify(ctx, { ...notice, userId: learner.id, href: "/settings/privacy", emailData: { ...notice.emailData, url: `${appUrl()}/settings/privacy` } });
       } catch (error) {
         logWarn("retention.inactive_warning_failed", { learnerId: learner.id, error: error instanceof Error ? error.message : String(error) });
         continue; // no record of a warning, so it is tried again tomorrow and nothing is deleted
@@ -373,6 +415,8 @@ async function sweepInactiveAccounts(sweep: Sweep): Promise<void> {
         body: `A learner account that nobody has used for a long time will be deleted in ${undoDays} days. You can undo this from your Privacy page until then.`,
         href: "/parent/privacy",
         dedupeKey: `retention-inactive-deletion:${learner.id}:${undoUntil.toISOString().slice(0, 10)}`,
+        emailTemplate: "retention_inactive_deletion",
+        emailData: { undoDays: String(undoDays), url: `${appUrl()}/parent/privacy` },
       });
     } catch (error) {
       logWarn("retention.inactive_deletion_notice_failed", { learnerId: learner.id, error: error instanceof Error ? error.message : String(error) });

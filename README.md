@@ -30,11 +30,27 @@ createdb -O app platform_dev && createdb -O app platform_test
 
 # 3. Schema and seed data
 pnpm db:migrate
-pnpm db:seed
+pnpm db:seed                      # also makes the placeholder trailers and sample images
 
 # 4. Run it
 pnpm dev                          # http://localhost:3000
 ```
+
+Sign in at <http://localhost:3000/signin>: the "Learner" tab takes a username, the "Parent or
+carer" tab an email address (staff use that tab too).
+
+**On another port**, sign-in needs to be told the address, or it refuses the request as coming
+from a site it does not know:
+
+```bash
+BETTER_AUTH_URL=http://localhost:3218 NEXT_PUBLIC_APP_URL=http://localhost:3218 pnpm dev -p 3218
+```
+
+**If every page keeps reloading** and sign-in never completes (the browser console says
+`HMR hash mismatch`): stop the server and start it again. If it still happens, delete the
+`.next/dev` folder first; nothing is lost, it is rebuilt on the next request. This was seen twice
+on 16 November 2026, both times while other work was changing files in the same folder, and not
+on a quiet checkout (`docs/OPEN_QUESTIONS.md`, last section).
 
 `pnpm db:seed` prints a table of accounts when it finishes. Every account uses the password in
 `SEED_PASSWORD`. Parents and staff sign in with their email address, learners with their username.
@@ -49,15 +65,17 @@ pnpm dev                          # http://localhost:3000
 | Pending teen | `turbo_finch` | Waiting for a parent: the approval link is in the seed's console output |
 
 **Two-step sign-in for seeded staff (local only).** Every seeded staff account shares one public
-secret, printed by the seed (`SEED_TOTP_SECRET` in `scripts/seed.ts`). Add it to an authenticator
-app once and it works for all of them. It is public, so the seed refuses to run anywhere but
-`APP_ENV=local` or `test`.
+secret, printed against each staff row of the seed's account table (`SEED_TOTP_SECRET` in
+`scripts/seed.ts`). Add it to an authenticator app once and it works for all of them. It is
+public, so the seed refuses to run anywhere but `APP_ENV=local` or `test`. Staff sign-in works
+today and then lands on `/studio`, which answers 404 until Studio is built.
 
 What the seed leaves behind: five published courses (through the real review-and-publish path),
-placeholder trailers, captions and sample images, 175 course ideas, part-finished courses, one
+placeholder trailers, captions and sample images, the marketing and help pages and the six legal
+pages (drafts, shown with their draft banner locally only), 175 course ideas, part-finished courses, one
 accepted submission with a certificate, one submission waiting in the review sample, one accepted
-by a moderator, a learner's report, promo codes, retention policies and one sample AI draft in the
-review queue. Parts whose slice is not built yet are listed as `skipped: …` and picked up when you
+by a moderator, a learner's report, promo codes, retention policies, ten candidate tools marked
+"to verify" and one sample AI draft in the review queue. Parts whose slice is not built yet are listed as `skipped: …` and picked up when you
 run `pnpm db:seed` again. Start again from nothing with `pnpm db:reset && pnpm db:seed`.
 
 ## Commands
@@ -69,7 +87,7 @@ run `pnpm db:seed` again. Start again from nothing with `pnpm db:reset && pnpm d
 | `pnpm test:unit` | Unit tests (no database) |
 | `pnpm test:integration` | Integration tests against real Postgres |
 | `pnpm test:e2e` / `pnpm test:a11y` | Playwright journeys and axe-core, against a production build |
-| `pnpm content:check [--strict]` | Validates everything in `content/`. CI uses `--strict` |
+| `pnpm content:check [--strict]` | Validates everything in `content/`. `--strict` also fails on anything "to verify before publish" (today: every tool's terms). CI runs both; strict is advisory until the tools are verified |
 | `pnpm content:import` | Imports tools, assets and courses as drafts in review. Publishes nothing |
 | `pnpm ideas:import` | Loads `content/course-ideas.json` into the ideas backlog |
 | `pnpm db:generate` | Creates a migration after a schema change. Never edit an applied migration |

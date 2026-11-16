@@ -167,6 +167,35 @@ export const EN_GB = {
     "You'll finish on a secure page run by Stripe. We never see or store your card details.",
   "billing.nothing_deleted":
     "If a plan ends, nothing is deleted: finished projects, portfolios and certificates are kept, and the free courses stay open.",
+
+  // ── Public site: home page and footer. Honest claims only: no testimonials, numbers or "trusted by". No prices. ──
+  "marketing.home.eyebrow": "An online studio for ages 13 to 18",
+  "marketing.home.title": "Learn today's AI tools by making things you actually care about",
+  "marketing.home.lede":
+    "{{brandName}} is where UK teenagers learn AI by doing. Every course is one short project, made in a real tool, with step-by-step guides, an AI coach that gives hints but never does the work, and a parent or carer in the loop.",
+  "marketing.home.cta.parent": "Parents: get started",
+  "marketing.home.cta.teen": "I'm a teenager",
+  "marketing.home.cta.teen_note":
+    "Aged 13 to 18? Show this page to a parent or carer, or start a sign-up yourself. Either way, they approve your account before it opens.",
+  "marketing.home.signed_in.learner": "You're signed in. Your courses are where you left them.",
+  "marketing.home.signed_in.parent": "You're signed in. Your family's dashboard is one click away.",
+  "marketing.home.signed_in.staff": "You're signed in as a member of staff.",
+  "marketing.home.what.title": "What it is",
+  "marketing.home.what.body":
+    "Short, self-paced projects: an app, a short film, a chatbot, a design. You follow the steps here and make the real thing in a real tool. You finish with something to keep, in a private portfolio, and a certificate.",
+  "marketing.home.who.title": "Who it's for",
+  "marketing.home.who.body":
+    "Teenagers aged 13 to 18, and the parents and carers who look after them. A parent sets up or approves every under-18 account, chooses the limits and sees progress. It is not for under-13s.",
+  "marketing.home.safe.title": "How it's kept safe",
+  "marketing.home.safe.body":
+    "No public profiles, no messaging and no adverts. Learners cannot see each other. Coach's messages are checked both ways, work is checked before it is accepted, and there is a Report button on every step.",
+  "marketing.home.courses.title": "Projects you can make",
+  "marketing.home.courses.lede":
+    "Real courses from the catalogue. Each one has been reviewed and signed off by a person on our team.",
+  "marketing.home.courses.empty":
+    "The first courses are being reviewed. Each one is signed off by a person before it appears here.",
+  "marketing.cookie_note":
+    "We only use the cookies this site needs to work: no advertising and no tracking.",
 } as const;
 
 export type CopyKey = keyof typeof EN_GB;

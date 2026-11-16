@@ -25,5 +25,6 @@ not legal advice and none of them has been reviewed by a lawyer or a safeguardin
 | `SAFEGUARDING_POLICY.md` | Outline of the safeguarding policy and procedure | DSL ⚖️ |
 
 Keep them true. When the product changes what data it holds, who it goes to or how long it is
-kept, change the document in the same piece of work. The periods in `RETENTION_SCHEDULE.md` are
-generated from `RETENTION_DEFAULTS` in `src/server/services/retention.ts`: change them there.
+kept, change the document in the same piece of work. The periods in `RETENTION_SCHEDULE.md` mirror
+`RETENTION_DEFAULTS` in `src/server/services/retention.ts`, and a test
+(`tests/unit/seed/compliance-docs.test.ts`) fails when the two differ: change both together.

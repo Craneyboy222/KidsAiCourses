@@ -163,7 +163,7 @@ Sign-up cannot be opened while any launch-readiness item is open: the gate is in
 (`src/server/settings/launch-readiness.ts`), not only in this list.
 
 **Product**
-- [ ] `next build` succeeds and CI is green on `main` (typecheck, lint, content check `--strict`, unit, integration, Playwright, axe)
+- [ ] `next build` succeeds and CI is green on `main` (typecheck, lint, content check `--strict`, unit, integration, Playwright, axe). The format check and the strict content check are advisory in `.github/workflows/ci.yml` today: remove `continue-on-error` from both first. The workflow itself has never run
 - [ ] Studio, safeguarding cases and the legal and help pages are built (not yet: see the README status)
 - [ ] All 15 starter courses are authored and reviewed by a person (5 exist; the seed's approvals are not real reviews and exist only locally)
 - [ ] Real videos, captions and transcripts replace every placeholder asset
