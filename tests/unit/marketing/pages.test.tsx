@@ -140,7 +140,11 @@ describe("text pages and help", () => {
     expect(screen.getByRole("link", { name: "For parents and carers" })).toHaveAttribute("href", "/help?q=invite+code&for=parent");
     expect(screen.getByRole("link", { name: "Invite codes" })).toHaveAttribute("href", "/help/invite-codes");
     expect(screen.getByText("For parents and carers", { selector: "span" })).toBeInTheDocument();
+    // "Everyone" is asked for by name, so a signed-in teenager can leave their own filter.
+    expect(screen.getByRole("link", { name: "Everyone" })).toHaveAttribute("href", "/help?q=invite+code&for=all");
     expect(helpHref({})).toBe("/help");
+    expect(helpHref({ everyone: true })).toBe("/help?for=all");
+    expect(helpHref({ reader: "teen", everyone: true })).toBe("/help?for=teen");
     expect(await axeViolations()).toEqual([]);
   });
 });

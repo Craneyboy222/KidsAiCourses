@@ -14,7 +14,7 @@ type Search = Promise<Record<string, string | string[] | undefined>>;
 
 export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
   const params = await searchParams;
-  const filtered = parseQuery(params.q) !== "" || parseReader(params.for) !== null;
+  const filtered = parseQuery(params.q) !== "" || params.for !== undefined;
   return publicPageMetadata({
     title: "Help centre",
     description: `Short answers for teenagers and parents: accounts, invite codes, consent, tools and approvals, Coach, time limits, handing in work, certificates, your data and billing on ${BRAND_NAME}.`,
@@ -67,7 +67,7 @@ export default async function HelpPage({ searchParams }: { searchParams: Search 
               title="Nothing found"
               description="Try fewer or different words, for example “password”, “invite code” or “certificate”."
               action={
-                <LinkButton href={helpHref({ reader })} variant="secondary">
+                <LinkButton href={helpHref({ reader, everyone: true })} variant="secondary">
                   Show every article
                 </LinkButton>
               }

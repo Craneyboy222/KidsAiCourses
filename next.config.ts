@@ -13,6 +13,8 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // A second dev server (previews, end-to-end runs) can use its own build folder.
+  distDir: process.env.NEXT_DIST_DIR ?? ".next",
   poweredByHeader: false,
   reactStrictMode: true,
   serverExternalPackages: ["@react-pdf/renderer", "postgres"],

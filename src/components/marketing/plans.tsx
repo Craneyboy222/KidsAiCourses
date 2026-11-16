@@ -6,6 +6,7 @@ import type { PricedPlan, PricingView } from "@/server/services/marketing";
 type Viewer = Extract<PricingView, { kind: "plans" }>["viewer"];
 
 const isFree = (plan: PricedPlan): boolean => plan.pricing.monthlyPence === 0 && plan.pricing.annualPence === 0;
+const seatsLine = (plan: PricedPlan): string => `Up to ${pluralise(plan.seats, "learner")}`;
 
 function action(plan: PricedPlan, viewer: Viewer): { href: string; label: string } | null {
   switch (viewer) {
@@ -31,7 +32,7 @@ export function PlanCards({ plans, viewer }: { plans: PricedPlan[]; viewer: View
     <div className="flex flex-col gap-6">
       {placeholder && (
         <Callout tone="warning" title="These prices are not final">
-          <p>We have not opened yet and the prices below have not been confirmed. The price shown at checkout is the price you pay.</p>
+          <p>The prices below have not been confirmed yet. The price shown at checkout is the price you pay.</p>
         </Callout>
       )}
       <ul className="grid gap-5 md:grid-cols-2">
@@ -78,7 +79,8 @@ export function PlanCards({ plans, viewer }: { plans: PricedPlan[]; viewer: View
               )}
 
               <ul className="flex flex-col gap-2">
-                <PlanPoint>{`Up to ${pluralise(plan.seats, "learner")}`}</PlanPoint>
+                {/* The plan's own highlights usually say how many learners; say it here only if they do not. */}
+                {!plan.highlights.some((highlight) => highlight.toLowerCase().startsWith(seatsLine(plan).toLowerCase())) && <PlanPoint>{seatsLine(plan)}</PlanPoint>}
                 {pricing.extraSeatMonthlyPence !== null && pricing.extraSeatMonthlyPence > 0 && <PlanPoint>{`Extra places at ${formatPence(pricing.extraSeatMonthlyPence)} a month each`}</PlanPoint>}
                 {pricing.trialDays > 0 && <PlanPoint>{`${pricing.trialDays}-day free trial. A card is needed to start it, and a family can have one trial.`}</PlanPoint>}
                 {plan.highlights.map((highlight) => (
@@ -116,7 +118,7 @@ function PlanPoint({ children }: { children: string }) {
  */
 export function AskParentAboutPlans() {
   return (
-    <Card as="section" variant="raised" padding="lg" className="flex flex-col gap-4" data-testid="pricing-ask-parent">
+    <Card as="section" variant="raised" padding="lg" className="flex flex-col gap-4" data-testid="ask-parent-about-plans">
       <div className="flex items-start gap-3">
         <span className="border-ink bg-accent text-on-accent flex size-10 shrink-0 items-center justify-center rounded-full border-2">
           <Lock aria-hidden="true" className="size-5" strokeWidth={2.5} />

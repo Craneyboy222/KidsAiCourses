@@ -42,7 +42,7 @@ const eslintConfig = defineConfig([
     files: ["src/server/ai/**"],
     rules: { "no-restricted-imports": "off" },
   },
-  globalIgnores([".next/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**", "playwright-report/**", "test-results/**", "coverage/**"]),
+  globalIgnores([".next/**", ".next-*/**", "out/**", "build/**", "next-env.d.ts", "drizzle/**", "playwright-report/**", "test-results/**", "coverage/**"]),
 ]);
 
 export default eslintConfig;

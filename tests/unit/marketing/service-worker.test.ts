@@ -95,7 +95,7 @@ function loadWorker(fetchImpl: (url: string, request: { credentials?: string }) 
     clients: { claim: async () => undefined },
   };
   const holder: { exports: Partial<Sw> } = { exports: {} };
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval -- the worker is a classic script, loaded as the browser loads it
+  // The worker is a classic script, so it is run here the way a browser runs it: as plain source.
   new Function("module", "self", "caches", "fetch", "Request", "Response", "URL", SOURCE)(holder, self, caches, fetch, FakeRequest, globalThis.Response, URL);
   return { sw: holder.exports as Sw, stores, puts, fetchCalls, listeners };
 }

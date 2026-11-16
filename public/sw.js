@@ -112,7 +112,7 @@ function routeRequest(request, origin) {
   var url;
   try {
     url = new URL(request.url);
-  } catch (error) {
+  } catch {
     return "bypass";
   }
   if (url.origin !== origin) return "bypass";
@@ -276,7 +276,7 @@ function onFetch(event) {
   var url;
   try {
     url = new URL(request.url);
-  } catch (error) {
+  } catch {
     return;
   }
   if (url.origin === self.location.origin && isSignOutRequest(url.pathname)) {

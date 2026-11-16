@@ -10,11 +10,15 @@ const READERS: { value: HelpReader | null; label: string }[] = [
   { value: "parent", label: "For parents and carers" },
 ];
 
-/** The address of the help page for a search and a reader. */
-export function helpHref(input: { query?: string; reader?: HelpReader | null }): string {
+/**
+ * The address of the help page for a search and a reader. `everyone` asks for every article by
+ * name (`for=all`): a signed-in teenager or parent otherwise starts on their own articles.
+ */
+export function helpHref(input: { query?: string; reader?: HelpReader | null; everyone?: boolean }): string {
   const params = new URLSearchParams();
   if (input.query) params.set("q", input.query);
   if (input.reader) params.set("for", input.reader);
+  else if (input.everyone) params.set("for", "all");
   const text = params.toString();
   return text ? `/help?${text}` : "/help";
 }
@@ -27,7 +31,7 @@ export function HelpSearchForm({ query, reader }: { query: string; reader: HelpR
         <Field label="Search the help centre" className="min-w-0 flex-1 basis-64">
           <Input type="search" name="q" defaultValue={query} maxLength={HELP_QUERY_MAX} autoComplete="off" enterKeyHint="search" />
         </Field>
-        {reader && <input type="hidden" name="for" value={reader} />}
+        <input type="hidden" name="for" value={reader ?? "all"} />
         <Button type="submit" iconStart={<Search aria-hidden="true" className="size-5" strokeWidth={2.5} />}>
           Search
         </Button>
@@ -39,7 +43,7 @@ export function HelpSearchForm({ query, reader }: { query: string; reader: HelpR
             return (
               <li key={option.label}>
                 <Link
-                  href={helpHref({ query, reader: option.value })}
+                  href={helpHref({ query, reader: option.value, everyone: true })}
                   aria-current={current ? "true" : undefined}
                   className="rounded-control border-ink text-ink hover:bg-tint aria-[current=true]:bg-ink aria-[current=true]:text-paper inline-flex min-h-11 items-center border-2 px-3 font-bold no-underline"
                 >
