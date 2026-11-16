@@ -18,6 +18,8 @@ Chris delegated the open spec items to the build lead on 15 November 2026. Each 
 | D12 | `order` quiz questions have no position field in the spec model | Authored option order is the correct order; the learner payload is shuffled server-side. | `src/content/schema.ts` (`toLearnerCourse`) |
 | D13 | Age is known only by birth month and year | A birthday counts once the birth month has fully passed in UK time, so nobody is ever treated as older than they are. A child may be blocked or held in a stricter band for up to a month after their real birthday. | `src/server/services/age.ts` |
 | D14 | Parallel build needs fixed seams | Cross-slice service and component contracts are fixed by the lead in `src/server/services/*` (files marked CONTRACT) and `src/components/{course,coach,submissions,safety}`. | `src/server/services/_contract.ts` |
+| D15 | Accessibility preferences are applied on the server from a cookie, which makes every route render per request | Accepted. It avoids a flash of the wrong theme or text size and needs no inline script. Marketing pages are not statically cached; revisit only if page-speed targets are missed. | `src/app/layout.tsx` |
+| D16 | Legal page addresses | Fixed set: `/legal/privacy`, `/legal/privacy-teen`, `/legal/terms`, `/legal/cookies`, `/legal/community-code`, `/legal/ai-use-policy`. | launch readiness, marketing shell |
 
 ## Enhancements added by the lead
 

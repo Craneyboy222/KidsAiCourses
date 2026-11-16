@@ -1,29 +1,14 @@
-import { eq } from "drizzle-orm";
-import { siteSetting } from "@/server/db";
-import type { Ctx } from "@/server/context";
 import { assertCan } from "@/server/authz";
 import { audit } from "@/server/audit";
+import type { Ctx } from "@/server/context";
+import { siteSetting } from "@/server/db";
 import { AppError } from "@/server/errors";
-import { SETTINGS, type SettingKey, type SettingValue } from "./registry";
+import { BUILT_IN_GUARDS } from "./guards";
+import { SETTINGS, type SettingGroup, type SettingKey, type SettingValue } from "./registry";
+import { getSetting } from "./store";
 
 export * from "./registry";
-
-/**
- * Reads a setting, falling back to the registry default when it has never been set
- * or when the stored value no longer matches the schema.
- */
-export async function getSetting<K extends SettingKey>(ctx: Pick<Ctx, "db">, key: K): Promise<SettingValue<K>> {
-  const [row] = await ctx.db.select({ value: siteSetting.value }).from(siteSetting).where(eq(siteSetting.key, key)).limit(1);
-  const definition = SETTINGS[key];
-  if (!row) return definition.defaultValue as SettingValue<K>;
-  const parsed = definition.schema.safeParse(row.value);
-  return (parsed.success ? parsed.data : definition.defaultValue) as SettingValue<K>;
-}
-
-export async function getSettings<K extends SettingKey>(ctx: Pick<Ctx, "db">, keys: readonly K[]): Promise<{ [P in K]: SettingValue<P> }> {
-  const entries = await Promise.all(keys.map(async (k) => [k, await getSetting(ctx, k)] as const));
-  return Object.fromEntries(entries) as { [P in K]: SettingValue<P> };
-}
+export { getSetting, getSettings } from "./store";
 
 /** Guards run before a setting is saved. Other modules register theirs with `registerSettingGuard`. */
 type Guard = (ctx: Ctx, value: unknown) => Promise<void>;
@@ -41,6 +26,9 @@ export async function setSetting<K extends SettingKey>(ctx: Ctx, key: K, value: 
   if (!parsed.success) {
     throw new AppError("invalid_input", `That value isn't valid for "${definition.label}". ${parsed.error.issues[0]?.message ?? ""}`.trim());
   }
+  // Built-in guards first (launch readiness, deputy escalation, Radar weights), then any registered by other modules.
+  const builtIn = BUILT_IN_GUARDS[key] as Guard | undefined;
+  if (builtIn) await builtIn(ctx, parsed.data);
   for (const guard of guards.get(key) ?? []) await guard(ctx, parsed.data);
   const updatedBy = ctx.actor.type === "staff" ? ctx.actor.userId : null;
   await ctx.db.transaction(async (tx) => {
@@ -50,5 +38,50 @@ export async function setSetting<K extends SettingKey>(ctx: Ctx, key: K, value: 
       .values({ key, value: parsed.data as unknown, updatedBy, updatedAt: ctx.now })
       .onConflictDoUpdate({ target: siteSetting.key, set: { value: parsed.data as unknown, updatedBy, updatedAt: ctx.now } });
     await audit(ctx, { action: "setting.update", targetType: "site_setting", targetId: key, reason, meta: { from: previous, to: parsed.data } }, tx);
+  });
+}
+
+/** One row of the Studio settings screen. */
+export type SettingListItem = {
+  key: SettingKey;
+  group: SettingGroup;
+  label: string;
+  help: string;
+  /** The value in force: the stored one, or the default when unset or no longer valid. */
+  value: unknown;
+  defaultValue: unknown;
+  /** False when nothing is stored and the default applies. */
+  isSet: boolean;
+  /** Only the owner may change it. */
+  ownerOnly: boolean;
+  /** Needs legal or specialist confirmation before launch. */
+  legal: boolean;
+  updatedAt: Date | null;
+  updatedBy: string | null;
+};
+
+/** Every registry entry with its current value, for Studio → Settings. Staff with `setting.manage`. */
+export async function listSettings(ctx: Ctx): Promise<SettingListItem[]> {
+  assertCan(ctx.actor, "setting.manage");
+  const rows = await ctx.db.select().from(siteSetting);
+  const stored = new Map(rows.map((r) => [r.key, r]));
+  return (Object.keys(SETTINGS) as SettingKey[]).map((key) => {
+    const definition = SETTINGS[key];
+    const row = stored.get(key);
+    const parsed = row ? definition.schema.safeParse(row.value) : undefined;
+    const isSet = parsed?.success === true;
+    return {
+      key,
+      group: definition.group,
+      label: definition.label,
+      help: definition.help,
+      value: isSet ? parsed.data : definition.defaultValue,
+      defaultValue: definition.defaultValue,
+      isSet,
+      ownerOnly: "ownerOnly" in definition && definition.ownerOnly === true,
+      legal: "legal" in definition && definition.legal === true,
+      updatedAt: row?.updatedAt ?? null,
+      updatedBy: row?.updatedBy ?? null,
+    };
   });
 }
