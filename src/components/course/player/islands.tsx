@@ -24,6 +24,7 @@ export function StepVideo(props: Pick<VideoPlayerProps, "title" | "src" | "capti
       onProgress={(watchedFraction, position) => store.update({ data: { watchedFraction, position } })}
       onSpeedChange={(speed) => store.update({ data: { speed } })}
       onTranscriptRead={() => store.update({ data: { transcriptRead: true } })}
+      unavailableText="You can carry on to the next step: this one won't hold you up."
     />
   );
 }
@@ -58,11 +59,15 @@ export function GuideTick({ guideStepId, label }: { guideStepId: string; label: 
   );
 }
 
-/** The learner's own words on a reflection or an ethics checkpoint. Autosaved, and private to them. */
+/**
+ * The learner's own words on a reflection or an ethics checkpoint. Autosaved. Never shown to a parent
+ * or to another learner. The wording does not promise that nobody at all can ever read it: whether
+ * staff may see flagged text for safeguarding is an open question (docs/OPEN_QUESTIONS.md).
+ */
 export function ResponseBox({ label }: { label: ReactNode }) {
   const store = usePlayer();
   return (
-    <Field label={label} hint="This is private. Only you can read it: not your parent, not other learners.">
+    <Field label={label} hint="This is private. Your parent or carer and other learners can't read it.">
       <Textarea rows={6} maxLength={MAX_TEXT_LENGTH} value={store.current.response} disabled={store.step.disabled} onChange={(event) => store.update({ response: event.target.value })} />
     </Field>
   );
@@ -76,7 +81,7 @@ export function NotesBox() {
     <details className="rounded-card border-ink bg-surface border-2" open={store.current.notes.length > 0 || undefined}>
       <summary className="hover:bg-tint flex min-h-11 items-center px-4 py-2 font-bold -outline-offset-4">My notes</summary>
       <div className="border-line border-t-2 p-4">
-        <Field label="Notes for this step" hint="Only you can see these. They save by themselves.">
+        <Field label="Notes for this step" hint="Private to you: your parent or carer and other learners can't see these. They save by themselves.">
           <Textarea rows={4} maxLength={MAX_TEXT_LENGTH} value={store.current.notes} onChange={(event) => store.update({ notes: event.target.value })} />
         </Field>
       </div>

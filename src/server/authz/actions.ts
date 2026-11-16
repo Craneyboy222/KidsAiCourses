@@ -49,6 +49,7 @@ export const ACTIONS = {
   "learner.quiz.attempt": { learner: "self" },
   "learner.wishlist.write": { learner: "self" },
   "learner.unlock.request": { learner: "self" },
+  "learner.tool_approval.request": { learner: "self" },
   "learner.submission.create": { learner: "self" },
   "learner.portfolio.read": { learner: "self", parent: "family", staff: MODERATION },
   "learner.artefact.download": { learner: "self", parent: "family", staff: MODERATION },
@@ -115,6 +116,8 @@ export const ACTIONS = {
   "safeguarding.case.read_notes": { staff: ["dsl"], humanOnly: true },
   "safeguarding.case.update": { staff: ["dsl"], humanOnly: true },
   "safeguarding.case.create": { staff: ["moderator", "dsl", "support", "admin"] },
+  /** Withdrawing a certificate always carries a person's name and a reason (spec 3.4). */
+  "certificate.revoke": { staff: MODERATION, humanOnly: true },
 
   // ── Studio: people and business ───────────────────────────────────────────
   "user.read": { staff: PEOPLE },

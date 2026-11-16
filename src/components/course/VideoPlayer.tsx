@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import { Button, Callout, Switch } from "@/components/ui";
 import { VIDEO_SPEEDS } from "@/lib/learning/step-data";
 
@@ -21,21 +21,49 @@ export type VideoPlayerProps = {
   onSpeedChange?: (speed: number) => void;
   /** Called the first time the transcript is opened. Reading it counts the same as watching. */
   onTranscriptRead?: () => void;
+  /** What to say when there is nothing to play and no transcript either. */
+  unavailableText?: string;
 };
 
 const LOW_DATA_KEY = "player.lowData";
 const REPORT_EVERY_MS = 5000;
+
+// Low-data mode is kept on this device only: it is about this connection, not about the learner.
+const lowDataListeners = new Set<() => void>();
+function subscribeLowData(listener: () => void): () => void {
+  lowDataListeners.add(listener);
+  window.addEventListener("storage", listener);
+  return () => {
+    lowDataListeners.delete(listener);
+    window.removeEventListener("storage", listener);
+  };
+}
+function readLowData(): boolean {
+  try {
+    return window.localStorage.getItem(LOW_DATA_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+function writeLowData(on: boolean): void {
+  try {
+    window.localStorage.setItem(LOW_DATA_KEY, on ? "1" : "0");
+  } catch {
+    // Storage is unavailable: the choice cannot be remembered.
+  }
+  for (const listener of lowDataListeners) listener();
+}
 
 /**
  * A plain native video: captions on by default, a transcript, speed control, no autoplay, and
  * every control reachable from the keyboard because the browser's own controls are used
  * (spec 3.2). Low-data mode loads nothing until the learner asks for it.
  */
-export function VideoPlayer({ title, src, captionsSrc, posterSrc, transcript, initialPosition = 0, initialSpeed = 1, onProgress, onSpeedChange, onTranscriptRead }: VideoPlayerProps) {
+export function VideoPlayer({ title, src, captionsSrc, posterSrc, transcript, initialPosition = 0, initialSpeed = 1, onProgress, onSpeedChange, onTranscriptRead, unavailableText = "We're getting it ready. Everything else on this page still works." }: VideoPlayerProps) {
   const video = useRef<HTMLVideoElement | null>(null);
   const speedId = useId();
   const [speed, setSpeed] = useState(initialSpeed);
-  const [lowData, setLowData] = useState(false);
+  const lowData = useSyncExternalStore(subscribeLowData, readLowData, () => false);
   const [loadAnyway, setLoadAnyway] = useState(false);
   const [failed, setFailed] = useState(false);
   const best = useRef(0);
@@ -46,23 +74,9 @@ export function VideoPlayer({ title, src, captionsSrc, posterSrc, transcript, in
     progress.current = onProgress;
   });
 
-  // The choice is kept on this device only: it is about this connection, not about the learner.
-  useEffect(() => {
-    try {
-      if (window.localStorage.getItem(LOW_DATA_KEY) === "1") setLowData(true);
-    } catch {
-      // Storage is unavailable: the default (off) stands.
-    }
-  }, []);
-
   function chooseLowData(on: boolean) {
-    setLowData(on);
     setLoadAnyway(false);
-    try {
-      window.localStorage.setItem(LOW_DATA_KEY, on ? "1" : "0");
-    } catch {
-      // Not remembered, but it still applies to this page.
-    }
+    writeLowData(on);
   }
 
   function report(force: boolean) {
@@ -90,7 +104,7 @@ export function VideoPlayer({ title, src, captionsSrc, posterSrc, transcript, in
     <div className="flex flex-col gap-3">
       {source === null || failed ? (
         <Callout tone="info" title={failed ? "The video didn't load" : "This video isn't ready to play yet"}>
-          <p>{transcript ? "The transcript below covers the same ground, so you can carry on." : "You can carry on to the next step: this one won't hold you up."}</p>
+          <p>{transcript ? "The transcript below covers the same ground." : unavailableText}</p>
           {failed && <p className="text-ink-muted text-sm">If you&apos;ve had this page open for a while, reloading it usually fixes it.</p>}
         </Callout>
       ) : showVideo ? (

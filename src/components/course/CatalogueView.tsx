@@ -84,7 +84,7 @@ export function CatalogueView({ basePath, audience, items, total, filters, categ
       </form>
 
       <section aria-labelledby="catalogue-results" className="flex flex-col gap-4">
-        <h2 id="catalogue-results" className="text-2xl font-bold" aria-live="polite">
+        <h2 id="catalogue-results" className="text-2xl font-bold">
           {total === 0 ? "No courses match" : `${total} ${total === 1 ? "course" : "courses"}${active ? " match" : ""}`}
         </h2>
         {items.length === 0 ? (

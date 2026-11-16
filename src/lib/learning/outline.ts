@@ -38,6 +38,10 @@ export type CourseOutline = Pick<
   setupGuides: { id: string; toolSlug: string; title: string; lastVerifiedAt: string }[];
   modules: OutlineModule[];
   stepCount: number;
+  /** The first step of the course, where "Start" goes. */
+  firstStepKey: string | null;
+  /** Asset ids listed alongside the trailer video on a step (its transcript, usually), so the page can offer one. */
+  trailerCompanionAssetIds: string[];
 };
 
 type AnyCourse = Course | LearnerCourse | CourseOutline;
@@ -58,6 +62,16 @@ export function toCourseOutline(course: AnyCourse): CourseOutline {
       steps: lesson.steps.map((step) => ({ id: step.id, type: step.type, title: step.title, estimatedMinutes: step.estimatedMinutes })),
     })),
   }));
+  let companions: string[] = "trailerCompanionAssetIds" in course ? [...course.trailerCompanionAssetIds] : [];
+  if (!("trailerCompanionAssetIds" in course)) {
+    for (const mod of course.modules) {
+      for (const lesson of mod.lessons) {
+        for (const step of lesson.steps) {
+          if (companions.length === 0 && step.assetIds?.includes(course.trailer.assetId)) companions = step.assetIds.filter((id) => id !== course.trailer.assetId);
+        }
+      }
+    }
+  }
   return {
     slug: course.slug,
     title: course.title,
@@ -92,5 +106,7 @@ export function toCourseOutline(course: AnyCourse): CourseOutline {
     guidesLastVerifiedAt: course.guidesLastVerifiedAt,
     modules,
     stepCount: modules.reduce((total, mod) => total + mod.lessons.reduce((sum, lesson) => sum + lesson.steps.length, 0), 0),
+    firstStepKey: modules[0]?.lessons[0]?.steps[0]?.id ?? null,
+    trailerCompanionAssetIds: companions,
   };
 }

@@ -11,7 +11,7 @@ import { vi } from "vitest";
 import type { Course } from "@/content/schema";
 import type { LearnerActor, StaffActor } from "@/server/authz";
 import type { Ctx } from "@/server/context";
-import { course, courseVersion, step } from "@/server/db";
+import { course, courseVersion, learnerProfile, step } from "@/server/db";
 import { REQUIRED_CONSENT_KEYS } from "@/server/services/consent";
 import { saveRevision } from "@/server/services/course-store";
 import { canAccessCourse } from "@/server/services/entitlements";
@@ -75,12 +75,13 @@ export async function seedPublishedCourses(): Promise<void> {
 }
 
 /** A learner in a family, with the required consents granted, and a context to act as them. */
-export async function learner(options: { age?: number; interests?: string[]; now?: Date } = {}): Promise<{ actor: LearnerActor; ctx: Ctx<LearnerActor>; familyId: string; at: (now: Date) => Ctx<LearnerActor> }> {
+export async function learner(options: { age?: number; interests?: string[]; now?: Date; onboarded?: boolean } = {}): Promise<{ actor: LearnerActor; ctx: Ctx<LearnerActor>; familyId: string; at: (now: Date) => Ctx<LearnerActor> }> {
   const { family, parent } = await createFamily();
   const created = await createLearner({ age: options.age ?? 14, familyId: family.id, interests: options.interests, now: options.now });
   for (const consentKey of REQUIRED_CONSENT_KEYS) {
     await recordConsent({ learnerId: created.user.id, familyId: family.id, consentKey, actorUserId: parent.id });
   }
+  if (options.onboarded !== false) await db.update(learnerProfile).set({ onboardingCompletedAt: new Date() }).where(eq(learnerProfile.userId, created.user.id));
   const now = options.now ?? AFTERNOON;
   return { actor: created.actor, ctx: testCtx(created.actor, { now }), familyId: family.id, at: (when: Date) => testCtx(created.actor, { now: when }) };
 }

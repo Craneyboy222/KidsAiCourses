@@ -316,7 +316,9 @@ export function StepBody(props: StepBodyProps) {
       case "checkpoint":
         body = (
           <div className="flex flex-col gap-4">
-            <Sticker icon={<CircleCheckBig aria-hidden="true" className="size-4" strokeWidth={2.5} />}>Checkpoint</Sticker>
+            <Sticker icon={<CircleCheckBig aria-hidden="true" className="size-4" strokeWidth={2.5} />} className="self-start">
+              Saved so far
+            </Sticker>
             <CheckpointProgress order={order} />
             {step.body && <StepMarkdown path={`${stepPath}.body`} value={step.body} label="Step text" />}
             {selfTick && <TickBox label="I've done this" />}

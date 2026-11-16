@@ -105,36 +105,36 @@
     {
       "id": 3,
       "name": "Learning",
-      "status": "IN_PROGRESS",
+      "status": "DONE",
       "tasks": [
         {
           "id": "3.1",
           "description": "Catalogue and search",
-          "status": "PENDING",
-          "result": null
+          "status": "DONE",
+          "result": "131 tests pass; public catalogue and course pages return 200. Signed-in pages need the parents and payments contracts before they run in a server."
         },
         {
           "id": "3.2",
           "description": "Course page",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "3.3",
           "description": "Course player with every step type",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "3.4",
           "description": "Progress, autosave, quizzes, hints",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "3.5",
           "description": "Time caps and quiet hours",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         }
       ]
@@ -454,7 +454,7 @@
   ],
   "blockers": [],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T13:56:20.684893+00:00",
+  "last_updated": "2026-11-16T14:22:53.564728+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",
@@ -464,16 +464,15 @@
     "next_build": "not yet run"
   },
   "queue": {
-    "note": "Reordered on 16 November 2026 at the owner's instruction: learner-facing path first. Two workstreams at a time. Briefs in docs/briefs/.",
+    "note": "Reordered on 16 November 2026 at the owner's instruction: learner-facing path first. Two workstreams at a time. Briefs in docs/briefs/. Payments and parents moved ahead of the course authors because signed-in learner pages depend on their contracts.",
     "order": [
-      "accounts (finishing)",
-      "learning",
-      "tools-submissions",
+      "tools-submissions (running)",
+      "payments (running)",
+      "parents",
+      "seed-compliance",
+      "integration",
       "courses-a",
       "courses-b",
-      "seed-compliance",
-      "payments",
-      "parents",
       "marketing",
       "studio-core",
       "studio-content",
@@ -488,7 +487,8 @@
       "course store and publish",
       "design system",
       "coach",
-      "accounts"
+      "accounts",
+      "learning"
     ]
   }
 }

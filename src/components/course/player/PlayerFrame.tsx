@@ -2,9 +2,10 @@
 
 import { ArrowRight, Check, MessageCircleQuestion } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { CoachPanel } from "@/components/coach/CoachPanel";
 import { isPreview } from "@/components/course/types";
+import { useHeartbeat } from "@/components/course/use-heartbeat";
 import { PlayerPrevious, PlayerShell } from "@/components/layout";
 import { Button, Callout, LinkButton, LiveRegion, type StepperStep } from "@/components/ui";
 import { canSkipStep, type StepState } from "@/lib/learning/completion";
@@ -48,59 +49,6 @@ function stepperStatus(status: StepState | undefined, current: boolean, disabled
   if (current) return "current";
   if (disabled) return "locked";
   return status === "completed" ? "done" : "upcoming";
-}
-
-/** How often active time is reported, and the most one report may claim (the server bounds it again). */
-const HEARTBEAT_MS = 30_000;
-
-type HeartbeatAnswer = { allowed: true; minutesLeftToday: number | null } | { allowed: false; reason: StopReason["reason"]; message: string };
-
-/**
- * Counts time only while this tab is visible, and tells the server every 30 seconds. When the
- * server says the daily cap or quiet hours have arrived, work in hand is saved first, then the
- * step is replaced by the stop screen.
- */
-function useHeartbeat(enabled: boolean, onAnswer: (answer: HeartbeatAnswer) => void): void {
-  const handler = useRef(onAnswer);
-  useEffect(() => {
-    handler.current = onAnswer;
-  });
-  useEffect(() => {
-    if (!enabled) return;
-    let visibleSince = document.visibilityState === "visible" ? Date.now() : null;
-    let banked = 0;
-    const bank = () => {
-      if (visibleSince !== null) {
-        banked += (Date.now() - visibleSince) / 1000;
-        visibleSince = Date.now();
-      }
-    };
-    const onVisibility = () => {
-      if (document.visibilityState === "visible") visibleSince = Date.now();
-      else {
-        bank();
-        visibleSince = null;
-      }
-    };
-    const beat = async () => {
-      bank();
-      const seconds = Math.round(banked);
-      if (seconds < 1) return;
-      banked = 0;
-      try {
-        const response = await fetch("/api/v1/usage/heartbeat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ seconds }), credentials: "same-origin" });
-        if (response.ok) handler.current((await response.json()) as HeartbeatAnswer);
-      } catch {
-        // Offline: the time is simply not counted. Learning is never blocked by a failed heartbeat.
-      }
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    const interval = window.setInterval(() => void beat(), HEARTBEAT_MS);
-    return () => {
-      document.removeEventListener("visibilitychange", onVisibility);
-      window.clearInterval(interval);
-    };
-  }, [enabled]);
 }
 
 /**
@@ -166,6 +114,7 @@ export function PlayerFrame({ courseSlug, courseTitle, lessonTitle, exitHref, st
   }
 
   const saveWords = preview ? "Preview: nothing here is saved." : SAVE_WORDS[store.saveStatus];
+  const saving = !preview && store.saveStatus === "saving";
   const nextLabel = nextHref ? "Next" : "Finish";
 
   return (
@@ -203,8 +152,14 @@ export function PlayerFrame({ courseSlug, courseTitle, lessonTitle, exitHref, st
           <LinkButton href="/home">Back to home</LinkButton>
         ) : (
           <div className="flex flex-wrap items-center justify-end gap-3">
+            {/* "Saving…" is shown but not read out: only the outcome is announced, so typing is not narrated. */}
+            {saving ? (
+              <span aria-hidden="true" className="text-ink-muted text-sm">
+                {saveWords}
+              </span>
+            ) : null}
             <LiveRegion visible className="text-ink-muted text-sm">
-              {saveWords}
+              {saving ? "" : saveWords}
             </LiveRegion>
             <Button
               onClick={() => void onNext()}
