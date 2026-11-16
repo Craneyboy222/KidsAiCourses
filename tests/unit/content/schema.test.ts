@@ -129,7 +129,7 @@ describe("courseSchema", () => {
     expect(parsed.id).toBeUndefined();
   });
 
-  it("keeps the course as spec Section 6.1 has it, apart from the four recorded changes", () => {
+  it("keeps the course as spec Section 6.1 has it, apart from the recorded changes", () => {
     const spec = readFileSync(resolve(REPO_ROOT, "PLATFORM_SPEC.md"), "utf8");
     const section = spec.slice(spec.indexOf("### 6.1 Example JSON"));
     const block = /```json\n([\s\S]*?)\n```/.exec(section);
@@ -137,8 +137,8 @@ describe("courseSchema", () => {
     const course = readJson(SNAPCHAT_FILE) as Course;
 
     // 1. The tagline in the spec is 134 characters; the schema limit is 120.
-    expect(expected.tagline.length).toBeGreaterThan(120);
-    expected.tagline = course.tagline;
+    // The spec example was corrected to the shortened tagline (decision D11), so the two now agree.
+    expect(expected.tagline).toBe(course.tagline);
     // 2–4. A read step with the sample image goes before the filter task, and the minutes follow.
     const lesson = at(at(expected.modules, 1).lessons, 1);
     const added = at(at(at(course.modules, 1).lessons, 1).steps, 0);

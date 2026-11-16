@@ -36,26 +36,32 @@
         {
           "id": "1.5",
           "description": "Database schema, migrations, Better Auth, request context",
-          "status": "IN_PROGRESS",
-          "result": null
+          "status": "DONE",
+          "result": "90 tables, 2 migrations, Better Auth with per-session 2FA, request context; 140 tests pass"
         },
         {
           "id": "1.6",
           "description": "Design system, UI kit, layout shells",
           "status": "IN_PROGRESS",
-          "result": null
+          "result": "57 kit files and 6 layout shells written; final verification pending (paused by usage limit)"
         },
         {
           "id": "1.7",
           "description": "Content schema, validator, first flagship course",
-          "status": "IN_PROGRESS",
-          "result": null
+          "status": "DONE",
+          "result": "Zod content model, 52 validation rules, Snapchat course passes content:check; 404 tests pass"
         },
         {
           "id": "1.8",
           "description": "Kernel services: audit, settings, flags, rate limit, email, storage, notifications, jobs, copy",
-          "status": "PENDING",
-          "result": null
+          "status": "IN_PROGRESS",
+          "result": "audit and settings written by lead; rest paused by usage limit before any file landed"
+        },
+        {
+          "id": "1.9",
+          "description": "Cross-slice service and component contracts",
+          "status": "DONE",
+          "result": "20 service contracts and 5 component contracts; typecheck clean"
         }
       ]
     },
@@ -178,7 +184,7 @@
         {
           "id": "5.1",
           "description": "11-stage proxy",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
@@ -332,13 +338,13 @@
         {
           "id": "9.1",
           "description": "15 starter courses",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
           "id": "9.2",
           "description": "Tool Register seed",
-          "status": "PENDING",
+          "status": "IN_PROGRESS",
           "result": null
         },
         {
@@ -446,7 +452,21 @@
   "decisions": [
     "See docs/DECISIONS.md (D1\u2013D10)"
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "what": "Account usage limit reached at about 23:55 on 15 November 2026; six workstreams paused",
+      "resolves": "02:50 Europe/London, 16 November 2026",
+      "action": "Scheduled resume at 02:55; continue the same agents, two or three at a time"
+    }
+  ],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-15T22:50:58.563705+00:00"
+  "last_updated": "2026-11-16T00:01:48.908291+00:00",
+  "verified": {
+    "at": "2026-11-16T00:02:00Z",
+    "typecheck": "0 errors",
+    "lint": "clean",
+    "tests": "24 files, 1261 tests pass (unit + integration)",
+    "content_check": "0 errors, 7 warnings (unverified tools, placeholder assets)",
+    "next_build": "not yet run"
+  }
 }
