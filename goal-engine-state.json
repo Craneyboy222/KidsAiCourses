@@ -1,7 +1,7 @@
 {
   "goal": "Build the launch platform specified in PLATFORM_SPEC.md in full, until complete.",
   "classification": "HYBRID (SAAS_TOOL + CONTENT_PLATFORM + AUTOMATION_SYSTEM)",
-  "status": "IN_PROGRESS",
+  "status": "PAUSED",
   "current_phase": 2,
   "phases": [
     {
@@ -452,9 +452,14 @@
   "decisions": [
     "See docs/DECISIONS.md (D1\u2013D10)"
   ],
-  "blockers": [],
+  "blockers": [
+    {
+      "what": "Paused at the owner's request at 08:04 on 16 November 2026",
+      "action": "On 'continue': start Postgres, then resume by message, two at a time: AI Coach a8c06a06ea7d1661a, accounts a5ad57e3b21ee5aa9, course authors A a48c65d2ea1dd04ba and B aacbe35e7c5e306b4; then dispatch the remaining slices"
+    }
+  ],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T01:05:44.984897+00:00",
+  "last_updated": "2026-11-16T08:07:32.939729+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",
