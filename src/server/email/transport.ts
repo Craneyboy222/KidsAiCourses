@@ -32,7 +32,10 @@ const SEND_TIMEOUT_MS = 10_000;
 
 export type SentEmail = EmailMessage & { at: Date };
 const KEEP_LAST = 50;
-const globalForEmail = globalThis as typeof globalThis & { __platformSentEmails?: SentEmail[]; __platformEmailTransport?: EmailTransport };
+const globalForEmail = globalThis as typeof globalThis & {
+  __platformSentEmails?: SentEmail[];
+  __platformEmailTransport?: EmailTransport;
+};
 const sent = (globalForEmail.__platformSentEmails ??= []);
 
 /** The most recent messages handed to the console transport, oldest first. For tests and local development. */
@@ -59,7 +62,9 @@ export const consoleTransport: EmailTransport = {
   async send(message) {
     if (env.APP_ENV === "production") {
       // Sign-in links must never be written to production logs, and an email that is only logged is an email not sent.
-      throw new Error("EMAIL_PROVIDER=console cannot send email in production. Configure an approved provider.");
+      throw new Error(
+        "EMAIL_PROVIDER=console cannot send email in production. Configure an approved provider.",
+      );
     }
     sent.push({ ...message, at: new Date() });
     if (sent.length > KEEP_LAST) sent.splice(0, sent.length - KEEP_LAST);
@@ -76,7 +81,13 @@ export const consoleTransport: EmailTransport = {
 
 // ── Resend ──────────────────────────────────────────────────────────────────
 
-async function postJson(fetchImpl: FetchLike, url: string, headers: Record<string, string>, body: unknown, provider: string): Promise<unknown> {
+async function postJson(
+  fetchImpl: FetchLike,
+  url: string,
+  headers: Record<string, string>,
+  body: unknown,
+  provider: string,
+): Promise<unknown> {
   const response = await fetchImpl(url, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json", ...headers },
@@ -112,11 +123,16 @@ export function resendTransport(fetchImpl: FetchLike = fetch): EmailTransport {
           html: message.html,
           text: message.text,
           ...(message.replyTo ? { reply_to: message.replyTo } : {}),
-          ...(message.template ? { tags: [{ name: "template", value: message.template.replace(/[^A-Za-z0-9_-]/g, "_") }] } : {}),
+          ...(message.template
+            ? { tags: [{ name: "template", value: message.template.replace(/[^A-Za-z0-9_-]/g, "_") }] }
+            : {}),
         },
         "Resend",
       );
-      const id = typeof data === "object" && data !== null && "id" in data ? String((data as { id: unknown }).id) : null;
+      const id =
+        typeof data === "object" && data !== null && "id" in data
+          ? String((data as { id: unknown }).id)
+          : null;
       return { provider: "resend", id };
     },
   };
@@ -148,7 +164,10 @@ export function postmarkTransport(fetchImpl: FetchLike = fetch): EmailTransport 
         },
         "Postmark",
       );
-      const id = typeof data === "object" && data !== null && "MessageID" in data ? String((data as { MessageID: unknown }).MessageID) : null;
+      const id =
+        typeof data === "object" && data !== null && "MessageID" in data
+          ? String((data as { MessageID: unknown }).MessageID)
+          : null;
       return { provider: "postmark", id };
     },
   };

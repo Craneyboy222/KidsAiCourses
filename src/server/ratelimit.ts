@@ -67,16 +67,29 @@ export function describeWait(seconds: number): string {
  * Counts one attempt and says whether it is within the limit. Does not throw.
  * Note that it does count: call it once per attempt, not to peek.
  */
-export async function checkRateLimit(ctx: Pick<Ctx, "db" | "actor" | "ip" | "now">, name: string, options: RateLimitOptions): Promise<RateLimitResult> {
+export async function checkRateLimit(
+  ctx: Pick<Ctx, "db" | "actor" | "ip" | "now">,
+  name: string,
+  options: RateLimitOptions,
+): Promise<RateLimitResult> {
   const { limit, windowSec } = options;
   if (!Number.isInteger(limit) || limit < 1 || !Number.isFinite(windowSec) || windowSec <= 0) {
-    throw new Error(`rateLimit("${name}"): limit must be a whole number of at least 1 and windowSec must be positive`);
+    throw new Error(
+      `rateLimit("${name}"): limit must be a whole number of at least 1 and windowSec must be positive`,
+    );
   }
   const key = rateLimitKey(ctx, name, options.key);
   const { start, end } = windowFor(ctx.now, windowSec);
   const rows = await ctx.db
     .insert(rateLimitBucket)
-    .values({ key, windowStart: start, count: 1, expiresAt: new Date(end.getTime() + EXPIRY_GRACE_MS), createdAt: ctx.now, updatedAt: ctx.now })
+    .values({
+      key,
+      windowStart: start,
+      count: 1,
+      expiresAt: new Date(end.getTime() + EXPIRY_GRACE_MS),
+      createdAt: ctx.now,
+      updatedAt: ctx.now,
+    })
     .onConflictDoUpdate({
       target: [rateLimitBucket.key, rateLimitBucket.windowStart],
       set: { count: sql`${rateLimitBucket.count} + 1`, updatedAt: ctx.now },
@@ -92,12 +105,20 @@ export async function checkRateLimit(ctx: Pick<Ctx, "db" | "actor" | "ip" | "now
 }
 
 /** Counts one attempt and throws `AppError("rate_limited")`, with how long to wait, when over the limit. */
-export async function rateLimit(ctx: Pick<Ctx, "db" | "actor" | "ip" | "now">, name: string, options: RateLimitOptions): Promise<RateLimitResult> {
+export async function rateLimit(
+  ctx: Pick<Ctx, "db" | "actor" | "ip" | "now">,
+  name: string,
+  options: RateLimitOptions,
+): Promise<RateLimitResult> {
   const result = await checkRateLimit(ctx, name, options);
   if (!result.allowed) {
-    throw new AppError("rate_limited", `That's a lot in a short time. Give it ${describeWait(result.retryAfterSec)}, then try again.`, {
-      detail: { name, retryAfterSec: result.retryAfterSec },
-    });
+    throw new AppError(
+      "rate_limited",
+      `That's a lot in a short time. Give it ${describeWait(result.retryAfterSec)}, then try again.`,
+      {
+        detail: { name, retryAfterSec: result.retryAfterSec },
+      },
+    );
   }
   return result;
 }
@@ -125,7 +146,13 @@ export type ConcurrencyOptions = {
 
 export const DEFAULT_LEASE_SEC = 120;
 
-async function takeSlot(db: Db, key: string, limit: number, nowIso: string, leaseUntilIso: string): Promise<number | null> {
+async function takeSlot(
+  db: Db,
+  key: string,
+  limit: number,
+  nowIso: string,
+  leaseUntilIso: string,
+): Promise<number | null> {
   const rows = await db.execute<{ slot: number }>(sql`
     WITH free AS (
       SELECT id FROM rate_limit_bucket
@@ -157,8 +184,13 @@ async function ensureSlots(db: Db, key: string, limit: number): Promise<number> 
 }
 
 /** Takes a slot, or returns `null` when all `limit` are in use. Always pair with `releaseConcurrency` in a `finally`. */
-export async function acquireConcurrency(name: string, limit: number, options: ConcurrencyOptions = {}): Promise<ConcurrencyLease | null> {
-  if (!Number.isInteger(limit) || limit < 1) throw new Error(`acquireConcurrency("${name}"): limit must be a whole number of at least 1`);
+export async function acquireConcurrency(
+  name: string,
+  limit: number,
+  options: ConcurrencyOptions = {},
+): Promise<ConcurrencyLease | null> {
+  if (!Number.isInteger(limit) || limit < 1)
+    throw new Error(`acquireConcurrency("${name}"): limit must be a whole number of at least 1`);
   const db = options.db ?? rootDb;
   const now = options.now ?? new Date();
   const leaseUntil = new Date(now.getTime() + (options.leaseSec ?? DEFAULT_LEASE_SEC) * 1000);
@@ -177,7 +209,10 @@ export async function acquireConcurrency(name: string, limit: number, options: C
 }
 
 /** Gives the slot back. Safe to call twice, and a no-op if the lease already ran out and someone else holds the slot. */
-export async function releaseConcurrency(lease: ConcurrencyLease, options: Pick<ConcurrencyOptions, "db"> = {}): Promise<void> {
+export async function releaseConcurrency(
+  lease: ConcurrencyLease,
+  options: Pick<ConcurrencyOptions, "db"> = {},
+): Promise<void> {
   const db = options.db ?? rootDb;
   await db.execute(sql`
     UPDATE rate_limit_bucket
@@ -188,10 +223,17 @@ export async function releaseConcurrency(lease: ConcurrencyLease, options: Pick<
 }
 
 /** Runs `fn` inside a slot. Throws `AppError("rate_limited")` when the cap is reached. */
-export async function withConcurrency<T>(name: string, limit: number, fn: () => Promise<T>, options: ConcurrencyOptions = {}): Promise<T> {
+export async function withConcurrency<T>(
+  name: string,
+  limit: number,
+  fn: () => Promise<T>,
+  options: ConcurrencyOptions = {},
+): Promise<T> {
   const lease = await acquireConcurrency(name, limit, options);
   if (!lease) {
-    throw new AppError("rate_limited", "It's really busy right now. Wait a few seconds, then try again.", { detail: { name, limit } });
+    throw new AppError("rate_limited", "It's really busy right now. Wait a few seconds, then try again.", {
+      detail: { name, limit },
+    });
   }
   try {
     return await fn();
@@ -204,18 +246,28 @@ export async function withConcurrency<T>(name: string, limit: number, fn: () => 
 export async function deleteExpiredRateLimitBuckets(ctx: Pick<Ctx, "db" | "now">): Promise<number> {
   const deleted = await ctx.db
     .delete(rateLimitBucket)
-    .where(and(lt(rateLimitBucket.expiresAt, ctx.now), notLike(rateLimitBucket.key, `${CONCURRENCY_PREFIX}%`)))
+    .where(
+      and(lt(rateLimitBucket.expiresAt, ctx.now), notLike(rateLimitBucket.key, `${CONCURRENCY_PREFIX}%`)),
+    )
     .returning({ id: rateLimitBucket.id });
   return deleted.length;
 }
 
 /** For tests and Studio diagnostics: how many slots are held right now. */
-export async function concurrencyInUse(name: string, options: Pick<ConcurrencyOptions, "db" | "now"> = {}): Promise<number> {
+export async function concurrencyInUse(
+  name: string,
+  options: Pick<ConcurrencyOptions, "db" | "now"> = {},
+): Promise<number> {
   const db = options.db ?? rootDb;
   const now = options.now ?? new Date();
   const rows = await db
     .select({ n: sql<number>`count(*)::int` })
     .from(rateLimitBucket)
-    .where(and(eq(rateLimitBucket.key, `${CONCURRENCY_PREFIX}${name}`), sql`${rateLimitBucket.expiresAt} > ${now.toISOString()}::timestamptz`));
+    .where(
+      and(
+        eq(rateLimitBucket.key, `${CONCURRENCY_PREFIX}${name}`),
+        sql`${rateLimitBucket.expiresAt} > ${now.toISOString()}::timestamptz`,
+      ),
+    );
   return rows[0]?.n ?? 0;
 }

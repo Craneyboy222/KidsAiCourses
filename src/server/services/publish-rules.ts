@@ -64,7 +64,9 @@ const holdsAny = (roles: readonly string[], wanted: readonly string[]): boolean 
   roles.some((role) => wanted.includes(role));
 
 /** True when the second-reviewer setting applies to a course of this origin. */
-export function secondReviewerApplies(input: Pick<ApprovalInput, "requireSecondReviewer" | "scope" | "origin">): boolean {
+export function secondReviewerApplies(
+  input: Pick<ApprovalInput, "requireSecondReviewer" | "scope" | "origin">,
+): boolean {
   if (!input.requireSecondReviewer) return false;
   return input.scope === "all_courses" || isAiOrigin(input.origin);
 }
@@ -99,7 +101,9 @@ export function evaluateApproval(input: ApprovalInput): ApprovalEvaluation {
   const declined = current.filter((decision) => decision.kind === "decline");
   const editsRequested = current.filter((decision) => decision.kind === "request_edits");
   if (declined.length > 0) {
-    missing.push("A reviewer declined this version. It cannot be published; make a new revision and have it approved.");
+    missing.push(
+      "A reviewer declined this version. It cannot be published; make a new revision and have it approved.",
+    );
   }
   if (editsRequested.length > 0) {
     missing.push("A reviewer asked for edits to this version. Make a new revision and have it approved.");
@@ -137,7 +141,8 @@ export function evaluateApproval(input: ApprovalInput): ApprovalEvaluation {
     );
   }
   if (counted.length === 0) {
-    if (withoutRights === 0 && withoutToolCheck === 0) missing.push("No human approval is recorded for this version.");
+    if (withoutRights === 0 && withoutToolCheck === 0)
+      missing.push("No human approval is recorded for this version.");
     return { approved: false, missing, warnings };
   }
 
@@ -151,10 +156,17 @@ export function evaluateApproval(input: ApprovalInput): ApprovalEvaluation {
       );
     }
     if (counted.every(isLastEditor)) {
-      missing.push("The last editor cannot be the only approver. Someone who did not make the last edit must approve.");
+      missing.push(
+        "The last editor cannot be the only approver. Someone who did not make the last edit must approve.",
+      );
     }
-    if (input.safeguardingSensitive && !counted.some((approval) => holdsAny(approval.roles, SAFEGUARDING_APPROVER_ROLES))) {
-      missing.push("This course is safeguarding-sensitive, so one of the two approvers must be a safety reviewer.");
+    if (
+      input.safeguardingSensitive &&
+      !counted.some((approval) => holdsAny(approval.roles, SAFEGUARDING_APPROVER_ROLES))
+    ) {
+      missing.push(
+        "This course is safeguarding-sensitive, so one of the two approvers must be a safety reviewer.",
+      );
     }
   } else {
     if (counted.length === 1) {

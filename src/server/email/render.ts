@@ -29,7 +29,12 @@ const LINK = /\[([^\]\n]+)\]\(([^)\s]+)\)/g;
 const ONLY_LINK = /^\[([^\]\n]+)\]\(([^)\s]+)\)$/;
 
 export function escapeHtml(value: string): string {
-  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 /** Names of the `{{variables}}` a template uses. */
@@ -40,7 +45,6 @@ export function templateVariables(...parts: string[]): string[] {
 }
 
 // Strips characters that could break out of a header or hide text: C0/C1 controls and bidi overrides.
-// eslint-disable-next-line no-control-regex
 const UNSAFE_CHARS = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F-\u009F\u202A-\u202E\u2066-\u2069]/g;
 
 function valueOf(data: TemplateData, name: string): string {
@@ -54,7 +58,6 @@ function fillRaw(template: string, data: TemplateData): string {
 
 /** An absolute, safe URL, or `null` when the link must not be made clickable. */
 export function safeHref(raw: string, appUrl: string): string | null {
-  // eslint-disable-next-line no-control-regex
   const value = raw.trim().replace(/[\u0000-\u0020\u007F]/g, (c) => (c === " " ? "%20" : ""));
   if (value === "") return null;
   if (value.startsWith("/") && !value.startsWith("//")) {
@@ -107,11 +110,17 @@ function blockHtml(block: string, data: TemplateData, options: RenderOptions): s
     return `<h2 style="font-size:18px;line-height:1.3;margin:24px 0 12px 0">${inlineHtml(heading[2] ?? "", data, options)}</h2>`;
   }
   if (lines.every((l) => /^[-*]\s+/.test(l))) {
-    const items = lines.map((l) => `<li style="margin:0 0 8px 0">${inlineHtml(l.replace(/^[-*]\s+/, ""), data, options)}</li>`).join("");
+    const items = lines
+      .map((l) => `<li style="margin:0 0 8px 0">${inlineHtml(l.replace(/^[-*]\s+/, ""), data, options)}</li>`)
+      .join("");
     return `<ul style="margin:0 0 16px 0;padding-left:24px">${items}</ul>`;
   }
   if (lines.every((l) => /^\d+[.)]\s+/.test(l))) {
-    const items = lines.map((l) => `<li style="margin:0 0 8px 0">${inlineHtml(l.replace(/^\d+[.)]\s+/, ""), data, options)}</li>`).join("");
+    const items = lines
+      .map(
+        (l) => `<li style="margin:0 0 8px 0">${inlineHtml(l.replace(/^\d+[.)]\s+/, ""), data, options)}</li>`,
+      )
+      .join("");
     return `<ol style="margin:0 0 16px 0;padding-left:24px">${items}</ol>`;
   }
   if (lines.every((l) => /^>\s?/.test(l))) {
@@ -122,7 +131,8 @@ function blockHtml(block: string, data: TemplateData, options: RenderOptions): s
   if (only) {
     const href = safeHref(fillRaw(only[2] ?? "", data), options.appUrl);
     const label = inlineText(only[1] ?? "", data);
-    if (href) return `<p style="margin:24px 0"><a href="${escapeHtml(href)}" style="${BUTTON_STYLE}">${label}</a></p>`;
+    if (href)
+      return `<p style="margin:24px 0"><a href="${escapeHtml(href)}" style="${BUTTON_STYLE}">${label}</a></p>`;
   }
   return `<p style="${P}">${lines.map((l) => inlineHtml(l, data, options)).join("<br>")}</p>`;
 }
@@ -189,8 +199,14 @@ ${bodyHtml}
 }
 
 /** Subject, HTML and text for one template and one set of values. Throws if the template uses a variable that was not supplied. */
-export function renderTemplate(template: { subject: string; body: string }, data: TemplateData, options: RenderOptions): RenderedEmail {
-  const missing = templateVariables(template.subject, template.body).filter((name) => data[name] === undefined || data[name] === null);
+export function renderTemplate(
+  template: { subject: string; body: string },
+  data: TemplateData,
+  options: RenderOptions,
+): RenderedEmail {
+  const missing = templateVariables(template.subject, template.body).filter(
+    (name) => data[name] === undefined || data[name] === null,
+  );
   if (missing.length > 0) {
     throw new Error(`Email template is missing values for: ${missing.join(", ")}`);
   }

@@ -77,7 +77,9 @@ export function isUrlAllowedForTool(target: Pick<ToolRow, "allowedUrlPrefixes">,
     const allowed = parseHttps(prefix);
     if (!allowed) return false;
     return (
-      parsed.hostname === allowed.hostname && parsed.port === allowed.port && pathWithin(parsed.pathname, allowed.pathname)
+      parsed.hostname === allowed.hostname &&
+      parsed.port === allowed.port &&
+      pathWithin(parsed.pathname, allowed.pathname)
     );
   });
 }
@@ -88,12 +90,19 @@ function onVendorDomain(host: string, vendorDomain: string): boolean {
 }
 
 /** The same rules a seed file must meet (`src/content/tool-schema.ts`), applied to edits made in Studio. */
-function assertLinksValid(fields: { vendorDomain: string | null; officialUrl: string | null; allowedUrlPrefixes: string[] }): void {
+function assertLinksValid(fields: {
+  vendorDomain: string | null;
+  officialUrl: string | null;
+  allowedUrlPrefixes: string[];
+}): void {
   const fieldErrors: Record<string, string[]> = {};
   const add = (key: string, message: string) => {
     fieldErrors[key] = [...(fieldErrors[key] ?? []), message];
   };
-  if (fields.vendorDomain !== null && !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/.test(fields.vendorDomain)) {
+  if (
+    fields.vendorDomain !== null &&
+    !/^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/.test(fields.vendorDomain)
+  ) {
     add("vendorDomain", "Use a bare domain such as example.com.");
   }
   for (const prefix of fields.allowedUrlPrefixes) {
@@ -117,7 +126,9 @@ function assertLinksValid(fields: { vendorDomain: string | null; officialUrl: st
     }
   }
   if (Object.keys(fieldErrors).length > 0) {
-    throw new AppError("invalid_input", "Some of the tool's links are not valid. Check them and try again.", { fieldErrors });
+    throw new AppError("invalid_input", "Some of the tool's links are not valid. Check them and try again.", {
+      fieldErrors,
+    });
   }
 }
 
@@ -133,7 +144,10 @@ export async function getToolBySlug(ctx: Pick<Ctx, "db">, slug: string): Promise
 }
 
 /** Tools by slug. Unknown slugs are simply absent from the map. */
-export async function getToolsBySlugs(ctx: Pick<Ctx, "db">, slugs: readonly string[]): Promise<Map<string, ToolRow>> {
+export async function getToolsBySlugs(
+  ctx: Pick<Ctx, "db">,
+  slugs: readonly string[],
+): Promise<Map<string, ToolRow>> {
   const unique = [...new Set(slugs)];
   if (unique.length === 0) return new Map();
   const rows = await ctx.db.select().from(tool).where(inArray(tool.slug, unique));
@@ -199,10 +213,14 @@ export interface LearnerToolView {
  * unverified or blocked tool is never shown as usable. Build this at request time from a fresh
  * Register row; never store the result in a course.
  */
-export function toolViewForLearners(row: ToolRow, options: { guideHref?: string | null } = {}): LearnerToolView | null {
+export function toolViewForLearners(
+  row: ToolRow,
+  options: { guideHref?: string | null } = {},
+): LearnerToolView | null {
   if (row.status !== "approved") return null;
   if (row.under18Policy === null || row.under18Policy === "blocked") return null;
-  const officialUrl = row.officialUrl !== null && isUrlAllowedForTool(row, row.officialUrl) ? row.officialUrl : null;
+  const officialUrl =
+    row.officialUrl !== null && isUrlAllowedForTool(row, row.officialUrl) ? row.officialUrl : null;
   return {
     slug: row.slug,
     name: row.name,
@@ -211,7 +229,8 @@ export function toolViewForLearners(row: ToolRow, options: { guideHref?: string 
     freeTier: row.freeTier,
     minAge: row.minAge,
     under18Policy: row.under18Policy,
-    parentMustApprove: row.under18Policy === "parent_consent_required" || row.under18Policy === "parent_operated",
+    parentMustApprove:
+      row.under18Policy === "parent_consent_required" || row.under18Policy === "parent_operated",
     parentMustSetUp: row.under18Policy === "parent_operated",
     guideHref: options.guideHref ?? null,
     lastCheckedAt: row.lastCheckedAt,
@@ -229,7 +248,10 @@ async function requireTool(db: Db, slug: string, lock = false): Promise<ToolRow>
 
 function one<T>(rows: T[], what: string): T {
   const [row] = rows;
-  if (!row) throw new AppError("internal", "Something went wrong saving that. Please try again.", { detail: { what } });
+  if (!row)
+    throw new AppError("internal", "Something went wrong saving that. Please try again.", {
+      detail: { what },
+    });
   return row;
 }
 
@@ -240,11 +262,30 @@ export async function coursesUsingTool(ctx: Pick<Ctx, "db">, slug: string): Prom
   const rows = await ctx.db
     .select({ id: course.id })
     .from(course)
-    .where(and(arrayContains(course.toolSlugs, [slug]), inArray(course.status, ["published", "needs_review"])));
+    .where(
+      and(arrayContains(course.toolSlugs, [slug]), inArray(course.status, ["published", "needs_review"])),
+    );
   return rows.map((row) => row.id);
 }
 
-const sameJson = (a: unknown, b: unknown): boolean => JSON.stringify(a) === JSON.stringify(b);
+/** JSON with object keys sorted, so two values can be compared whatever order their keys are in (jsonb reorders keys). */
+export function canonicalJson(value: unknown): string {
+  const sort = (input: unknown): unknown => {
+    if (Array.isArray(input)) return input.map(sort);
+    if (input !== null && typeof input === "object" && !(input instanceof Date)) {
+      return Object.fromEntries(
+        Object.entries(input as Record<string, unknown>)
+          .filter(([, entry]) => entry !== undefined)
+          .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+          .map(([key, entry]) => [key, sort(entry)]),
+      );
+    }
+    return input;
+  };
+  return JSON.stringify(sort(value));
+}
+
+const sameJson = (a: unknown, b: unknown): boolean => canonicalJson(a) === canonicalJson(b);
 
 // ───────────────────────────── Seeds and candidates ─────────────────────────────
 
@@ -296,32 +337,60 @@ export async function upsertToolFromSeed(
   if (options.approveAsDevSeed) assertDevSeedAllowed();
   const fields = seedFields(seed);
 
-  const upserted = await ctx.db.transaction(async (tx): Promise<{ tool: ToolRow; action: SeedUpsertAction }> => {
-    const [existing] = await tx.select().from(tool).where(eq(tool.slug, seed.slug)).limit(1).for("update");
-    if (!existing) {
-      const created = one(await tx.insert(tool).values({ slug: seed.slug, ...fields }).returning(), "tool");
-      await audit(ctx, { action: "tool.seed.create", targetType: "tool", targetId: created.id, meta: { slug: seed.slug, status: created.status } }, tx);
-      return { tool: created, action: "created" };
-    }
-    const pristine = existing.updatedAt.getTime() === existing.createdAt.getTime();
-    const seedOwned = existing.status === "candidate" || existing.status === "pending_verification";
-    if (!pristine || !seedOwned || existing.verifiedBy !== null || existing.under18Policy !== null) {
-      return { tool: existing, action: "kept_human_record" };
-    }
-    const changed = (Object.keys(fields) as Array<keyof typeof fields>).filter((key) => !sameJson(existing[key], fields[key]));
-    if (changed.length === 0) return { tool: existing, action: "unchanged" };
-    const updated = one(
-      await tx
-        .update(tool)
-        // Keeping `updated_at = created_at` marks the record as still owned by the seed.
-        .set({ ...fields, updatedAt: sql`${tool.createdAt}` })
-        .where(eq(tool.id, existing.id))
-        .returning(),
-      "tool",
-    );
-    await audit(ctx, { action: "tool.seed.update", targetType: "tool", targetId: updated.id, meta: { slug: seed.slug, changed } }, tx);
-    return { tool: updated, action: "updated" };
-  });
+  const upserted = await ctx.db.transaction(
+    async (tx): Promise<{ tool: ToolRow; action: SeedUpsertAction }> => {
+      const [existing] = await tx.select().from(tool).where(eq(tool.slug, seed.slug)).limit(1).for("update");
+      if (!existing) {
+        const created = one(
+          await tx
+            .insert(tool)
+            .values({ slug: seed.slug, ...fields })
+            .returning(),
+          "tool",
+        );
+        await audit(
+          ctx,
+          {
+            action: "tool.seed.create",
+            targetType: "tool",
+            targetId: created.id,
+            meta: { slug: seed.slug, status: created.status },
+          },
+          tx,
+        );
+        return { tool: created, action: "created" };
+      }
+      const pristine = existing.updatedAt.getTime() === existing.createdAt.getTime();
+      const seedOwned = existing.status === "candidate" || existing.status === "pending_verification";
+      if (!pristine || !seedOwned || existing.verifiedBy !== null || existing.under18Policy !== null) {
+        return { tool: existing, action: "kept_human_record" };
+      }
+      const changed = (Object.keys(fields) as Array<keyof typeof fields>).filter(
+        (key) => !sameJson(existing[key], fields[key]),
+      );
+      if (changed.length === 0) return { tool: existing, action: "unchanged" };
+      const updated = one(
+        await tx
+          .update(tool)
+          // Keeping `updated_at = created_at` marks the record as still owned by the seed.
+          .set({ ...fields, updatedAt: sql`${tool.createdAt}` })
+          .where(eq(tool.id, existing.id))
+          .returning(),
+        "tool",
+      );
+      await audit(
+        ctx,
+        {
+          action: "tool.seed.update",
+          targetType: "tool",
+          targetId: updated.id,
+          meta: { slug: seed.slug, changed },
+        },
+        tx,
+      );
+      return { tool: updated, action: "updated" };
+    },
+  );
 
   if (!options.approveAsDevSeed) return { ...upserted, devSeedApproved: false };
   // Never touch a tool a person has already decided on.
@@ -331,8 +400,10 @@ export async function upsertToolFromSeed(
   const placeholders: string[] = [];
   if (seed.under18Policy === null) placeholders.push('under-18 policy "allowed"');
   if (seed.minAge === null) placeholders.push(`minimum age ${DEV_SEED_MIN_AGE}`);
-  const policy = seed.under18Policy === null || seed.under18Policy === "blocked" ? "allowed" : seed.under18Policy;
-  if (seed.under18Policy === "blocked") placeholders.push('under-18 policy "allowed" (the seed says blocked)');
+  const policy =
+    seed.under18Policy === null || seed.under18Policy === "blocked" ? "allowed" : seed.under18Policy;
+  if (seed.under18Policy === "blocked")
+    placeholders.push('under-18 policy "allowed" (the seed says blocked)');
   const approved = await approveTool(ctx, seed.slug, {
     under18Policy: policy,
     minAge: seed.minAge ?? DEV_SEED_MIN_AGE,
@@ -346,9 +417,13 @@ export async function upsertToolFromSeed(
 
 function assertDevSeedAllowed(): void {
   if (env.APP_ENV !== "local" && env.APP_ENV !== "test") {
-    throw new AppError("forbidden", "Development seed approval is only allowed in a local or test environment.", {
-      detail: { appEnv: env.APP_ENV },
-    });
+    throw new AppError(
+      "forbidden",
+      "Development seed approval is only allowed in a local or test environment.",
+      {
+        detail: { appEnv: env.APP_ENV },
+      },
+    );
   }
 }
 
@@ -380,7 +455,10 @@ const slugify = (value: string): string =>
  * approve the Register fields before any course that uses the tool can go live (spec 3.3, 3.9).
  * If a tool with the same slug or vendor domain already exists it is returned untouched.
  */
-export async function createCandidateTool(ctx: Ctx, input: CandidateToolInput): Promise<{ tool: ToolRow; created: boolean }> {
+export async function createCandidateTool(
+  ctx: Ctx,
+  input: CandidateToolInput,
+): Promise<{ tool: ToolRow; created: boolean }> {
   assertCan(ctx.actor, "tool.edit");
   const name = input.name.trim();
   const vendorDomain = input.vendorDomain.trim().toLowerCase();
@@ -424,7 +502,16 @@ export async function createCandidateTool(ctx: Ctx, input: CandidateToolInput): 
         .returning(),
       "tool",
     );
-    await audit(ctx, { action: "tool.candidate.create", targetType: "tool", targetId: created.id, meta: { slug: created.slug, vendorDomain } }, tx);
+    await audit(
+      ctx,
+      {
+        action: "tool.candidate.create",
+        targetType: "tool",
+        targetId: created.id,
+        meta: { slug: created.slug, vendorDomain },
+      },
+      tx,
+    );
     return { tool: created, created: true };
   });
 }
@@ -498,7 +585,10 @@ export async function updateToolFields(ctx: Ctx, slug: string, patch: ToolPatch)
     if (patch.consentRule !== undefined) set.consentRule = patch.consentRule;
     if (patch.evidence !== undefined) set.evidence = patch.evidence;
     if (patch.minAge !== undefined) {
-      if (patch.minAge !== null && (!Number.isInteger(patch.minAge) || patch.minAge < 0 || patch.minAge > 21)) {
+      if (
+        patch.minAge !== null &&
+        (!Number.isInteger(patch.minAge) || patch.minAge < 0 || patch.minAge > 21)
+      ) {
         throw new AppError("invalid_input", "The minimum age must be a whole number from 0 to 21.");
       }
       set.minAge = patch.minAge;
@@ -564,15 +654,22 @@ export interface ApproveToolInput {
  */
 export async function approveTool(ctx: Ctx, slug: string, input: ApproveToolInput): Promise<ToolRow> {
   assertCan(ctx.actor, "tool.approve");
-  if (ctx.actor.type !== "staff") throw new AppError("forbidden", "Only a signed-in member of staff can approve a tool.");
+  if (ctx.actor.type !== "staff")
+    throw new AppError("forbidden", "Only a signed-in member of staff can approve a tool.");
   const approverId = ctx.actor.userId;
   if (input.devSeed) assertDevSeedAllowed();
   if (input.evidenceChecked !== true) {
-    throw new AppError("invalid_input", "Confirm that you checked the evidence against the vendor's live pages before approving.");
+    throw new AppError(
+      "invalid_input",
+      "Confirm that you checked the evidence against the vendor's live pages before approving.",
+    );
   }
   const policy: string = input.under18Policy;
   if (policy !== "allowed" && policy !== "parent_consent_required" && policy !== "parent_operated") {
-    throw new AppError("invalid_input", "Choose an under-18 policy. To block a tool, use Block instead of Approve.");
+    throw new AppError(
+      "invalid_input",
+      "Choose an under-18 policy. To block a tool, use Block instead of Approve.",
+    );
   }
   if (!Number.isInteger(input.minAge) || input.minAge < 0 || input.minAge > 21) {
     throw new AppError("invalid_input", "The minimum age must be a whole number from 0 to 21.");
@@ -593,14 +690,24 @@ export async function approveTool(ctx: Ctx, slug: string, input: ApproveToolInpu
   return ctx.db.transaction(async (tx) => {
     const existing = await requireTool(tx, slug, true);
     if (existing.officialUrl === null || existing.allowedUrlPrefixes.length === 0) {
-      throw new AppError("validation_failed", "Add the tool's official link and allowed link prefixes before approving it.");
+      throw new AppError(
+        "validation_failed",
+        "Add the tool's official link and allowed link prefixes before approving it.",
+      );
     }
     if (!isUrlAllowedForTool(existing, existing.officialUrl)) {
-      throw new AppError("validation_failed", "The tool's official link does not start with one of its allowed link prefixes.");
+      throw new AppError(
+        "validation_failed",
+        "The tool's official link does not start with one of its allowed link prefixes.",
+      );
     }
     const parentOperated = input.under18Policy === "parent_operated";
     const note = input.note?.trim();
-    const notes = note ? (existing.notes?.includes(note) ? existing.notes : [note, existing.notes].filter(Boolean).join("\n\n")) : existing.notes;
+    const notes = note
+      ? existing.notes?.includes(note)
+        ? existing.notes
+        : [note, existing.notes].filter(Boolean).join("\n\n")
+      : existing.notes;
     const updated = one(
       await tx
         .update(tool)
@@ -678,7 +785,12 @@ export async function blockTool(ctx: Ctx, slug: string, reason: string): Promise
         targetType: "tool",
         targetId: updated.id,
         reason: reason.trim(),
-        meta: { slug, statusFrom: existing.status, under18PolicyFrom: existing.under18Policy, by: staffUserId(ctx) },
+        meta: {
+          slug,
+          statusFrom: existing.status,
+          under18PolicyFrom: existing.under18Policy,
+          by: staffUserId(ctx),
+        },
       },
       tx,
     );
@@ -715,7 +827,16 @@ export async function addSubstitute(
         .returning(),
       "tool_substitute",
     );
-    await audit(ctx, { action: "tool.substitute.add", targetType: "tool", targetId: main.id, meta: { slug, substituteSlug } }, tx);
+    await audit(
+      ctx,
+      {
+        action: "tool.substitute.add",
+        targetType: "tool",
+        targetId: main.id,
+        meta: { slug, substituteSlug },
+      },
+      tx,
+    );
     return created;
   });
 }

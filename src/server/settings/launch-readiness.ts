@@ -18,7 +18,14 @@ import { getSetting } from "./store";
  */
 
 /** Legal pages that must be published before sign-up opens. Slugs are those of `page.slug`. */
-export const REQUIRED_LEGAL_SLUGS = ["privacy", "privacy-teen", "terms", "cookies", "community-code", "ai-use-policy"] as const;
+export const REQUIRED_LEGAL_SLUGS = [
+  "privacy",
+  "privacy-teen",
+  "terms",
+  "cookies",
+  "community-code",
+  "ai-use-policy",
+] as const;
 
 /**
  * Providers that are processors but are switched on by environment variable rather than in
@@ -46,13 +53,22 @@ export type LaunchReadinessItem = {
   confirmedAt?: string;
 };
 
-export type LaunchReadiness = { ready: boolean; items: LaunchReadinessItem[]; outstanding: LaunchReadinessItem[] };
+export type LaunchReadiness = {
+  ready: boolean;
+  items: LaunchReadinessItem[];
+  outstanding: LaunchReadinessItem[];
+};
 
 /** Everything the checklist looks at. Tests pass these in directly; `loadReadinessInputs` reads them from the database. */
 export type ReadinessInputs = {
   dslName: string | null;
   aiProviderMode: "fixture" | "gateway";
-  processors: Array<{ providerKey: string; enabled: boolean; approvedAt: Date | null; dpaReference: string | null }>;
+  processors: Array<{
+    providerKey: string;
+    enabled: boolean;
+    approvedAt: Date | null;
+    dpaReference: string | null;
+  }>;
   /** Extra provider keys that must be approved and enabled (email, storage). */
   requiredProcessorKeys: string[];
   /** Slugs of `legal` pages whose current version is published. */
@@ -62,7 +78,8 @@ export type ReadinessInputs = {
   confirmations: Record<string, LaunchConfirmation>;
 };
 
-const hasText = (value: string | null | undefined): value is string => typeof value === "string" && value.trim().length > 0;
+const hasText = (value: string | null | undefined): value is string =>
+  typeof value === "string" && value.trim().length > 0;
 const list = (items: string[]) => items.join(", ");
 
 function isApproved(p: ReadinessInputs["processors"][number]): boolean {
@@ -81,21 +98,33 @@ const AUTO_CHECKS: Record<string, (inputs: ReadinessInputs) => AutoResult> = {
     const enabled = inputs.processors.filter((p) => p.enabled);
     const unapproved = enabled.filter((p) => !isApproved(p)).map((p) => p.providerKey);
     if (unapproved.length > 0) {
-      return { satisfied: false, detail: `Enabled without an approval and DPA reference: ${list(unapproved)}.` };
+      return {
+        satisfied: false,
+        detail: `Enabled without an approval and DPA reference: ${list(unapproved)}.`,
+      };
     }
     const usable = new Set(enabled.map((p) => p.providerKey));
     const missing = inputs.requiredProcessorKeys.filter((key) => !usable.has(key));
     if (missing.length > 0) {
-      return { satisfied: false, detail: `Selected by configuration but not approved and enabled in Studio → AI: ${list(missing)}.` };
+      return {
+        satisfied: false,
+        detail: `Selected by configuration but not approved and enabled in Studio → AI: ${list(missing)}.`,
+      };
     }
     // Email and storage rows do not count: live AI needs a model provider of its own.
     const modelProviders = enabled.filter((p) => !inputs.requiredProcessorKeys.includes(p.providerKey));
     if (inputs.aiProviderMode === "gateway" && modelProviders.length === 0) {
-      return { satisfied: false, detail: "Live AI is switched on, but no model provider is approved and enabled." };
+      return {
+        satisfied: false,
+        detail: "Live AI is switched on, but no model provider is approved and enabled.",
+      };
     }
     return {
       satisfied: true,
-      detail: enabled.length === 0 ? "No external provider is enabled." : `${enabled.length} enabled, each with an approval and a DPA reference.`,
+      detail:
+        enabled.length === 0
+          ? "No external provider is enabled."
+          : `${enabled.length} enabled, each with an approval and a DPA reference.`,
     };
   },
 
@@ -108,12 +137,21 @@ const AUTO_CHECKS: Record<string, (inputs: ReadinessInputs) => AutoResult> = {
   },
 
   tools_verified: (inputs) => {
-    const problems = inputs.publishedCourseTools.filter((t) => t.status !== "approved" || t.under18Policy === null).map((t) => t.slug);
+    const problems = inputs.publishedCourseTools
+      .filter((t) => t.status !== "approved" || t.under18Policy === null)
+      .map((t) => t.slug);
     const unique = [...new Set(problems)].sort();
-    if (unique.length > 0) return { satisfied: false, detail: `Used by a published course but not verified in the Tool Register: ${list(unique)}.` };
+    if (unique.length > 0)
+      return {
+        satisfied: false,
+        detail: `Used by a published course but not verified in the Tool Register: ${list(unique)}.`,
+      };
     return {
       satisfied: true,
-      detail: inputs.publishedCourseTools.length === 0 ? "No published course uses a tool yet." : "Every tool used by a published course is approved with an under-18 policy.",
+      detail:
+        inputs.publishedCourseTools.length === 0
+          ? "No published course uses a tool yet."
+          : "Every tool used by a published course is approved with an under-18 policy.",
     };
   },
 };
@@ -139,7 +177,13 @@ export function evaluateLaunchReadiness(inputs: ReadinessInputs): LaunchReadines
         confirmedAt: confirmation.confirmedAt,
       };
     }
-    return { key: item.key, label: item.label, auto: false, satisfied: false, detail: "Waiting for the owner to confirm." };
+    return {
+      key: item.key,
+      label: item.label,
+      auto: false,
+      satisfied: false,
+      detail: "Waiting for the owner to confirm.",
+    };
   });
   const outstanding = items.filter((i) => !i.satisfied);
   return { ready: outstanding.length === 0, items, outstanding };
@@ -150,23 +194,40 @@ export async function loadReadinessInputs(ctx: Pick<Ctx, "db">): Promise<Readine
     getSetting(ctx, "safeguarding.dsl_name"),
     getSetting(ctx, "launch.readiness"),
     ctx.db
-      .select({ providerKey: aiProcessor.providerKey, enabled: aiProcessor.enabled, approvedAt: aiProcessor.approvedAt, dpaReference: aiProcessor.dpaReference })
+      .select({
+        providerKey: aiProcessor.providerKey,
+        enabled: aiProcessor.enabled,
+        approvedAt: aiProcessor.approvedAt,
+        dpaReference: aiProcessor.dpaReference,
+      })
       .from(aiProcessor),
     ctx.db
       .select({ slug: page.slug })
       .from(page)
       .innerJoin(pageVersion, eq(pageVersion.id, page.currentVersionId))
-      .where(and(eq(page.kind, "legal"), eq(pageVersion.status, "published"), inArray(page.slug, [...REQUIRED_LEGAL_SLUGS]))),
+      .where(
+        and(
+          eq(page.kind, "legal"),
+          eq(pageVersion.status, "published"),
+          inArray(page.slug, [...REQUIRED_LEGAL_SLUGS]),
+        ),
+      ),
     ctx.db
       .select({ slug: tool.slug, status: tool.status, under18Policy: tool.under18Policy })
       .from(courseTool)
-      .innerJoin(course, and(eq(course.id, courseTool.courseId), eq(course.publishedVersionId, courseTool.courseVersionId)))
+      .innerJoin(
+        course,
+        and(eq(course.id, courseTool.courseId), eq(course.publishedVersionId, courseTool.courseVersionId)),
+      )
       .innerJoin(tool, eq(tool.id, courseTool.toolId))
       .where(eq(course.status, "published")),
     ctx.db
       .select({ slug: tool.slug, status: tool.status, under18Policy: tool.under18Policy })
       .from(courseTool)
-      .innerJoin(course, and(eq(course.id, courseTool.courseId), eq(course.publishedVersionId, courseTool.courseVersionId)))
+      .innerJoin(
+        course,
+        and(eq(course.id, courseTool.courseId), eq(course.publishedVersionId, courseTool.courseVersionId)),
+      )
       .innerJoin(tool, eq(tool.id, courseTool.fallbackToolId))
       .where(eq(course.status, "published")),
   ]);
@@ -196,7 +257,10 @@ function manualItem(key: string) {
   const item = LAUNCH_READINESS_ITEMS.find((i) => i.key === key);
   if (!item) throw new AppError("not_found", "That checklist item doesn't exist.");
   if (item.auto) {
-    throw new AppError("invalid_input", `"${item.label}" is checked automatically, so it can't be confirmed or cleared by hand.`);
+    throw new AppError(
+      "invalid_input",
+      `"${item.label}" is checked automatically, so it can't be confirmed or cleared by hand.`,
+    );
   }
   return item;
 }
@@ -205,13 +269,21 @@ function manualItem(key: string) {
 export async function confirmLaunchItem(ctx: Ctx, key: LaunchReadinessKey, note: string): Promise<void> {
   assertCan(ctx.actor, "launch_readiness.manage");
   // `launch_readiness.manage` is human-only, so this is always a member of staff.
-  if (ctx.actor.type !== "staff") throw new AppError("forbidden", "Only the owner can confirm a launch-readiness item.");
+  if (ctx.actor.type !== "staff")
+    throw new AppError("forbidden", "Only the owner can confirm a launch-readiness item.");
   const item = manualItem(key);
   const trimmed = note.trim();
   if (trimmed.length < 3) {
-    throw new AppError("invalid_input", "Add a short note saying who signed this off or where the evidence is kept.");
+    throw new AppError(
+      "invalid_input",
+      "Add a short note saying who signed this off or where the evidence is kept.",
+    );
   }
-  const entry: LaunchConfirmation = { confirmedBy: ctx.actor.userId, confirmedAt: ctx.now.toISOString(), note: trimmed.slice(0, 500) };
+  const entry: LaunchConfirmation = {
+    confirmedBy: ctx.actor.userId,
+    confirmedAt: ctx.now.toISOString(),
+    note: trimmed.slice(0, 500),
+  };
   const patch = JSON.stringify({ [item.key]: entry });
   const updatedBy = ctx.actor.userId;
   await ctx.db.transaction(async (tx) => {
@@ -227,24 +299,46 @@ export async function confirmLaunchItem(ctx: Ctx, key: LaunchReadinessKey, note:
           updatedAt: ctx.now,
         },
       });
-    await audit(ctx, { action: "launch_readiness.confirm", targetType: "launch_readiness", targetId: item.key, meta: { note: entry.note } }, tx);
+    await audit(
+      ctx,
+      {
+        action: "launch_readiness.confirm",
+        targetType: "launch_readiness",
+        targetId: item.key,
+        meta: { note: entry.note },
+      },
+      tx,
+    );
   });
 }
 
 /** Owner only. Withdraws a confirmation. Sign-up closes itself until the item is confirmed again. */
 export async function clearLaunchItem(ctx: Ctx, key: LaunchReadinessKey, reason: string): Promise<void> {
   assertCan(ctx.actor, "launch_readiness.manage");
-  if (ctx.actor.type !== "staff") throw new AppError("forbidden", "Only the owner can change a launch-readiness item.");
+  if (ctx.actor.type !== "staff")
+    throw new AppError("forbidden", "Only the owner can change a launch-readiness item.");
   const item = manualItem(key);
   const trimmed = reason.trim();
-  if (trimmed.length < 3) throw new AppError("invalid_input", "Say briefly why this confirmation is being withdrawn.");
+  if (trimmed.length < 3)
+    throw new AppError("invalid_input", "Say briefly why this confirmation is being withdrawn.");
   const updatedBy = ctx.actor.userId;
   await ctx.db.transaction(async (tx) => {
     await tx
       .update(siteSetting)
       .set({ value: sql`${siteSetting.value} - ${item.key}::text`, updatedBy, updatedAt: ctx.now })
-      .where(and(eq(siteSetting.key, "launch.readiness"), sql`jsonb_typeof(${siteSetting.value}) = 'object'`));
-    await audit(ctx, { action: "launch_readiness.clear", targetType: "launch_readiness", targetId: item.key, reason: trimmed.slice(0, 500) }, tx);
+      .where(
+        and(eq(siteSetting.key, "launch.readiness"), sql`jsonb_typeof(${siteSetting.value}) = 'object'`),
+      );
+    await audit(
+      ctx,
+      {
+        action: "launch_readiness.clear",
+        targetType: "launch_readiness",
+        targetId: item.key,
+        reason: trimmed.slice(0, 500),
+      },
+      tx,
+    );
   });
 }
 
@@ -269,7 +363,10 @@ export async function isSignupOpen(ctx: Pick<Ctx, "db">): Promise<boolean> {
  */
 export async function markLaunchReadyForDev(ctx: Ctx): Promise<LaunchReadiness> {
   if (env.APP_ENV === "production" || env.APP_ENV === "preview") {
-    throw new AppError("forbidden", "The launch-readiness checklist can't be filled in automatically outside local development and tests.");
+    throw new AppError(
+      "forbidden",
+      "The launch-readiness checklist can't be filled in automatically outside local development and tests.",
+    );
   }
   await ctx.db.transaction(async (tx) => {
     const scoped = { db: tx };
@@ -285,7 +382,11 @@ export async function markLaunchReadyForDev(ctx: Ctx): Promise<LaunchReadiness> 
     const confirmations: Record<string, LaunchConfirmation> = { ...existing };
     for (const item of LAUNCH_READINESS_ITEMS) {
       if (item.auto || confirmations[item.key]) continue;
-      confirmations[item.key] = { confirmedBy: "dev-seed", confirmedAt: ctx.now.toISOString(), note: "Development placeholder. Not a real sign-off." };
+      confirmations[item.key] = {
+        confirmedBy: "dev-seed",
+        confirmedAt: ctx.now.toISOString(),
+        note: "Development placeholder. Not a real sign-off.",
+      };
     }
     await tx
       .insert(siteSetting)
@@ -303,7 +404,10 @@ export async function markLaunchReadyForDev(ctx: Ctx): Promise<LaunchReadiness> 
       let pageId = rows[0]?.id;
       if (!pageId) {
         const audience = slug === "privacy-teen" ? ("teen" as const) : ("everyone" as const);
-        const inserted = await tx.insert(page).values({ slug, kind: "legal", audience, title }).returning({ id: page.id });
+        const inserted = await tx
+          .insert(page)
+          .values({ slug, kind: "legal", audience, title })
+          .returning({ id: page.id });
         pageId = inserted[0]?.id;
       }
       if (!pageId) throw new Error(`Could not create the placeholder legal page "${slug}"`);
@@ -323,10 +427,21 @@ export async function markLaunchReadyForDev(ctx: Ctx): Promise<LaunchReadiness> 
           changeNote: "Development placeholder",
         })
         .returning({ id: pageVersion.id });
-      await tx.update(page).set({ currentVersionId: version[0]?.id ?? null, updatedAt: ctx.now }).where(eq(page.id, pageId));
+      await tx
+        .update(page)
+        .set({ currentVersionId: version[0]?.id ?? null, updatedAt: ctx.now })
+        .where(eq(page.id, pageId));
     }
 
-    await audit(ctx, { action: "launch_readiness.dev_override", targetType: "launch_readiness", meta: { appEnv: env.APP_ENV } }, tx);
+    await audit(
+      ctx,
+      {
+        action: "launch_readiness.dev_override",
+        targetType: "launch_readiness",
+        meta: { appEnv: env.APP_ENV },
+      },
+      tx,
+    );
   });
   return computeLaunchReadiness(ctx);
 }

@@ -30,7 +30,10 @@ export const BUILT_IN_GUARDS: BuiltInGuards = {
   "safeguarding.deputy_escalation_enabled": async (ctx, enabled) => {
     if (!enabled) return;
     if (!hasText(await getSetting(ctx, "safeguarding.deputy_name"))) {
-      throw new AppError("not_ready", "Name a deputy or outsourced cover in Settings → Safeguarding before switching on escalation to the deputy.");
+      throw new AppError(
+        "not_ready",
+        "Name a deputy or outsourced cover in Settings → Safeguarding before switching on escalation to the deputy.",
+      );
     }
   },
 
@@ -38,7 +41,10 @@ export const BUILT_IN_GUARDS: BuiltInGuards = {
   "safeguarding.deputy_name": async (ctx, name) => {
     if (hasText(name)) return;
     if (await getSetting(ctx, "safeguarding.deputy_escalation_enabled")) {
-      throw new AppError("conflict", "Switch off escalation to the deputy before removing the deputy's name.");
+      throw new AppError(
+        "conflict",
+        "Switch off escalation to the deputy before removing the deputy's name.",
+      );
     }
   },
 
@@ -49,7 +55,10 @@ export const BUILT_IN_GUARDS: BuiltInGuards = {
     }
     const total = values.reduce((sum, v) => sum + v, 0);
     if (Math.abs(total - 100) > 1e-6) {
-      throw new AppError("invalid_input", `The score weights must add up to 100. They currently add up to ${Number(total.toFixed(2))}.`);
+      throw new AppError(
+        "invalid_input",
+        `The score weights must add up to 100. They currently add up to ${Number(total.toFixed(2))}.`,
+      );
     }
   },
 };

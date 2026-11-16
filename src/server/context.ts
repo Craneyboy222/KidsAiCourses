@@ -125,7 +125,11 @@ export async function loadActor(database: Db, info: SessionInfo, now: Date): Pro
         type: "staff",
         userId: row.id,
         roles: roles.map((r) => r.role),
-        twoFactorVerified: row.twoFactorEnabled && info.twoFactorVerified,
+        // Local development and tests only: with STAFF_2FA_REQUIRED=false, staff count as verified
+        // without TOTP. `src/env.ts` refuses that setting in preview and production.
+        twoFactorVerified:
+          (row.twoFactorEnabled && info.twoFactorVerified) ||
+          (!env.STAFF_2FA_REQUIRED && (env.APP_ENV === "local" || env.APP_ENV === "test")),
       };
       return actor;
     }

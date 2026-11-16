@@ -33,7 +33,12 @@ export type EmailTemplateDef = {
   description: string;
 };
 
-const t = (audience: EmailAudience, description: string, subject: string, body: string): EmailTemplateDef => ({
+const t = (
+  audience: EmailAudience,
+  description: string,
+  subject: string,
+  body: string,
+): EmailTemplateDef => ({
   subject,
   body: body.trim(),
   audience,
@@ -89,10 +94,10 @@ Someone entered the wrong password several times for {{accountLabel}}, so we hav
 Nothing else has changed, and anyone already signed in can carry on.
 
 - If this was you or your child, wait until then and try again.
-- If the password has been forgotten, you can set a new one from your parent dashboard.
+- If the password has been forgotten, it can be reset: a child's from your parent dashboard, your own from the sign-in page.
 - If you don't recognise this, set a new password to be safe.
 
-[Open my dashboard]({{url}})
+[Go to {{brandName}}]({{url}})
 `,
   ),
   staff_invite: t(
@@ -325,19 +330,26 @@ export type EmailTemplateKey = keyof typeof EMAIL_TEMPLATES;
  *
  *   registerEmailTemplate("certificate_issued", { subject, body, audience: "parent", category: "transactional", description });
  */
-const globalForTemplates = globalThis as typeof globalThis & { __platformEmailTemplates?: Map<string, EmailTemplateDef> };
+const globalForTemplates = globalThis as typeof globalThis & {
+  __platformEmailTemplates?: Map<string, EmailTemplateDef>;
+};
 const registered = (globalForTemplates.__platformEmailTemplates ??= new Map<string, EmailTemplateDef>());
 
 export function registerEmailTemplate(key: string, definition: EmailTemplateDef): void {
-  if (!/^[a-z][a-z0-9_]{2,63}$/.test(key)) throw new Error(`Email template key "${key}" must be lower_snake_case`);
-  if (key in EMAIL_TEMPLATES) throw new Error(`Email template "${key}" already exists as a built-in template`);
-  if ((definition.category as string) !== "transactional") throw new Error("Only transactional email templates can be registered");
+  if (!/^[a-z][a-z0-9_]{2,63}$/.test(key))
+    throw new Error(`Email template key "${key}" must be lower_snake_case`);
+  if (key in EMAIL_TEMPLATES)
+    throw new Error(`Email template "${key}" already exists as a built-in template`);
+  if ((definition.category as string) !== "transactional")
+    throw new Error("Only transactional email templates can be registered");
   registered.set(key, { ...definition, body: definition.body.trim() });
 }
 
 /** The code default for a key, or `undefined` if nothing in code defines it. */
 export function defaultEmailTemplate(key: string): EmailTemplateDef | undefined {
-  return Object.prototype.hasOwnProperty.call(EMAIL_TEMPLATES, key) ? EMAIL_TEMPLATES[key as EmailTemplateKey] : registered.get(key);
+  return Object.prototype.hasOwnProperty.call(EMAIL_TEMPLATES, key)
+    ? EMAIL_TEMPLATES[key as EmailTemplateKey]
+    : registered.get(key);
 }
 
 /** Every template key known to the code, built-in first. */
@@ -364,10 +376,14 @@ export async function getEmailTemplate(ctx: Pick<Ctx, "db">, key: string): Promi
   const [row] = await ctx.db
     .select({ subject: emailTemplate.subject, body: emailTemplate.body, version: emailTemplate.version })
     .from(emailTemplate)
-    .where(and(eq(emailTemplate.key, key), eq(emailTemplate.channel, "email"), eq(emailTemplate.active, true)))
+    .where(
+      and(eq(emailTemplate.key, key), eq(emailTemplate.channel, "email"), eq(emailTemplate.active, true)),
+    )
     .orderBy(desc(emailTemplate.version))
     .limit(1);
-  const chosen = row ? { subject: row.subject, body: row.body } : { subject: fallback.subject, body: fallback.body };
+  const chosen = row
+    ? { subject: row.subject, body: row.body }
+    : { subject: fallback.subject, body: fallback.body };
   return {
     ...fallback,
     ...chosen,
@@ -382,13 +398,21 @@ const FOOTERS: Record<EmailAudience, string> = {
   parent:
     "You are receiving this email because you have, or have been asked to approve, a parent or carer account with {brand}. It is a service message about that account, not marketing.",
   staff: "You are receiving this email because you are a member of the {brand} team.",
-  adult_learner: "You are receiving this email because you are 18 or over and have an account with {brand}. It is a service message about your account, not marketing.",
+  adult_learner:
+    "You are receiving this email because you are 18 or over and have an account with {brand}. It is a service message about your account, not marketing.",
 };
 
 /** Subject, HTML and plain text for a template, using the Studio override when one is active. */
-export async function renderEmail(ctx: Pick<Ctx, "db">, key: string, data: TemplateData = {}): Promise<RenderedEmail> {
+export async function renderEmail(
+  ctx: Pick<Ctx, "db">,
+  key: string,
+  data: TemplateData = {},
+): Promise<RenderedEmail> {
   const template = await getEmailTemplate(ctx, key);
-  const [displayName, supportEmail] = await Promise.all([getSetting(ctx, "site.brand_display_name"), getSetting(ctx, "site.support_email")]);
+  const [displayName, supportEmail] = await Promise.all([
+    getSetting(ctx, "site.brand_display_name"),
+    getSetting(ctx, "site.support_email"),
+  ]);
   const brandName = displayName?.trim() || env.NEXT_PUBLIC_BRAND_NAME;
   const appUrl = env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, "");
   const support = supportEmail ? ` If you need help, email ${supportEmail}.` : "";

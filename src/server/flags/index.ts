@@ -26,7 +26,12 @@ export type FlagRule = {
   [future: string]: unknown;
 };
 
-export type FlagTarget = { safetyBand?: SafetyBand | string; plan?: string; familyId?: string; userId?: string };
+export type FlagTarget = {
+  safetyBand?: SafetyBand | string;
+  plan?: string;
+  familyId?: string;
+  userId?: string;
+};
 
 export type Flag = {
   key: string;
@@ -51,7 +56,8 @@ const KNOWN_CONDITIONS = new Set(["safetyBands", "plans", "familyIds", "percenta
 
 /** Accepts one rule object or a list, as stored. Anything else is treated as "no rules". */
 export function normaliseRules(raw: unknown): FlagRule[] {
-  if (Array.isArray(raw)) return raw.filter((r): r is FlagRule => typeof r === "object" && r !== null && !Array.isArray(r));
+  if (Array.isArray(raw))
+    return raw.filter((r): r is FlagRule => typeof r === "object" && r !== null && !Array.isArray(r));
   if (typeof raw === "object" && raw !== null) return Object.keys(raw).length === 0 ? [] : [raw as FlagRule];
   return [];
 }
@@ -86,7 +92,10 @@ export function ruleMatches(flagKey: string, rule: FlagRule, target: FlagTarget)
 }
 
 /** Pure: the whole decision for one flag. */
-export function evaluateFlag(flag: { key: string; enabled: boolean; rules: unknown } | null | undefined, target: FlagTarget = {}): boolean {
+export function evaluateFlag(
+  flag: { key: string; enabled: boolean; rules: unknown } | null | undefined,
+  target: FlagTarget = {},
+): boolean {
   if (!flag || !flag.enabled) return false;
   const rules = normaliseRules(flag.rules);
   if (rules.length === 0) return true;
@@ -136,7 +145,11 @@ function targetFromActor(ctx: Pick<Ctx, "actor">, given: FlagTarget | undefined)
  * Is the flag on for this request? Unknown flag → false. The safety band and family come from
  * the actor unless `target` overrides them; the plan must be passed in by the caller.
  */
-export async function isEnabled(ctx: Pick<Ctx, "db" | "now" | "actor">, key: string, target?: FlagTarget): Promise<boolean> {
+export async function isEnabled(
+  ctx: Pick<Ctx, "db" | "now" | "actor">,
+  key: string,
+  target?: FlagTarget,
+): Promise<boolean> {
   return evaluateFlag(await loadFlag(ctx, key), targetFromActor(ctx, target));
 }
 
@@ -166,13 +179,19 @@ export async function setFlag(ctx: Ctx, input: SetFlagInput): Promise<void> {
   assertCan(ctx.actor, "flag.manage");
   const key = input.key.trim();
   if (!/^[a-z0-9][a-z0-9_.-]{1,79}$/.test(key)) {
-    throw new AppError("invalid_input", "Flag keys use lower-case letters, numbers, dots, dashes and underscores, for example coach.voice_input.");
+    throw new AppError(
+      "invalid_input",
+      "Flag keys use lower-case letters, numbers, dots, dashes and underscores, for example coach.voice_input.",
+    );
   }
   let rules: FlagRule[] | undefined;
   if (input.rules !== undefined) {
     const parsed = rulesSchema.safeParse(input.rules);
     if (!parsed.success) {
-      throw new AppError("invalid_input", `Those targeting rules aren't valid. ${parsed.error.issues[0]?.message ?? ""}`.trim());
+      throw new AppError(
+        "invalid_input",
+        `Those targeting rules aren't valid. ${parsed.error.issues[0]?.message ?? ""}`.trim(),
+      );
     }
     rules = normaliseRules(parsed.data);
   }

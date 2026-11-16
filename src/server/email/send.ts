@@ -19,7 +19,13 @@ import { getEmailTransport, maskEmail, type EmailSendResult } from "./transport"
  *    emailed only once they are 18 (`adult_18`), on the cautious reading of their age.
  * 3. Only transactional templates exist. There is no marketing send path at all.
  */
-export type EmailRefusalReason = "invalid_address" | "undeliverable_address" | "learner_placeholder" | "under_18_learner" | "unknown_user" | "not_transactional";
+export type EmailRefusalReason =
+  | "invalid_address"
+  | "undeliverable_address"
+  | "learner_placeholder"
+  | "under_18_learner"
+  | "unknown_user"
+  | "not_transactional";
 
 export class EmailRefusedError extends AppError {
   readonly reason: EmailRefusalReason;
@@ -61,18 +67,34 @@ const REFUSAL_MESSAGES: Record<EmailRefusalReason, string> = {
 };
 const refuse = (reason: EmailRefusalReason) => new EmailRefusedError(reason, REFUSAL_MESSAGES[reason]);
 
-type Recipient = { id: string; kind: string; birthYear: number | null; birthMonth: number | null; storedBand: "teen_13_15" | "teen_16_17" | "adult_18" | null };
+type Recipient = {
+  id: string;
+  kind: string;
+  birthYear: number | null;
+  birthMonth: number | null;
+  storedBand: "teen_13_15" | "teen_16_17" | "adult_18" | null;
+};
 
 /** True only for a learner who is certainly 18 or over: both the stored band and today's calculation must agree. */
 function isAdultLearner(recipient: Recipient, now: Date): boolean {
-  if (recipient.birthYear === null || recipient.birthMonth === null || recipient.storedBand === null) return false;
+  if (recipient.birthYear === null || recipient.birthMonth === null || recipient.storedBand === null)
+    return false;
   const live = safetyBandForAge(ageFromBirth(recipient.birthYear, recipient.birthMonth, now));
   return live !== null && stricterBand(live, recipient.storedBand) === "adult_18";
 }
 
-async function findRecipient(ctx: Pick<Ctx, "db">, where: { userId: string } | { email: string }): Promise<Recipient | undefined> {
+async function findRecipient(
+  ctx: Pick<Ctx, "db">,
+  where: { userId: string } | { email: string },
+): Promise<Recipient | undefined> {
   const rows = await ctx.db
-    .select({ id: user.id, kind: user.kind, birthYear: learnerProfile.birthYear, birthMonth: learnerProfile.birthMonth, storedBand: learnerProfile.safetyBand })
+    .select({
+      id: user.id,
+      kind: user.kind,
+      birthYear: learnerProfile.birthYear,
+      birthMonth: learnerProfile.birthMonth,
+      storedBand: learnerProfile.safetyBand,
+    })
     .from(user)
     .leftJoin(learnerProfile, eq(learnerProfile.userId, user.id))
     .where("userId" in where ? eq(user.id, where.userId) : eq(user.email, where.email))
@@ -84,17 +106,27 @@ async function findRecipient(ctx: Pick<Ctx, "db">, where: { userId: string } | {
  * Renders a template and sends it. Throws `EmailRefusedError` when a hard rule forbids the send,
  * and an ordinary error when the provider fails (callers decide whether that is fatal).
  */
-export async function sendEmail(ctx: Pick<Ctx, "db" | "now">, input: SendEmailInput): Promise<EmailSendResult> {
+export async function sendEmail(
+  ctx: Pick<Ctx, "db" | "now">,
+  input: SendEmailInput,
+): Promise<EmailSendResult> {
   const to = input.to.trim();
   const badAddress = addressRefusal(to);
   if (badAddress) throw refuse(badAddress);
 
   // Look the recipient up by id when given, and by address otherwise, so that an under-18 can never
   // be reached just because a caller left `userId` out.
-  const recipient = input.userId ? await findRecipient(ctx, { userId: input.userId }) : await findRecipient(ctx, { email: to.toLowerCase() });
+  const recipient = input.userId
+    ? await findRecipient(ctx, { userId: input.userId })
+    : await findRecipient(ctx, { email: to.toLowerCase() });
   if (input.userId && !recipient) throw refuse("unknown_user");
   // Any account that is not plainly a parent or staff is treated as a learner: deny by default.
-  if (recipient && recipient.kind !== "parent" && recipient.kind !== "staff" && !isAdultLearner(recipient, ctx.now)) {
+  if (
+    recipient &&
+    recipient.kind !== "parent" &&
+    recipient.kind !== "staff" &&
+    !isAdultLearner(recipient, ctx.now)
+  ) {
     throw refuse("under_18_learner");
   }
 
@@ -111,6 +143,11 @@ export async function sendEmail(ctx: Pick<Ctx, "db" | "now">, input: SendEmailIn
     text: rendered.text,
     template: input.template,
   });
-  logInfo("email.sent", { template: input.template, to: maskEmail(to), provider: result.provider, userId: recipient?.id ?? null });
+  logInfo("email.sent", {
+    template: input.template,
+    to: maskEmail(to),
+    provider: result.provider,
+    userId: recipient?.id ?? null,
+  });
   return result;
 }

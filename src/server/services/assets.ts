@@ -36,7 +36,10 @@ function manifestFields(entry: ManifestAsset) {
  * asset id (`asset.key`). An entry that already matches is left alone, so running it twice writes
  * nothing. Needs `asset.manage`.
  */
-export async function upsertAssetsFromManifest(ctx: Ctx, manifest: readonly ManifestAsset[]): Promise<AssetUpsertResult> {
+export async function upsertAssetsFromManifest(
+  ctx: Ctx,
+  manifest: readonly ManifestAsset[],
+): Promise<AssetUpsertResult> {
   assertCan(ctx.actor, "asset.manage");
   const result: AssetUpsertResult = { created: [], updated: [], unchanged: [] };
   if (manifest.length === 0) return result;
@@ -46,7 +49,12 @@ export async function upsertAssetsFromManifest(ctx: Ctx, manifest: readonly Mani
     const existing = await tx
       .select()
       .from(asset)
-      .where(inArray(asset.key, manifest.map((entry) => entry.id)));
+      .where(
+        inArray(
+          asset.key,
+          manifest.map((entry) => entry.id),
+        ),
+      );
     const byKey = new Map(existing.map((row) => [row.key, row]));
     for (const entry of manifest) {
       const fields = manifestFields(entry);
@@ -56,7 +64,9 @@ export async function upsertAssetsFromManifest(ctx: Ctx, manifest: readonly Mani
         result.created.push(entry.id);
         continue;
       }
-      const changed = (Object.keys(fields) as Array<keyof typeof fields>).some((key) => row[key] !== fields[key]);
+      const changed = (Object.keys(fields) as Array<keyof typeof fields>).some(
+        (key) => row[key] !== fields[key],
+      );
       if (!changed) {
         result.unchanged.push(entry.id);
         continue;
@@ -67,7 +77,11 @@ export async function upsertAssetsFromManifest(ctx: Ctx, manifest: readonly Mani
     if (result.created.length > 0 || result.updated.length > 0) {
       await audit(
         ctx,
-        { action: "asset.import", targetType: "asset", meta: { created: result.created, updated: result.updated } },
+        {
+          action: "asset.import",
+          targetType: "asset",
+          meta: { created: result.created, updated: result.updated },
+        },
         tx,
       );
     }
@@ -76,7 +90,10 @@ export async function upsertAssetsFromManifest(ctx: Ctx, manifest: readonly Mani
 }
 
 /** Assets by id. Unknown ids are simply absent from the map. No authorisation check: assets are course media. */
-export async function getAssetsByKeys(ctx: Pick<Ctx, "db">, keys: readonly string[]): Promise<Map<string, AssetRow>> {
+export async function getAssetsByKeys(
+  ctx: Pick<Ctx, "db">,
+  keys: readonly string[],
+): Promise<Map<string, AssetRow>> {
   const unique = [...new Set(keys)];
   if (unique.length === 0) return new Map();
   const rows = await ctx.db.select().from(asset).where(inArray(asset.key, unique));

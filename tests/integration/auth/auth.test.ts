@@ -1,6 +1,7 @@
 import { createHmac } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterAll, afterEach, beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
+import { resetEnvCache } from "@/env";
 import { createAccount, revokeAllSessions, setAccountPassword } from "@/server/auth/accounts";
 import { STAFF_SESSION_SECONDS, createAuth, getAuth } from "@/server/auth/auth";
 import { resetAuthEmailSender, setAuthEmailSender, type AuthEmail } from "@/server/auth/email";
@@ -545,6 +546,14 @@ describe("staff: two-factor and the 12-hour session", () => {
   });
 
   it("a password alone gives a staff Actor that has not passed two-factor", async () => {
+    // `.env.test` relaxes staff two-factor for the rest of the suite (kernel brief, item 11).
+    // This test is about the real rule, so it switches the requirement back on.
+    vi.stubEnv("STAFF_2FA_REQUIRED", "true");
+    resetEnvCache();
+    onTestFinished(() => {
+      vi.unstubAllEnvs();
+      resetEnvCache();
+    });
     const staff = await staffWithPassword({ roles: ["editor", "reviewer"] });
     const ctx = await resolveCtx(withCookie((await signInByEmail("sam@example.test")).cookie));
     expect(ctx.actor).toEqual({

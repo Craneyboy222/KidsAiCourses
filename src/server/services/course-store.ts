@@ -9,10 +9,28 @@
  *
  * This module does not import `server-only`, so that the import scripts can run it with tsx.
  */
-import { and, asc, desc, eq, inArray, isNotNull, isNull, notInArray, sql, type AnyColumn, type SQL } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  isNull,
+  notInArray,
+  sql,
+  type AnyColumn,
+  type SQL,
+} from "drizzle-orm";
 import { flattenSteps, requiredToolSlugs } from "@/content/course-utils";
 import { REQUIRED_SETUP_GUIDE_KINDS, courseSchema, type Course } from "@/content/schema";
-import { setupGuideWaiverKey, summariseIssues, validateCourse, type ValidationContext, type ValidationIssue } from "@/content/validate";
+import {
+  setupGuideWaiverKey,
+  summariseIssues,
+  validateCourse,
+  type ValidationContext,
+  type ValidationIssue,
+} from "@/content/validate";
 import { audit } from "@/server/audit";
 import { assertCan, can } from "@/server/authz";
 import type { Ctx } from "@/server/context";
@@ -39,7 +57,9 @@ import { AppError } from "@/server/errors";
 import { getSetting } from "@/server/settings";
 import { getAssetsByKeys } from "./assets";
 import { isAiOrigin } from "./publish-rules";
-import { getToolsBySlugs } from "./tools";
+import { canonicalJson, getToolsBySlugs } from "./tools";
+
+export { canonicalJson };
 
 export type CourseRow = typeof course.$inferSelect;
 export type CourseVersionRow = typeof courseVersion.$inferSelect;
@@ -75,7 +95,12 @@ export interface CourseWithContent extends CourseAndVersion {
  * Course statuses that describe what learners see rather than where a draft is in review. While a
  * course has one of these, saving or reviewing a new draft revision does not change it.
  */
-export const CATALOGUE_STATUSES: readonly CourseStatus[] = ["published", "needs_review", "taken_down", "retired"];
+export const CATALOGUE_STATUSES: readonly CourseStatus[] = [
+  "published",
+  "needs_review",
+  "taken_down",
+  "retired",
+];
 
 /** A version that was live and has been replaced by a newer one. Learners enrolled on it keep it. */
 export const SUPERSEDED_VERSION_STATUS = "retired" satisfies CourseStatus;
@@ -84,28 +109,14 @@ export const SUPERSEDED_VERSION_STATUS = "retired" satisfies CourseStatus;
 
 function one<T>(rows: T[], what: string): T {
   const [row] = rows;
-  if (!row) throw new AppError("internal", "Something went wrong saving that. Please try again.", { detail: { what } });
+  if (!row)
+    throw new AppError("internal", "Something went wrong saving that. Please try again.", {
+      detail: { what },
+    });
   return row;
 }
 
 const staffUserId = (ctx: Ctx): string | null => (ctx.actor.type === "staff" ? ctx.actor.userId : null);
-
-/** JSON with object keys sorted, so two snapshots can be compared whatever order their keys are in. */
-export function canonicalJson(value: unknown): string {
-  const sort = (input: unknown): unknown => {
-    if (Array.isArray(input)) return input.map(sort);
-    if (input !== null && typeof input === "object") {
-      return Object.fromEntries(
-        Object.entries(input as Record<string, unknown>)
-          .filter(([, entry]) => entry !== undefined)
-          .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
-          .map(([key, entry]) => [key, sort(entry)]),
-      );
-    }
-    return input;
-  };
-  return JSON.stringify(sort(value));
-}
 
 /** True when two snapshots hold the same content. The database-assigned `id` is ignored. */
 export function sameContent(a: unknown, b: unknown): boolean {
@@ -126,9 +137,13 @@ export function parseSnapshot(input: unknown): Course {
     const path = zodIssue.path.map(String).join(".") || "course";
     fieldErrors[path] = [...(fieldErrors[path] ?? []), zodIssue.message];
   }
-  throw new AppError("validation_failed", "This course does not fit the course format, so it was not saved. Fix the fields listed and try again.", {
-    fieldErrors,
-  });
+  throw new AppError(
+    "validation_failed",
+    "This course does not fit the course format, so it was not saved. Fix the fields listed and try again.",
+    {
+      fieldErrors,
+    },
+  );
 }
 
 /** The parsed content of a stored version. */
@@ -178,7 +193,11 @@ function referencedToolSlugs(snapshot: Course): string[] {
 }
 
 function referencedAssetIds(snapshot: Course): string[] {
-  const ids = new Set<string>([snapshot.trailer.assetId, snapshot.trailer.posterAssetId, snapshot.trailer.captionsAssetId]);
+  const ids = new Set<string>([
+    snapshot.trailer.assetId,
+    snapshot.trailer.posterAssetId,
+    snapshot.trailer.captionsAssetId,
+  ]);
   for (const { step: item } of flattenSteps(snapshot)) for (const id of item.assetIds ?? []) ids.add(id);
   for (const guide of snapshot.setupGuides) {
     for (const guideStep of guide.steps) for (const id of guideStep.screenshotAssetIds ?? []) ids.add(id);
@@ -202,23 +221,69 @@ export async function buildDbValidationContext(
     getSetting(ctx, "uploads.people_screening_enabled"),
   ]);
   return {
-    tools: Object.fromEntries([...tools].map(([slug, row]) => [slug, { under18Policy: row.under18Policy, status: row.status }])),
+    tools: Object.fromEntries(
+      [...tools].map(([slug, row]) => [slug, { under18Policy: row.under18Policy, status: row.status }]),
+    ),
     assets: Object.fromEntries(
-      [...assets].map(([key, row]) => [key, row.altText === null ? { kind: row.kind } : { kind: row.kind, altText: row.altText }]),
+      [...assets].map(([key, row]) => [
+        key,
+        row.altText === null ? { kind: row.kind } : { kind: row.kind, altText: row.altText },
+      ]),
     ),
     peopleScreeningEnabled,
     waivers: [...(options.waivers ?? [])],
   };
 }
 
-/** Runs `validateCourse` against the live database. Shared with `publish.ts`. */
+/** Rule code for `toolAgeIssues`. Not waivable. */
+export const TOOL_MIN_AGE_RULE = "tool_min_age_above_course";
+
+/**
+ * A check only the live Register can make (spec Section 7: "course `minAge` and the tool policy are
+ * compatible"): a required tool the learner would run themselves must not have a minimum age above
+ * the course's. A parent-operated tool is exempt, because the parent holds the account. The check
+ * follows the tool the course really depends on: the main tool, or its fallback when the main tool
+ * cannot be used.
+ */
+export async function toolAgeIssues(ctx: Pick<Ctx, "db">, snapshot: Course): Promise<ValidationIssue[]> {
+  const tools = await getToolsBySlugs(ctx, referencedToolSlugs(snapshot));
+  const usable = (slug: string | undefined) => {
+    const row = slug === undefined ? undefined : tools.get(slug);
+    return row && row.status === "approved" && row.under18Policy !== null && row.under18Policy !== "blocked"
+      ? row
+      : undefined;
+  };
+  const issues: ValidationIssue[] = [];
+  snapshot.toolRequirements.forEach((requirement, index) => {
+    if (!requirement.required) return;
+    const main = usable(requirement.toolSlug);
+    const inUse = main ?? usable(requirement.fallbackToolSlug);
+    if (
+      !inUse ||
+      inUse.under18Policy === "parent_operated" ||
+      inUse.minAge === null ||
+      inUse.minAge <= snapshot.minAge
+    )
+      return;
+    issues.push({
+      code: TOOL_MIN_AGE_RULE,
+      severity: "error",
+      path: `toolRequirements.${index}.${main ? "toolSlug" : "fallbackToolSlug"}`,
+      message: `"${inUse.slug}" is for ages ${inUse.minAge} and over under the vendor's terms, but this course is open from age ${snapshot.minAge}. Raise the course's minimum age or choose another tool.`,
+      waivable: false,
+    });
+  });
+  return issues;
+}
+
+/** Runs `validateCourse` against the live database, plus the Register age check. Shared with `publish.ts`. */
 export async function validateAgainstDb(
   ctx: Pick<Ctx, "db" | "now">,
   snapshot: Course,
   waivers: readonly string[] = [],
 ): Promise<StoredValidation> {
   const context = await buildDbValidationContext(ctx, snapshot, { waivers });
-  const issues = validateCourse(snapshot, context);
+  const issues = [...validateCourse(snapshot, context), ...(await toolAgeIssues(ctx, snapshot))];
   const summary = summariseIssues(issues);
   return {
     ok: summary.publishable,
@@ -279,7 +344,9 @@ export async function revalidateVersion(
 ): Promise<StoredValidation> {
   assertCan(ctx.actor, "course.read_draft");
   const version = await requireVersion(ctx.db, versionId);
-  const waivers = options.waivers ?? [...new Set((await loadRecordedWaivers(ctx.db, versionId)).map((waiver) => waiver.check))];
+  const waivers = options.waivers ?? [
+    ...new Set((await loadRecordedWaivers(ctx.db, versionId)).map((waiver) => waiver.check)),
+  ];
   const validation = await validateAgainstDb(ctx, contentOfVersion(version), waivers);
   await ctx.db
     .update(courseVersion)
@@ -352,7 +419,11 @@ export interface CreateCourseOptions {
  * `draft`. Needs `course.generate` for an AI origin and `course.edit` otherwise. Nothing is
  * published, and a draft with validation errors still saves: the issues are stored on the revision.
  */
-export async function createCourse(ctx: Ctx, snapshot: Course, options: CreateCourseOptions): Promise<CourseAndVersion> {
+export async function createCourse(
+  ctx: Ctx,
+  snapshot: Course,
+  options: CreateCourseOptions,
+): Promise<CourseAndVersion> {
   const ai = isAiOrigin(options.origin);
   assertCan(ctx.actor, ai ? "course.generate" : "course.edit");
   const content = parseSnapshot(snapshot);
@@ -360,9 +431,16 @@ export async function createCourse(ctx: Ctx, snapshot: Course, options: CreateCo
   const userId = staffUserId(ctx);
 
   return ctx.db.transaction(async (tx) => {
-    const [taken] = await tx.select({ id: course.id }).from(course).where(eq(course.slug, content.slug)).limit(1);
+    const [taken] = await tx
+      .select({ id: course.id })
+      .from(course)
+      .where(eq(course.slug, content.slug))
+      .limit(1);
     if (taken) {
-      throw new AppError("conflict", `A course with the slug "${content.slug}" already exists. Choose another slug, or edit that course.`);
+      throw new AppError(
+        "conflict",
+        `A course with the slug "${content.slug}" already exists. Choose another slug, or edit that course.`,
+      );
     }
     const created = one(
       await tx
@@ -423,7 +501,13 @@ export async function createCourse(ctx: Ctx, snapshot: Course, options: CreateCo
         action: "course.create",
         targetType: "course",
         targetId: created.id,
-        meta: { slug: content.slug, origin: options.origin, versionId: version.id, revision: 1, validationErrors: validation.errors },
+        meta: {
+          slug: content.slug,
+          origin: options.origin,
+          versionId: version.id,
+          revision: 1,
+          validationErrors: validation.errors,
+        },
       },
       tx,
     );
@@ -470,14 +554,26 @@ async function insertRevision(
     let parent: Pick<CourseVersionRow, "id" | "revision" | "lastEditedBy"> | undefined;
     if (options.fromRevision !== undefined) {
       [parent] = await tx
-        .select({ id: courseVersion.id, revision: courseVersion.revision, lastEditedBy: courseVersion.lastEditedBy })
+        .select({
+          id: courseVersion.id,
+          revision: courseVersion.revision,
+          lastEditedBy: courseVersion.lastEditedBy,
+        })
         .from(courseVersion)
         .where(and(eq(courseVersion.courseId, courseId), eq(courseVersion.revision, options.fromRevision)))
         .limit(1);
-      if (!parent) throw new AppError("not_found", `Revision ${options.fromRevision} of this course could not be found.`);
+      if (!parent)
+        throw new AppError(
+          "not_found",
+          `Revision ${options.fromRevision} of this course could not be found.`,
+        );
     } else if (current.workingVersionId !== null) {
       [parent] = await tx
-        .select({ id: courseVersion.id, revision: courseVersion.revision, lastEditedBy: courseVersion.lastEditedBy })
+        .select({
+          id: courseVersion.id,
+          revision: courseVersion.revision,
+          lastEditedBy: courseVersion.lastEditedBy,
+        })
         .from(courseVersion)
         .where(eq(courseVersion.id, current.workingVersionId))
         .limit(1);
@@ -485,17 +581,30 @@ async function insertRevision(
 
     if (content.slug !== current.slug) {
       if (current.publishedAt !== null) {
-        throw new AppError("invalid_input", "The web address (slug) of a course cannot change once it has been published.", {
-          fieldErrors: { slug: ["This cannot change once the course has been published."] },
-        });
+        throw new AppError(
+          "invalid_input",
+          "The web address (slug) of a course cannot change once it has been published.",
+          {
+            fieldErrors: { slug: ["This cannot change once the course has been published."] },
+          },
+        );
       }
-      const [taken] = await tx.select({ id: course.id }).from(course).where(eq(course.slug, content.slug)).limit(1);
-      if (taken) throw new AppError("conflict", `A course with the slug "${content.slug}" already exists. Choose another slug.`);
+      const [taken] = await tx
+        .select({ id: course.id })
+        .from(course)
+        .where(eq(course.slug, content.slug))
+        .limit(1);
+      if (taken)
+        throw new AppError(
+          "conflict",
+          `A course with the slug "${content.slug}" already exists. Choose another slug.`,
+        );
       await tx.update(course).set({ slug: content.slug }).where(eq(course.id, courseId));
     }
 
     // A person's edit makes a `draft`. A revision written by a job for an AI course stays an `ai_draft`.
-    const status: CourseStatus = ctx.actor.type === "system" && isAiOrigin(current.origin) ? "ai_draft" : "draft";
+    const status: CourseStatus =
+      ctx.actor.type === "system" && isAiOrigin(current.origin) ? "ai_draft" : "draft";
     const stored: Course = { ...content, id: courseId };
     const validation = await validateAgainstDb({ db: tx, now: ctx.now }, stored);
     const version = one(
@@ -528,13 +637,21 @@ async function insertRevision(
     // Approvals and schedules belong to one version. A new revision starts again.
     await tx
       .update(publishSchedule)
-      .set({ status: "cancelled", cancelledAt: ctx.now, error: `Superseded by revision ${version.revision}.` })
+      .set({
+        status: "cancelled",
+        cancelledAt: ctx.now,
+        error: `Superseded by revision ${version.revision}.`,
+      })
       .where(and(eq(publishSchedule.courseId, courseId), eq(publishSchedule.status, "scheduled")));
     await tx
       .update(reviewTask)
       .set({ status: "cancelled", completedAt: ctx.now })
       .where(
-        and(eq(reviewTask.courseId, courseId), eq(reviewTask.kind, "course_review"), inArray(reviewTask.status, ["open", "in_progress"])),
+        and(
+          eq(reviewTask.courseId, courseId),
+          eq(reviewTask.kind, "course_review"),
+          inArray(reviewTask.status, ["open", "in_progress"]),
+        ),
       );
     if (options.editRequestId !== undefined) {
       await tx
@@ -591,11 +708,18 @@ export async function saveRevision(
   options: SaveRevisionOptions = {},
 ): Promise<CourseAndVersion> {
   assertCan(ctx.actor, "course.edit");
-  return insertRevision(ctx, courseId, parseSnapshot(snapshot), { ...options, auditAction: "course.revision.save" });
+  return insertRevision(ctx, courseId, parseSnapshot(snapshot), {
+    ...options,
+    auditAction: "course.revision.save",
+  });
 }
 
 /** Makes a new revision that copies the snapshot of an earlier one. The earlier revision is untouched. */
-export async function restoreRevision(ctx: Ctx, courseId: string, revision: number): Promise<CourseAndVersion> {
+export async function restoreRevision(
+  ctx: Ctx,
+  courseId: string,
+  revision: number,
+): Promise<CourseAndVersion> {
   assertCan(ctx.actor, "course.edit");
   const [source] = await ctx.db
     .select()
@@ -621,9 +745,22 @@ export async function linkCourseToIdea(ctx: Ctx, courseId: string, ideaId: strin
     if (!idea) throw new AppError("not_found", "That course idea could not be found.");
     await tx.update(course).set({ sourceIdeaId: ideaId }).where(eq(course.id, courseId));
     const live = current.status === "published" && current.publishedVersionId !== null;
-    const status = live ? "published" : idea.status === "idea" || idea.status === "drafting" ? "drafted" : idea.status;
+    const status = live
+      ? "published"
+      : idea.status === "idea" || idea.status === "drafting"
+        ? "drafted"
+        : idea.status;
     await tx.update(courseIdea).set({ courseId, status }).where(eq(courseIdea.id, ideaId));
-    await audit(ctx, { action: "course.idea.link", targetType: "course", targetId: courseId, meta: { ideaId, ideaKey: idea.ideaKey } }, tx);
+    await audit(
+      ctx,
+      {
+        action: "course.idea.link",
+        targetType: "course",
+        targetId: courseId,
+        meta: { ideaId, ideaKey: idea.ideaKey },
+      },
+      tx,
+    );
   });
 }
 
@@ -674,21 +811,38 @@ export async function getRevision(
 export async function getWorkingVersion(ctx: Ctx, courseId: string): Promise<CourseWithContent> {
   assertCan(ctx.actor, "course.read_draft");
   const [current] = await ctx.db.select().from(course).where(eq(course.id, courseId)).limit(1);
-  if (!current || current.workingVersionId === null) throw new AppError("not_found", "That course could not be found.");
+  if (!current || current.workingVersionId === null)
+    throw new AppError("not_found", "That course could not be found.");
   const version = await requireVersion(ctx.db, current.workingVersionId);
   return { course: current, version, content: contentOfVersion(version) };
 }
 
+/** What `getPublishedCourseBySlug` returns: the live course, and whether it is flagged for review. */
+export interface PublishedCourse extends CourseWithContent {
+  /**
+   * True when the course's status is `needs_review`: a tool it uses has changed and a person has
+   * been asked to look. The course is still live and still startable (spec 3.9); Studio shows the
+   * flag. Whether a learner may start is decided by the start gate, not by this flag.
+   */
+  needsReview: boolean;
+}
+
+/** Course statuses that learners can see and start. `needs_review` is a flag for staff, not a take-down. */
+export const LIVE_COURSE_STATUSES = ["published", "needs_review"] as const satisfies readonly CourseStatus[];
+
 /**
- * The live course for a slug, or null. A course is returned only when its status is `published`, it
- * has not been taken down, and its published version really carries a publish time. Drafts, courses
- * in review, courses flagged `needs_review`, taken-down and retired courses all return null, so a
- * guessed slug behaves exactly like a course that does not exist.
+ * The live course for a slug, or null. A course is returned when its status is `published` or
+ * `needs_review`, it has not been taken down, and its published version really carries a publish
+ * time. Drafts, courses in review, unpublished, taken-down and retired courses all return null, so
+ * a guessed slug behaves exactly like a course that does not exist.
  *
  * No authorisation check: the catalogue is public. The caller applies the age gate, and must pass
  * `content` through `toLearnerCourse` before sending any of it to a browser.
  */
-export async function getPublishedCourseBySlug(ctx: Pick<Ctx, "db">, slug: string): Promise<CourseWithContent | null> {
+export async function getPublishedCourseBySlug(
+  ctx: Pick<Ctx, "db">,
+  slug: string,
+): Promise<PublishedCourse | null> {
   const [row] = await ctx.db
     .select({ course, version: courseVersion })
     .from(course)
@@ -696,7 +850,7 @@ export async function getPublishedCourseBySlug(ctx: Pick<Ctx, "db">, slug: strin
     .where(
       and(
         eq(course.slug, slug),
-        eq(course.status, "published"),
+        inArray(course.status, [...LIVE_COURSE_STATUSES]),
         isNull(course.takenDownAt),
         isNotNull(courseVersion.publishedAt),
         eq(courseVersion.courseId, course.id),
@@ -704,7 +858,12 @@ export async function getPublishedCourseBySlug(ctx: Pick<Ctx, "db">, slug: strin
     )
     .limit(1);
   if (!row) return null;
-  return { course: row.course, version: row.version, content: contentOfVersion(row.version) };
+  return {
+    course: row.course,
+    version: row.version,
+    content: contentOfVersion(row.version),
+    needsReview: row.course.status === "needs_review",
+  };
 }
 
 /**
@@ -729,13 +888,17 @@ function assertUniqueKeys(keys: readonly string[], kind: string): void {
   const seen = new Set<string>();
   for (const key of keys) {
     if (seen.has(key)) {
-      throw new AppError("validation_failed", `Two ${kind} entries share the id "${key}". Give each its own id before publishing.`);
+      throw new AppError(
+        "validation_failed",
+        `Two ${kind} entries share the id "${key}". Give each its own id before publishing.`,
+      );
     }
     seen.add(key);
   }
 }
 
-const percent = (fraction: number | undefined): number | null => (fraction === undefined ? null : Math.round(fraction * 100));
+const percent = (fraction: number | undefined): number | null =>
+  fraction === undefined ? null : Math.round(fraction * 100);
 
 /**
  * Writes the rows the player and progress tracking use (`module`, `lesson`, `step`, `quiz`,
@@ -752,21 +915,54 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
   const content = contentOfVersion(version);
   const flat = flattenSteps(content);
 
-  assertUniqueKeys(content.modules.map((item) => item.id), "module");
-  assertUniqueKeys(content.modules.flatMap((item) => item.lessons.map((entry) => entry.id)), "lesson");
-  assertUniqueKeys(flat.map((entry) => entry.step.id), "step");
-  assertUniqueKeys(content.quizzes.map((item) => item.id), "quiz");
-  assertUniqueKeys(content.rubric.criteria.map((item) => item.id), "rubric criterion");
-  assertUniqueKeys(content.setupGuides.map((item) => item.id), "setup guide");
-  assertUniqueKeys(content.toolRequirements.map((item) => item.toolSlug), "tool requirement");
+  assertUniqueKeys(
+    content.modules.map((item) => item.id),
+    "module",
+  );
+  assertUniqueKeys(
+    content.modules.flatMap((item) => item.lessons.map((entry) => entry.id)),
+    "lesson",
+  );
+  assertUniqueKeys(
+    flat.map((entry) => entry.step.id),
+    "step",
+  );
+  assertUniqueKeys(
+    content.quizzes.map((item) => item.id),
+    "quiz",
+  );
+  assertUniqueKeys(
+    content.rubric.criteria.map((item) => item.id),
+    "rubric criterion",
+  );
+  assertUniqueKeys(
+    content.setupGuides.map((item) => item.id),
+    "setup guide",
+  );
+  assertUniqueKeys(
+    content.toolRequirements.map((item) => item.toolSlug),
+    "tool requirement",
+  );
 
   // Modules
   const moduleRows = await tx
     .insert(courseModule)
-    .values(content.modules.map((item, position) => ({ courseVersionId: versionId, key: item.id, title: item.title, summary: item.summary, position })))
+    .values(
+      content.modules.map((item, position) => ({
+        courseVersionId: versionId,
+        key: item.id,
+        title: item.title,
+        summary: item.summary,
+        position,
+      })),
+    )
     .onConflictDoUpdate({
       target: [courseModule.courseVersionId, courseModule.key],
-      set: { title: excluded(courseModule.title), summary: excluded(courseModule.summary), position: excluded(courseModule.position) },
+      set: {
+        title: excluded(courseModule.title),
+        summary: excluded(courseModule.summary),
+        position: excluded(courseModule.position),
+      },
     })
     .returning({ id: courseModule.id, key: courseModule.key });
   const moduleIds = new Map(moduleRows.map((row) => [row.key, row.id]));
@@ -847,7 +1043,14 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
   if (content.quizzes.length > 0) {
     const quizRows = await tx
       .insert(quiz)
-      .values(content.quizzes.map((item) => ({ courseVersionId: versionId, key: item.id, title: item.title, passMark: Math.round(item.passMark * 100) })))
+      .values(
+        content.quizzes.map((item) => ({
+          courseVersionId: versionId,
+          key: item.id,
+          title: item.title,
+          passMark: Math.round(item.passMark * 100),
+        })),
+      )
       .onConflictDoUpdate({
         target: [quiz.courseVersionId, quiz.key],
         set: { title: excluded(quiz.title), passMark: excluded(quiz.passMark) },
@@ -857,7 +1060,10 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
     for (const item of content.quizzes) {
       const quizId = quizIds.get(item.id);
       if (quizId === undefined) continue;
-      assertUniqueKeys(item.questions.map((question) => question.id), `question in quiz "${item.id}"`);
+      assertUniqueKeys(
+        item.questions.map((question) => question.id),
+        `question in quiz "${item.id}"`,
+      );
       await tx
         .insert(quizQuestion)
         .values(
@@ -880,7 +1086,13 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
           },
         });
       await tx.delete(quizQuestion).where(
-        and(eq(quizQuestion.quizId, quizId), notInArray(quizQuestion.key, item.questions.map((question) => question.id))),
+        and(
+          eq(quizQuestion.quizId, quizId),
+          notInArray(
+            quizQuestion.key,
+            item.questions.map((question) => question.id),
+          ),
+        ),
       );
     }
   }
@@ -910,7 +1122,10 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
 
   // Tools and guides. Only the tool's id is stored: its facts are read from the Register at request time.
   const tools = await getToolsBySlugs({ db: tx }, [
-    ...content.toolRequirements.flatMap((item) => [item.toolSlug, ...(item.fallbackToolSlug === undefined ? [] : [item.fallbackToolSlug])]),
+    ...content.toolRequirements.flatMap((item) => [
+      item.toolSlug,
+      ...(item.fallbackToolSlug === undefined ? [] : [item.fallbackToolSlug]),
+    ]),
     ...content.setupGuides.map((item) => item.toolSlug),
   ]);
   const toolValues: Array<typeof courseTool.$inferInsert> = [];
@@ -918,7 +1133,10 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
     const row = tools.get(item.toolSlug);
     if (!row) {
       if (!item.required) return; // an optional tool that is not in the Register is simply not offered
-      throw new AppError("validation_failed", `The required tool "${item.toolSlug}" is not in the Tool Register.`);
+      throw new AppError(
+        "validation_failed",
+        `The required tool "${item.toolSlug}" is not in the Tool Register.`,
+      );
     }
     toolValues.push({
       courseVersionId: versionId,
@@ -926,7 +1144,8 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
       toolId: row.id,
       purpose: item.purpose,
       required: item.required,
-      fallbackToolId: item.fallbackToolSlug === undefined ? null : (tools.get(item.fallbackToolSlug)?.id ?? null),
+      fallbackToolId:
+        item.fallbackToolSlug === undefined ? null : (tools.get(item.fallbackToolSlug)?.id ?? null),
       position,
     });
   });
@@ -983,7 +1202,10 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
       })
       .returning({ id: toolGuide.id });
     if (!guideRow) continue;
-    assertUniqueKeys(guide.steps.map((item) => item.id), `step in guide "${guide.id}"`);
+    assertUniqueKeys(
+      guide.steps.map((item) => item.id),
+      `step in guide "${guide.id}"`,
+    );
     await tx
       .insert(toolGuideStep)
       .values(
@@ -1008,28 +1230,51 @@ export async function materialiseVersion(tx: Db, versionId: string): Promise<Map
         },
       });
     await tx.delete(toolGuideStep).where(
-      and(eq(toolGuideStep.toolGuideId, guideRow.id), notInArray(toolGuideStep.key, guide.steps.map((item) => item.id))),
+      and(
+        eq(toolGuideStep.toolGuideId, guideRow.id),
+        notInArray(
+          toolGuideStep.key,
+          guide.steps.map((item) => item.id),
+        ),
+      ),
     );
   }
 
   // Remove rows for ids that are no longer in the snapshot. For a published version there are none,
   // because its snapshot is frozen; a row that progress points at refuses to go (RESTRICT).
   const stale = (keyColumn: AnyColumn, versionColumn: AnyColumn, keys: readonly string[]): SQL | undefined =>
-    keys.length === 0 ? eq(versionColumn, versionId) : and(eq(versionColumn, versionId), notInArray(keyColumn, [...keys]));
+    keys.length === 0
+      ? eq(versionColumn, versionId)
+      : and(eq(versionColumn, versionId), notInArray(keyColumn, [...keys]));
   await tx.delete(step).where(stale(step.key, step.courseVersionId, [...stepIds.keys()]));
   await tx.delete(lesson).where(stale(lesson.key, lesson.courseVersionId, [...lessonIds.keys()]));
-  await tx.delete(courseModule).where(stale(courseModule.key, courseModule.courseVersionId, [...moduleIds.keys()]));
+  await tx
+    .delete(courseModule)
+    .where(stale(courseModule.key, courseModule.courseVersionId, [...moduleIds.keys()]));
   await tx.delete(quiz).where(stale(quiz.key, quiz.courseVersionId, [...quizIds.keys()]));
   await tx.delete(rubricCriterion).where(
-    stale(rubricCriterion.key, rubricCriterion.courseVersionId, content.rubric.criteria.map((item) => item.id)),
+    stale(
+      rubricCriterion.key,
+      rubricCriterion.courseVersionId,
+      content.rubric.criteria.map((item) => item.id),
+    ),
   );
   await tx.delete(toolGuide).where(stale(toolGuide.key, toolGuide.courseVersionId, guideKeys));
   await tx.delete(courseTool).where(
     toolValues.length === 0
       ? eq(courseTool.courseVersionId, versionId)
-      : and(eq(courseTool.courseVersionId, versionId), notInArray(courseTool.toolId, toolValues.map((item) => item.toolId))),
+      : and(
+          eq(courseTool.courseVersionId, versionId),
+          notInArray(
+            courseTool.toolId,
+            toolValues.map((item) => item.toolId),
+          ),
+        ),
   );
 
-  await tx.update(courseVersion).set({ materialisedAt: sql`now()` }).where(eq(courseVersion.id, versionId));
+  await tx
+    .update(courseVersion)
+    .set({ materialisedAt: sql`now()` })
+    .where(eq(courseVersion.id, versionId));
   return stepIds;
 }

@@ -111,6 +111,11 @@ function load(): Env {
     throw new Error(`Invalid environment configuration:\n${lines}\nSee .env.example.`);
   }
   const env = parsed.data;
+  if ((env.APP_ENV === "production" || env.APP_ENV === "preview") && !env.STAFF_2FA_REQUIRED) {
+    // Staff reach safeguarding records and unpublished courses. Two-step sign-in may only be
+    // relaxed on a developer's machine and in automated tests.
+    throw new Error(`Unsafe ${env.APP_ENV} configuration:\n  STAFF_2FA_REQUIRED=false is only allowed when APP_ENV is local or test`);
+  }
   if (env.APP_ENV === "production") {
     const problems: string[] = [];
     if (env.AGE_ASSURANCE_MODE === "off_dev_only") problems.push("AGE_ASSURANCE_MODE=off_dev_only is not allowed in production");
