@@ -105,7 +105,7 @@
     {
       "id": 3,
       "name": "Learning",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "tasks": [
         {
           "id": "3.1",
@@ -179,30 +179,30 @@
     {
       "id": 5,
       "name": "AI Coach",
-      "status": "PENDING",
+      "status": "DONE",
       "tasks": [
         {
           "id": "5.1",
           "description": "11-stage proxy",
-          "status": "IN_PROGRESS",
-          "result": null
+          "status": "DONE",
+          "result": "445 tests pass; fixture eval 353/353. Crisis-rule recall on unseen phrasing measured at 20/30 to 45/52: needs DSL review and a real classifier before Coach opens to learners."
         },
         {
           "id": "5.2",
           "description": "Credits ledger and spend cap",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "5.3",
           "description": "Crisis pathway",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         },
         {
           "id": "5.4",
           "description": "Evals",
-          "status": "PENDING",
+          "status": "DONE",
           "result": null
         }
       ]
@@ -454,7 +454,7 @@
   ],
   "blockers": [],
   "created_at": "2026-11-15T22:50:58.563705+00:00",
-  "last_updated": "2026-11-16T11:15:52.154049+00:00",
+  "last_updated": "2026-11-16T13:24:57.105150+00:00",
   "verified": {
     "at": "2026-11-16T00:02:00Z",
     "typecheck": "0 errors",
@@ -462,5 +462,32 @@
     "tests": "24 files, 1261 tests pass (unit + integration)",
     "content_check": "0 errors, 7 warnings (unverified tools, placeholder assets)",
     "next_build": "not yet run"
+  },
+  "queue": {
+    "note": "Reordered on 16 November 2026 at the owner's instruction: learner-facing path first. Two workstreams at a time. Briefs in docs/briefs/.",
+    "order": [
+      "accounts (finishing)",
+      "learning",
+      "tools-submissions",
+      "courses-a",
+      "courses-b",
+      "seed-compliance",
+      "payments",
+      "parents",
+      "marketing",
+      "studio-core",
+      "studio-content",
+      "studio-safety",
+      "engine",
+      "e2e",
+      "independent review"
+    ],
+    "done": [
+      "foundation",
+      "kernel",
+      "course store and publish",
+      "design system",
+      "coach"
+    ]
   }
 }

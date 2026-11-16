@@ -33,3 +33,16 @@
 | 12 | Deployment readiness | Vercel config, env docs, go-live checklist. **Not deployed without approval.** | build passes; checklist reviewed |
 
 Phases 2–9 depend on phase 1. Phases 2–8 run as parallel slices with separate file ownership; phase 9 runs alongside them.
+
+## Build order (revised 16 November 2026)
+
+The owner asked for the learner-facing path first, so a clickable site exists as early as possible. Two workstreams run at a time to stay inside the usage limit.
+
+1. Accounts (finishing) and Learning (catalogue, course page, player)
+2. Tools, start gate, submissions, portfolio, certificates; the remaining starter courses
+3. Seed data and placeholder assets — **first clickable build**: sign up, browse, take a course, submit
+4. Payments; Parents
+5. Marketing site, help and legal drafts
+6. Studio core; Studio content; Studio safety
+7. Course creation engine
+8. End-to-end, accessibility and performance gate; independent review
