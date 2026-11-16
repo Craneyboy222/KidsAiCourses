@@ -1,6 +1,5 @@
 import { and, eq, inArray } from "drizzle-orm";
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { encrypt } from "@/server/crypto";
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   aiMessage,
   aiRequest,
@@ -17,12 +16,9 @@ import {
   notification,
   parentControl,
   project,
-  projectVersion,
-  quiz,
   quizAttempt,
   reflection,
   safeguardingCase,
-  step,
   stepProgress,
   subscription,
   plan,
@@ -51,77 +47,42 @@ import {
 } from "@/server/services/data-request";
 import { getStorage } from "@/server/storage";
 import { closeDb, db, testCtx } from "../../helpers/db";
-import { HOMEWORK, courseBySlug, enrol, seedCourses, tearDownStorage } from "../tools/helpers";
-import { DAY_MS, appError, at, giveSession, makeFamily, readZip, secondParent, sessionCount, system, userRow, type TestFamily } from "./helpers";
+import { seedCourses, tearDownStorage } from "../tools/helpers";
+import { DAY_MS, appError, at, fillLearner, giveSession, makeFamily, readZip, secondParent, sessionCount, system, userRow, type TestFamily } from "./helpers";
 
 // Only so that nothing here can ever reach a real safeguarding alert; the data-request code does not call it.
 vi.mock("@/server/services/safeguarding", () => ({ countSafetyNoticesForLearner: vi.fn(async () => 0), openSafeguardingCase: vi.fn() }));
+
+/**
+ * `requestExport` queues the `data.export` job, and without Inngest the queue runs it in this
+ * process a moment later, on the real clock. Most tests here run the job by hand at a fixed time
+ * instead, and the two would race for the same request (whichever wins sets the expiry date). So
+ * the queued run is held back unless a test asks for it; every other event goes through untouched.
+ */
+const queue = vi.hoisted(() => ({ holdExports: true }));
+vi.mock("@/server/jobs/inngest", async (original) => {
+  const actual = await original<typeof import("@/server/jobs/inngest")>();
+  const enqueue: typeof actual.enqueue = async (event, payload, options) => (queue.holdExports && event === "data/export.requested" ? { mode: "inline", jobs: [] } : actual.enqueue(event, payload, options));
+  return { ...actual, enqueue };
+});
 
 beforeAll(seedCourses);
 afterAll(async () => {
   tearDownStorage();
   await closeDb();
 });
-beforeEach(() => clearSentEmails());
+beforeEach(() => {
+  clearSentEmails();
+  queue.holdExports = true;
+});
+afterEach(async () => {
+  await flushJobs();
+});
 
 const NOW = new Date("2027-01-12T10:00:00Z");
 const later = (days: number, extraMs = 0) => new Date(NOW.getTime() + days * DAY_MS + extraMs);
 
-type Filled = { enrolmentId: string; projectId: string; acceptedKey: string; pendingKey: string; heldKey: string | null; conversationId: string; flaggedConversationId: string | null };
-
-/**
- * Gives a learner one of everything, each piece marked with `tag` so that a leak between
- * children or families shows up as a string in the wrong place.
- */
-async function fill(learnerId: string, tag: string, options: { safeguarding?: boolean } = {}): Promise<Filled> {
-  const where = await enrol(learnerId, HOMEWORK, "completed");
-  const steps = await db.select({ id: step.id, type: step.type }).from(step).where(eq(step.courseVersionId, where.versionId));
-  const first = steps[0]!;
-  await db.insert(stepProgress).values({ enrolmentId: where.enrolmentId, learnerId, stepId: first.id, status: "completed", notes: `${tag}-PRIVATE-NOTE`, data: { answer: `${tag}-ETHICS-ANSWER` }, completedAt: NOW });
-  const reflective = steps.find((entry) => entry.type === "reflection") ?? steps[1]!;
-  await db.insert(reflection).values({ learnerId, enrolmentId: where.enrolmentId, stepId: reflective.id, body: `${tag}-REFLECTION-TEXT` });
-  const [anyQuiz] = await db.select({ id: quiz.id }).from(quiz).where(eq(quiz.courseVersionId, where.versionId)).limit(1);
-  if (anyQuiz) await db.insert(quizAttempt).values({ learnerId, enrolmentId: where.enrolmentId, quizId: anyQuiz.id, attemptNumber: 1, answers: { q1: `${tag}-QUIZ-ANSWER` }, score: 80, passed: true });
-  await db.insert(usageDay).values({ learnerId, day: "2027-01-11", seconds: 1500 }).onConflictDoNothing();
-
-  const [made] = await db.insert(project).values({ learnerId, enrolmentId: where.enrolmentId, courseId: where.courseId, title: `${tag} project`, status: "accepted", acceptedAt: NOW }).returning();
-  const [version] = await db.insert(projectVersion).values({ projectId: made!.id, learnerId, version: 1, note: `${tag}-SUBMISSION-NOTE`, moderationState: "approved", submittedAt: NOW, decidedAt: NOW }).returning();
-  await db.update(project).set({ currentVersionId: version!.id }).where(eq(project.id, made!.id));
-  const storage = getStorage("private");
-  const acceptedKey = `evidence/${learnerId}/accepted.png`;
-  const pendingKey = `evidence/${learnerId}/pending.png`;
-  await storage.put(acceptedKey, Buffer.from(`${tag}-ACCEPTED-FILE-BYTES`), { contentType: "image/png" });
-  await storage.put(pendingKey, Buffer.from(`${tag}-PENDING-FILE-BYTES`), { contentType: "image/png" });
-  const base = { learnerId, enrolmentId: where.enrolmentId, projectId: made!.id, projectVersionId: version!.id };
-  await db.insert(artefact).values([
-    { ...base, kind: "link", url: `https://example.test/${tag.toLowerCase()}-project`, moderationState: "approved" },
-    { ...base, kind: "screenshot", storageKey: acceptedKey, sha256: "a".repeat(64), sizeBytes: 24, mime: "image/png", moderationState: "approved" },
-    { ...base, kind: "screenshot", storageKey: pendingKey, sha256: "b".repeat(64), sizeBytes: 23, mime: "image/png", moderationState: "pending" },
-  ]);
-  let heldKey: string | null = null;
-  if (options.safeguarding) {
-    heldKey = `quarantine/${crypto.randomUUID()}`;
-    await storage.put(heldKey, Buffer.from(`${tag}-HELD-FILE-BYTES`), { contentType: "image/png" });
-    await db.insert(artefact).values({ ...base, kind: "screenshot", storageKey: heldKey, sha256: "c".repeat(64), sizeBytes: 21, mime: "image/png", moderationState: "blocked", quarantined: true });
-  }
-  await db.insert(certificate).values({ learnerId, enrolmentId: where.enrolmentId, courseId: where.courseId, courseVersionId: where.versionId, projectId: made!.id, verifyCode: `V${crypto.randomUUID().slice(0, 10).toUpperCase()}`, displayName: tag, courseTitle: "Homework Helper", issuedAt: NOW });
-
-  const [conversation] = await db.insert(tutorConversation).values({ learnerId, enrolmentId: where.enrolmentId, courseId: where.courseId, messageCount: 2, topics: [`${tag} topic`], lastMessageAt: NOW }).returning();
-  await db.insert(aiRequest).values({ userId: learnerId, feature: "tutor", conversationId: conversation!.id, outcome: "ok", creditsCharged: 1, inputTokens: 10, outputTokens: 20, costMillipence: 5 });
-  await db.insert(aiMessage).values([
-    { conversationId: conversation!.id, learnerId, role: "user", contentEncrypted: encrypt(`${tag}-COACH-QUESTION`, "content"), keyVersion: 1, expiresAt: later(30) },
-    { conversationId: conversation!.id, learnerId, role: "assistant", contentEncrypted: encrypt(`${tag}-COACH-ANSWER`, "content"), keyVersion: 1, expiresAt: later(30) },
-  ]);
-  let flaggedConversationId: string | null = null;
-  if (options.safeguarding) {
-    const [flagged] = await db.insert(tutorConversation).values({ learnerId, messageCount: 1, topics: [], flagged: true, lastMessageAt: NOW }).returning();
-    flaggedConversationId = flagged!.id;
-    await db.insert(aiMessage).values({ conversationId: flagged!.id, learnerId, role: "user", contentEncrypted: encrypt(`${tag}-DISCLOSURE`, "content"), keyVersion: 1, flagged: true, expiresAt: later(365) });
-    await db.insert(safeguardingCase).values({ learnerId, severity: "high", trigger: "crisis_classifier" });
-  }
-  await db.insert(creditLedger).values({ learnerId, entryType: "grant", amount: 50, periodKey: "2027-01", idempotencyKey: `grant:${learnerId}:${crypto.randomUUID()}` });
-  return { enrolmentId: where.enrolmentId, projectId: made!.id, acceptedKey, pendingKey, heldKey, conversationId: conversation!.id, flaggedConversationId };
-}
+const fill = (learnerId: string, tag: string, options: { safeguarding?: boolean } = {}) => fillLearner(learnerId, tag, { ...options, now: NOW });
 
 async function exportZip(requestId: string): Promise<{ files: Map<string, Buffer>; text: string }> {
   const [row] = await db.select().from(dataRequest).where(eq(dataRequest.id, requestId));
@@ -276,6 +237,7 @@ describe("downloading a child's data", () => {
   });
 
   it("is built by the queued job when the request is made", async () => {
+    queue.holdExports = false;
     const mine = await makeFamily([{ nickname: "Maya" }]);
     const view = await requestExport(mine.parent, { learnerId: mine.children[0]!.id });
     await flushJobs();

@@ -1,7 +1,7 @@
 import "server-only";
 import { notFound } from "next/navigation";
 import { formatDate } from "@/lib/dates";
-import { isAppError } from "@/server/errors";
+import { appErrorCode } from "@/lib/parents/error-code";
 import type { ApprovalItem } from "@/server/services/approvals";
 import type { ApprovalCardItem } from "../_components/approval-card";
 
@@ -15,7 +15,8 @@ export async function loadOr404<T>(load: () => Promise<T>): Promise<T> {
   try {
     return await load();
   } catch (error) {
-    if (isAppError(error) && (error.code === "not_found" || error.code === "forbidden")) notFound();
+    const code = appErrorCode(error);
+    if (code === "not_found" || code === "forbidden") notFound();
     throw error;
   }
 }

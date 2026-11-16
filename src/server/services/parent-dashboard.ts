@@ -1,3 +1,4 @@
+import { appErrorCode } from "@/lib/parents/error-code";
 import { assertCan } from "@/server/authz";
 import type { Ctx } from "@/server/context";
 import { AppError } from "@/server/errors";
@@ -121,7 +122,7 @@ export async function requireOwnChild(ctx: Ctx, learnerId: string): Promise<Lear
   try {
     learner = await getLearnerSummary(ctx, learnerId);
   } catch (error) {
-    if (error instanceof AppError && error.code === "not_found") throw new AppError("not_found", CHILD_NOT_FOUND);
+    if (appErrorCode(error) === "not_found") throw new AppError("not_found", CHILD_NOT_FOUND);
     throw error;
   }
   // Another family's child and nobody's child get the same answer, so nothing is confirmed.

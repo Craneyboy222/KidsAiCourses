@@ -16,6 +16,7 @@ Run after the learner-facing slices have landed. You may edit any slice's files,
 - Remove stray scratch folders (for example `.smoke/`) or exclude them from lint.
 - An adult learner's settings page links to `/settings/billing`; account deletion calls `cancelFamilySubscriptions`.
 - Do not use `instanceof` on error classes across route handlers and services (separate bundles): check by name or code.
+- The learner settings page links adults to `/settings/privacy`.
 - Public course pages need the marketing layout's `<main>` and frame.
 - Parent pages use `requireParentPage()`.
 - Sign-in copies saved accessibility preferences into the cookie; settings saves them back to the profile.

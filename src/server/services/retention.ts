@@ -64,6 +64,13 @@ export type RetentionDefault = {
   description: string;
   /** What enforces it, for the retention schedule document and Studio. */
   enforcedBy: string;
+  /**
+   * Set when the slice that does the deleting uses a constant in its own code rather than reading
+   * the row. The row is still there, so the schedule is complete and other screens can show the
+   * figure, but `setRetentionDays` refuses to change it: a change here would change nothing, and a
+   * period that says one thing and does another is worse than one that cannot be edited.
+   */
+  fixedInCode?: string;
 };
 
 const LEGAL_MARK = "⚖️";
@@ -76,8 +83,8 @@ const LEGAL_MARK = "⚖️";
 export const RETENTION_DEFAULTS: readonly RetentionDefault[] = [
   { key: "account_inactive", days: 730, legal: true, description: "Account, profile and progress: deleted 24 months after the learner was last active, after a warning to the parent.", enforcedBy: "retention.sweep (warning, then a deletion request with the usual undo window)" },
   { key: "account_inactive_warning", days: 30, legal: false, description: "How long before an inactive account is deleted the parent is warned.", enforcedBy: "retention.sweep" },
-  { key: "account_deletion_undo", days: 14, legal: true, description: "Undo window after a deletion request. When it ends the account is deleted.", enforcedBy: "data.delete_due (hourly) and retention.sweep" },
-  { key: "pending_teen", days: 7, legal: false, description: "A sign-up a teenager started that no parent approved: everything about it is deleted.", enforcedBy: "accounts.purge_pending and retention.sweep" },
+  { key: "account_deletion_undo", days: 14, legal: true, description: "Undo window after a deletion request. When it ends the account is deleted.", enforcedBy: "data.delete_due (hourly) and retention.sweep", fixedInCode: "DELETION_UNDO_DAYS in src/server/services/children.ts" },
+  { key: "pending_teen", days: 7, legal: false, description: "A sign-up a teenager started that no parent approved: everything about it is deleted.", enforcedBy: "accounts.purge_pending and retention.sweep", fixedInCode: "PENDING_TEEN_DAYS in src/server/services/teen-signup.ts" },
   { key: "tutor_conversation_default", days: 30, legal: false, description: "Coach messages: the words are deleted after this many days. Counts and topics remain.", enforcedBy: "retention.sweep (ai_message.expires_at)" },
   { key: "tutor_conversation_extended", days: 90, legal: false, description: "Coach messages when a parent has switched on chat history.", enforcedBy: "retention.sweep (ai_message.expires_at)" },
   { key: "flagged_content", days: 365, legal: true, description: "Flagged Coach conversations and moderation decisions: kept this long after the matter is resolved, under the safeguarding schedule.", enforcedBy: "retention.sweep (held while a linked safeguarding case is open)" },
@@ -94,7 +101,7 @@ export const RETENTION_DEFAULTS: readonly RetentionDefault[] = [
 /** The description stored in `retention_policy`, with the ⚖️ mark where it applies. */
 export const policyDescription = (policy: Pick<RetentionDefault, "legal" | "description">): string => (policy.legal ? `${LEGAL_MARK} ${policy.description}` : policy.description);
 
-export type RetentionPolicyView = { key: string; days: number; description: string; legal: boolean; enforcedBy: string | null; isDefault: boolean };
+export type RetentionPolicyView = { key: string; days: number; description: string; legal: boolean; enforcedBy: string | null; isDefault: boolean; /** False for "not a number of days" and for periods fixed in code. */ editable: boolean };
 
 function assertMayManage(ctx: Pick<Ctx, "actor">): void {
   assertCan(ctx.actor, "retention.manage");
@@ -120,9 +127,10 @@ export async function listRetentionPolicies(ctx: Ctx): Promise<RetentionPolicyVi
   const stored = new Map(rows.map((row) => [row.key, row]));
   const known = RETENTION_DEFAULTS.map((policy) => {
     const row = stored.get(policy.key);
-    return { key: policy.key, days: row?.days ?? policy.days, description: row?.description ?? policyDescription(policy), legal: policy.legal, enforcedBy: policy.enforcedBy, isDefault: !row || row.days === policy.days };
+    const fixed = policy.fixedInCode !== undefined;
+    return { key: policy.key, days: fixed ? policy.days : (row?.days ?? policy.days), description: row?.description ?? policyDescription(policy), legal: policy.legal, enforcedBy: policy.enforcedBy, isDefault: fixed || !row || row.days === policy.days, editable: policy.days > 0 && !fixed };
   });
-  const extra = rows.filter((row) => !RETENTION_DEFAULTS.some((policy) => policy.key === row.key)).map((row) => ({ key: row.key, days: row.days, description: row.description, legal: row.description.startsWith(LEGAL_MARK), enforcedBy: null, isDefault: false }));
+  const extra = rows.filter((row) => !RETENTION_DEFAULTS.some((policy) => policy.key === row.key)).map((row) => ({ key: row.key, days: row.days, description: row.description, legal: row.description.startsWith(LEGAL_MARK), enforcedBy: null, isDefault: false, editable: false }));
   return [...known, ...extra];
 }
 
@@ -132,6 +140,7 @@ export async function setRetentionDays(ctx: Ctx, key: string, days: number, reas
   const policy = RETENTION_DEFAULTS.find((candidate) => candidate.key === key);
   if (!policy) throw new AppError("not_found", "That retention policy doesn't exist.");
   if (policy.days === 0) throw new AppError("invalid_input", "That one isn't a number of days, so there is nothing to change here. It is set by a policy document or by the life of the account.");
+  if (policy.fixedInCode) throw new AppError("invalid_input", `That period is fixed in the code for now (${policy.fixedInCode}), so changing it here would not change what happens. Ask a developer to change it there.`);
   if (!Number.isInteger(days) || days < 1 || days > 36_500) throw new AppError("invalid_input", "A retention period is a whole number of days, from 1 to 36,500.");
   const updatedBy = ctx.actor.type === "staff" ? ctx.actor.userId : null;
   await ctx.db.transaction(async (tx) => {
@@ -144,11 +153,11 @@ export async function setRetentionDays(ctx: Ctx, key: string, days: number, reas
   });
 }
 
-/** The configured number of days for each known key (the default where there is no row). */
+/** The number of days in force for each known key: the row, or the default where there is no row or the period is fixed in code. */
 export async function loadRetentionDays(ctx: Pick<Ctx, "db">): Promise<Record<string, number>> {
   const rows = await ctx.db.select({ key: retentionPolicy.key, days: retentionPolicy.days }).from(retentionPolicy);
   const stored = new Map(rows.map((row) => [row.key, row.days]));
-  return Object.fromEntries(RETENTION_DEFAULTS.map((policy) => [policy.key, stored.get(policy.key) ?? policy.days]));
+  return Object.fromEntries(RETENTION_DEFAULTS.map((policy) => [policy.key, policy.fixedInCode ? policy.days : (stored.get(policy.key) ?? policy.days)]));
 }
 
 // ───────────────────────────── The sweep ─────────────────────────────

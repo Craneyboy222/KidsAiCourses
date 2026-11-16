@@ -94,6 +94,22 @@ describe("pnpm db:seed", () => {
     expect(afterFirst.consent_definition).toBe(5);
   });
 
+  it("adds ten candidate tools to verify, with no age or under-18 policy guessed and no course using them", async () => {
+    const rows = await db.execute<{ status: string; n: number; guessed: number; used: number }>(sql`
+      select status, count(*)::int as n,
+        count(*) filter (where min_age is not null or under18_policy is not null)::int as guessed,
+        count(*) filter (where exists (select 1 from course_tool ct where ct.tool_id = tool.id or ct.fallback_tool_id = tool.id))::int as used
+      from tool group by status`);
+    expect(rows.find((row) => row.status === "candidate")).toMatchObject({ n: 10, guessed: 0, used: 0 });
+    expect(rows.find((row) => row.status === "approved")?.n).toBe(5);
+  });
+
+  it("prints the local two-step secret against every staff account in the table", () => {
+    const staffRows = second.accounts.filter((row) => row.kind.startsWith("staff:"));
+    expect(staffRows).toHaveLength(8);
+    for (const row of staffRows) expect(row.notes).toContain(SEED_TOTP_SECRET);
+  });
+
   it("leaves realistic learning behind: progress, an accepted and a pending submission, a certificate, moderation examples", async () => {
     expect(afterFirst.enrolment).toBe(6);
     const projects = await db.execute<{ status: string; n: number }>(sql`select status::text as status, count(*)::int as n from project group by 1 order by 1`);

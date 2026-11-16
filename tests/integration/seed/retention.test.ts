@@ -25,10 +25,13 @@ import {
   tutorConversation,
   user,
 } from "@/server/db";
+import { expiryFor } from "@/server/ai/store";
 import { runJob } from "@/server/jobs";
 import { retentionSweep } from "@/server/jobs/retention";
 import { JOBS } from "@/server/jobs/registry";
-import { RETENTION_DEFAULTS, ensureRetentionPolicies, listRetentionPolicies, runRetentionSweep, setRetentionDays } from "@/server/services/retention";
+import { DELETION_UNDO_DAYS } from "@/server/services/children";
+import { RETENTION_DEFAULTS, ensureRetentionPolicies, listRetentionPolicies, loadRetentionDays, runRetentionSweep, setRetentionDays } from "@/server/services/retention";
+import { PENDING_TEEN_DAYS } from "@/server/services/teen-signup";
 import { createLocalStorage, getStorage, setStorage } from "@/server/storage";
 import { importContent } from "../../../scripts/import-courses";
 import { scriptCtx } from "../../../scripts/import-ideas";
@@ -104,6 +107,26 @@ describe("retention policies", () => {
   });
 });
 
+describe("periods another slice fixes in its own code", () => {
+  it("match that slice's constant, and refuse an edit that would change nothing", async () => {
+    const fixed = RETENTION_DEFAULTS.filter((policy) => policy.fixedInCode !== undefined);
+    expect(Object.fromEntries(fixed.map((policy) => [policy.key, policy.days]))).toEqual({ account_deletion_undo: DELETION_UNDO_DAYS, pending_teen: PENDING_TEEN_DAYS });
+
+    await ensureRetentionPolicies(system());
+    const { actor: admin } = await createStaff({ roles: ["admin"] });
+    for (const policy of fixed) {
+      await expect(setRetentionDays(testCtx(admin, { now: NOW }), policy.key, policy.days + 5)).rejects.toMatchObject({ code: "invalid_input" });
+    }
+    // A row changed some other way is not believed either: what the code does is what is reported and used.
+    await db.update(retentionPolicy).set({ days: 99 }).where(eq(retentionPolicy.key, "pending_teen"));
+    const listed = await listRetentionPolicies(testCtx(admin, { now: NOW }));
+    expect(listed.find((policy) => policy.key === "pending_teen")).toMatchObject({ days: PENDING_TEEN_DAYS, editable: false });
+    expect(listed.find((policy) => policy.key === "tutor_conversation_default")).toMatchObject({ editable: true });
+    expect(listed.find((policy) => policy.key === "safeguarding_case")).toMatchObject({ editable: false });
+    expect((await loadRetentionDays({ db })).pending_teen).toBe(PENDING_TEEN_DAYS);
+  });
+});
+
 describe("the sweep deletes what is due and nothing else", () => {
   it("deletes Coach messages past their date, keeps the rest, and keeps counts and topics", async () => {
     const { learnerId } = await learnerInFamily({ lastActiveDaysAgo: 1 });
@@ -142,6 +165,43 @@ describe("the sweep deletes what is due and nothing else", () => {
     expect(left).toEqual([open, recentlyClosed].sort());
     // Safeguarding cases themselves are never deleted by the sweep.
     expect(await countOf("safeguarding_case")).toBe(3);
+  });
+
+  it("deletes each Coach message when the period Coach stamped it with has run out: 30 days, 90 with chat history, the flagged period", async () => {
+    // The dates are written by Coach's own `expiryFor`, from the three policy rows, so this fails if
+    // Coach and the sweep ever stop agreeing on the keys.
+    await ensureRetentionPolicies(system());
+    const { learnerId } = await learnerInFamily({ lastActiveDaysAgo: 1 });
+    const chat = await conversation(learnerId);
+    const written = { db, now: NOW };
+    const [standard] = await message(chat, learnerId, await expiryFor(written, { flagged: false, extendedRetention: false }));
+    const [extended] = await message(chat, learnerId, await expiryFor(written, { flagged: false, extendedRetention: true }));
+    const [flagged] = await message(chat, learnerId, await expiryFor(written, { flagged: true, extendedRetention: false }), true);
+    const sweepAfter = (days: number) => runRetentionSweep(testCtx(systemActor("retention.sweep"), { now: new Date(NOW.getTime() + days * DAY) }));
+    const left = async () => (await db.select({ id: aiMessage.id }).from(aiMessage)).map((row) => row.id).sort();
+
+    expect((await sweepAfter(29)).coachMessagesDeleted).toBe(0);
+    expect((await sweepAfter(30)).coachMessagesDeleted).toBe(1); // tutor_conversation_default
+    expect(await left()).toEqual([extended?.id, flagged?.id].sort());
+    expect((await sweepAfter(89)).coachMessagesDeleted).toBe(0);
+    expect((await sweepAfter(90)).coachMessagesDeleted).toBe(1); // tutor_conversation_extended
+    expect(await left()).toEqual([flagged?.id]);
+    expect((await sweepAfter(364)).coachMessagesDeleted).toBe(0);
+    const last = await sweepAfter(365); // flagged_content, with no safeguarding case holding it
+    expect(last).toMatchObject({ coachMessagesDeleted: 1, coachConversationsCleared: 1, failedSteps: [] });
+    expect(standard?.id).toBeTruthy();
+    expect(await left()).toEqual([]);
+  });
+
+  it("uses a period changed in Studio for messages written afterwards", async () => {
+    await ensureRetentionPolicies(system());
+    const { actor: admin } = await createStaff({ roles: ["admin"] });
+    await setRetentionDays(testCtx(admin, { now: NOW }), "tutor_conversation_default", 10, "Shorter, on the owner's instruction");
+    const { learnerId } = await learnerInFamily({ lastActiveDaysAgo: 1 });
+    const chat = await conversation(learnerId);
+    await message(chat, learnerId, await expiryFor({ db, now: NOW }, { flagged: false, extendedRetention: false }));
+    expect((await runRetentionSweep(testCtx(systemActor("retention.sweep"), { now: new Date(NOW.getTime() + 9 * DAY) }))).coachMessagesDeleted).toBe(0);
+    expect((await runRetentionSweep(testCtx(systemActor("retention.sweep"), { now: new Date(NOW.getTime() + 10 * DAY) }))).coachMessagesDeleted).toBe(1);
   });
 
   it("deletes the stored file of a rejected upload as well as clearing the row, and touches no other file", async () => {

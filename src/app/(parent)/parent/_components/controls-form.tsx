@@ -15,6 +15,8 @@ export type ControlsFormProps = {
   quietEnd: string;
   categories: { slug: string; label: string; blocked: boolean }[];
   courses: { id: string; title: string; detail: string; blocked: boolean }[];
+  /** Courses that are blocked but not in the list just now (taken down, or for an older age group). Kept blocked on save. */
+  keptCourseIds: string[];
   requireApprovalForPro: boolean;
 };
 
@@ -38,6 +40,9 @@ export function ControlsForm(props: ControlsFormProps) {
         </Callout>
       )}
       <input type="hidden" name="learnerId" value={props.learnerId} />
+      {props.keptCourseIds.map((id) => (
+        <input key={id} type="hidden" name="blockedCourseIds" value={id} />
+      ))}
 
       <section aria-labelledby="time-title" className="flex flex-col gap-4">
         <h2 id="time-title" className="text-2xl font-bold">

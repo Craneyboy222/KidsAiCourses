@@ -60,6 +60,10 @@ export default async function ChildControlsPage({ params }: Props) {
   const courses = await loadOr404(() => listBlockableCourses(ctx, id));
   const blockedCourses = new Set(controls.blockedCourseIds);
   const blockedCategories = new Set(controls.blockedCategories);
+  // A blocked course that is not on offer just now (taken down, say) must stay blocked when the form is saved,
+  // or it would come back unblocked the day it is restored.
+  const offered = new Set(courses.map((course) => course.id));
+  const keptCourseIds = controls.blockedCourseIds.filter((courseId) => !offered.has(courseId));
   const cap = controls.dailyMinutesCap;
   const choices: number[] = [...DAILY_CAP_CHOICES];
   // A limit set some other way (or an older value) must still appear, or saving would silently change it.
@@ -91,6 +95,7 @@ export default async function ChildControlsPage({ params }: Props) {
         quietEnd={minutesToClockValue(quietOn ? controls.quietEndMin : 7 * 60)}
         categories={CATEGORY_SLUGS.map((slug) => ({ slug, label: CATEGORY_LABELS[slug], blocked: blockedCategories.has(slug) }))}
         courses={courses.map((course) => ({ id: course.id, title: course.title, detail: [categoryLabel(course.category), course.difficulty ? DIFFICULTY[course.difficulty] : null].filter(Boolean).join(" · "), blocked: blockedCourses.has(course.id) }))}
+        keptCourseIds={keptCourseIds}
         requireApprovalForPro={controls.requireApprovalForPro}
       />
     </div>

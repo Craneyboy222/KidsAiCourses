@@ -1,6 +1,7 @@
 // CONTRACT — owner: parents slice. See _contract.ts.
 import { and, asc, eq, inArray, isNull, lte } from "drizzle-orm";
 import { cleanPauseReason, controlsInputSchema, type ControlsInput } from "@/lib/parents/controls-rules";
+import { appErrorCode } from "@/lib/parents/error-code";
 import { revokeAllSessions } from "@/server/auth/accounts";
 import { audit } from "@/server/audit";
 import { actorUserId, assertCan } from "@/server/authz";
@@ -193,7 +194,7 @@ async function childFor(ctx: Ctx, learnerId: string, action: ControlAction): Pro
   try {
     learner = await getLearnerSummary(ctx, learnerId);
   } catch (error) {
-    if (!(error instanceof AppError) || error.code !== "not_found") throw error;
+    if (appErrorCode(error) !== "not_found") throw error;
   }
   const notFound = new AppError("not_found", "That child could not be found in your family.");
   if (ctx.actor.type === "parent" && (!learner || learner.familyId !== ctx.actor.familyId)) throw notFound;

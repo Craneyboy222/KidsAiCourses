@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { and, asc, desc, eq, inArray, isNotNull, isNull, like, lt, lte, ne, notInArray, or, sql } from "drizzle-orm";
 import { env } from "@/env";
 import { formatDate } from "@/lib/dates";
+import { appErrorCode } from "@/lib/parents/error-code";
 import { revokeAllSessions } from "@/server/auth/accounts";
 import { newLearnerPlaceholderEmail, userEmail } from "@/server/auth/learner-email";
 import { audit } from "@/server/audit";
@@ -211,7 +212,7 @@ async function childOfParent(ctx: Ctx, parent: ParentActor, learnerId: string): 
   try {
     learner = await getLearnerSummary(ctx, learnerId);
   } catch (error) {
-    if (error instanceof AppError && error.code === "not_found") throw new AppError("not_found", CHILD_NOT_FOUND);
+    if (appErrorCode(error) === "not_found") throw new AppError("not_found", CHILD_NOT_FOUND);
     throw error;
   }
   if (learner.familyId !== parent.familyId) throw new AppError("not_found", CHILD_NOT_FOUND);

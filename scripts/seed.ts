@@ -87,6 +87,7 @@ import { openSafeguardingCase } from "@/server/services/safeguarding";
 import { signUpAdultLearner, signUpParent } from "@/server/services/signup";
 import { addLinkEvidence, submitWork } from "@/server/services/submission";
 import { signUpTeen } from "@/server/services/teen-signup";
+import { createCandidateTool } from "@/server/services/tools";
 import { getSetting, setSetting } from "@/server/settings";
 import { isSignupOpen, markLaunchReadyForDev } from "@/server/settings/launch-readiness";
 import { completeFakeCheckout, completeFakeSetup, simulateSubscriptionChange } from "@/server/stripe/fake-simulator";
@@ -103,6 +104,9 @@ export const SEED_REASON = "Development seed";
  * authenticator app, or use the `otpauth://` link the seed prints). PUBLIC AND LOCAL ONLY.
  */
 export const SEED_TOTP_SECRET = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
+
+/** Shown against every staff row of the account table, so the secret is beside the account it opens. */
+const STAFF_NOTE = `two-step sign-in, local TOTP secret ${SEED_TOTP_SECRET}`;
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -155,6 +159,24 @@ const COURSES = {
 } as const;
 
 const AI_DRAFT_SLUG = "sample-ai-draft-prompt-gym-remix";
+
+/**
+ * Spec Section 15: "around 10 further candidate tools marked to verify". Only a name and the
+ * vendor's own address are recorded. Being on this list says nothing about whether a tool is
+ * suitable for under-18s: that is exactly what has not been checked yet.
+ */
+const CANDIDATE_TOOLS: ReadonlyArray<{ name: string; vendorDomain: string; officialUrl: string }> = [
+  { name: "Teachable Machine", vendorDomain: "teachablemachine.withgoogle.com", officialUrl: "https://teachablemachine.withgoogle.com/" },
+  { name: "Google Colab", vendorDomain: "colab.research.google.com", officialUrl: "https://colab.research.google.com/" },
+  { name: "Scratch", vendorDomain: "scratch.mit.edu", officialUrl: "https://scratch.mit.edu/" },
+  { name: "Figma", vendorDomain: "figma.com", officialUrl: "https://www.figma.com/" },
+  { name: "Notion", vendorDomain: "notion.so", officialUrl: "https://www.notion.so/" },
+  { name: "Claude", vendorDomain: "claude.ai", officialUrl: "https://claude.ai/" },
+  { name: "Gemini", vendorDomain: "gemini.google.com", officialUrl: "https://gemini.google.com/" },
+  { name: "Microsoft Copilot", vendorDomain: "copilot.microsoft.com", officialUrl: "https://copilot.microsoft.com/" },
+  { name: "BandLab", vendorDomain: "bandlab.com", officialUrl: "https://www.bandlab.com/" },
+  { name: "Adobe Express", vendorDomain: "adobe.com", officialUrl: "https://www.adobe.com/express/" },
+];
 
 // ───────────────────────────── Result and reporting ─────────────────────────────
 
@@ -353,6 +375,18 @@ export async function runSeed(options: SeedOptions = {}): Promise<SeedResult> {
   if (options.assets !== false) {
     await part("placeholder media in storage", async () => log(formatPlaceholderResult(await makePlaceholderAssets())));
   }
+
+  await part("candidate tools to verify", async () => {
+    // Names and addresses only. A candidate has no minimum age and no under-18 policy: those are
+    // never guessed (spec 3.3), so none of these can be used by a course until a person has checked
+    // the vendor's own terms and approved the Register entry.
+    let added = 0;
+    for (const candidate of CANDIDATE_TOOLS) {
+      const made = await createCandidateTool(owner, { ...candidate, notes: "TO VERIFY — development seed. Nothing about this tool has been checked: not its minimum age, its terms for under-18s, its free tier or its privacy settings." });
+      if (made.created) added += 1;
+    }
+    log(`Candidate tools: ${added} added, ${CANDIDATE_TOOLS.length - added} already there. All are "candidate" (to verify): no age, no policy, not usable by any course.`);
+  });
 
   // ── 4. Reference data ─────────────────────────────────────────────────────
   await part("retention policies", async () => {
@@ -679,8 +713,8 @@ export async function runSeed(options: SeedOptions = {}): Promise<SeedResult> {
 
   // ── 14. What was made ─────────────────────────────────────────────────────
   result.accounts.unshift(
-    { who: "Owner", signIn: env.OWNER_BOOTSTRAP_EMAIL ?? "(OWNER_BOOTSTRAP_EMAIL)", kind: "staff: super_admin", notes: "two-step code needed" },
-    ...STAFF.map((member) => ({ who: member.name, signIn: member.email, kind: `staff: ${member.role}`, notes: "two-step code needed" })),
+    { who: "Owner", signIn: env.OWNER_BOOTSTRAP_EMAIL ?? "(OWNER_BOOTSTRAP_EMAIL)", kind: "staff: super_admin", notes: STAFF_NOTE },
+    ...STAFF.map((member) => ({ who: member.name, signIn: member.email, kind: `staff: ${member.role}`, notes: STAFF_NOTE })),
   );
   const [counts] = await db
     .select({
