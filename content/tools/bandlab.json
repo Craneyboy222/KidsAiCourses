@@ -1,0 +1,90 @@
+{
+  "slug": "bandlab",
+  "name": "BandLab",
+  "vendorDomain": "bandlab.com",
+  "officialUrl": "https://www.bandlab.com/",
+  "allowedUrlPrefixes": ["https://www.bandlab.com/", "https://bandlab.com/"],
+  "cost": {
+    "freeTier": "A free account gives the Studio and SongStarter, which BandLab calls its free AI music idea generator. Whether every mixdown download format is free was not stated on the pages read.",
+    "paidNote": "BandLab Membership is a paid subscription (the pages read name a Pro plan and a Max Membership) that adds tools such as Voice Cleaner AI and AutoMix AI. Users can also buy Tokens for generative AI features. General prices were not shown on the membership page as fetched, so none is recorded. No paid plan is needed for our course."
+  },
+  "minAge": 13,
+  "consentRule": "Under-18s need a parent or guardian's permission. The Terms of Use (current as of 9 September 2026) require a user under 18 to be 13 or over and to have a parent's or legal guardian's permission, and tell under-18s to get a parent or guardian to read and agree to the terms for them. BandLab's Minor Safety page repeats the 13 minimum and says users from Australia must be at least 16.",
+  "under18Policy": null,
+  "notes": "To verify before publish. Chosen as the music tool for Make a Track with an AI Bandmate. Facts below were read from BandLab's own pages on 16 November 2026 and each has an evidence entry; the terms were read in full text, the help-centre pages through a fetch tool that returns extracted quotes, so a reviewer should check those quotes against the live pages. A reviewer must weigh one thing before approving: BandLab describes itself as a social music platform, with feeds, followers, chat and comments. BandLab says it limits direct messaging and public comments automatically for minors, content is private by default, an account can be set to Private, and Chat and Comments can be limited to people you follow; the course's setup guide uses all of these and never asks the learner to publish. Because the vendor requires a parent's permission for under-18s, a reviewer will probably want the under-18 policy to be parent_consent_required; that decision is left to them. SongStarter ideas are not owned by the user ('you won't own the rights to the generated track'), which the course teaches. NOT verified: whether downloading a mixdown is free in MP3 and WAV, whether SongStarter uses Tokens on a free account, the sign-up screens (including how BandLab asks for age and a parent's consent), and whether an Unlisted revision from a Private Account opens for someone who has the link.",
+  "seedStatus": "pending_verification",
+  "lastCheckedAt": "2026-11-16",
+  "evidence": [
+    {
+      "claim": "Under-13s may not use BandLab (Terms of Use, clause 1.5).",
+      "quote": "IF YOU ARE BELOW 13 YEARS OF AGE, YOU MAY NOT USE THE SERVICE.",
+      "url": "https://bandlabtechnologies.com/policies/bandlab-terms-of-use/"
+    },
+    {
+      "claim": "Users aged 13 to 17 need a parent's or guardian's permission (Terms of Use, clause 1.4).",
+      "quote": "have your parent(s)’ or legal guardian(s)’ permission to use the Services",
+      "url": "https://bandlabtechnologies.com/policies/bandlab-terms-of-use/"
+    },
+    {
+      "claim": "Date of the Terms of Use that were read.",
+      "quote": "These Terms of Use are current as of 9 September 2026.",
+      "url": "https://bandlabtechnologies.com/policies/bandlab-terms-of-use/"
+    },
+    {
+      "claim": "Generative AI features are metered in Tokens, which can be bought (Terms of Use, section 2E).",
+      "quote": "tokens are units that measure a User’s usage of generative AI-related features",
+      "url": "https://bandlabtechnologies.com/policies/bandlab-terms-of-use/"
+    },
+    {
+      "claim": "Minimum age on BandLab's Minor Safety page.",
+      "quote": "you must be at least 13 years old to create an account",
+      "url": "https://help.bandlab.com/hc/en-us/articles/52223951629465-Minor-Safety"
+    },
+    {
+      "claim": "BandLab restricts some features automatically for minors.",
+      "quote": "limits on direct messaging and public comments",
+      "url": "https://help.bandlab.com/hc/en-us/articles/52223951629465-Minor-Safety"
+    },
+    {
+      "claim": "Content is private until the user changes it.",
+      "quote": "All Content is set to “Private” by default",
+      "url": "https://help.bandlab.com/hc/en-us/articles/360018947313-Protecting-my-Content-on-BandLab"
+    },
+    {
+      "claim": "A public project can be heard by every BandLab user.",
+      "quote": "If it’s public, everyone on BandLab can listen to it.",
+      "url": "https://help.bandlab.com/hc/en-us/articles/48041557586201-Who-can-access-my-music"
+    },
+    {
+      "claim": "An account can be made private in Settings, Privacy, with the Private Account switch.",
+      "quote": "Only your followers will be able to view the content you post.",
+      "url": "https://help.bandlab.com/hc/en-us/articles/4402107192857-How-do-I-make-my-account-private"
+    },
+    {
+      "claim": "Settings, Privacy has a Chat and Comments choice: Everyone, Your followers and people you follow, or People you follow.",
+      "quote": "Your followers and people you follow",
+      "url": "https://help.bandlab.com/hc/en-us/articles/900002966626-How-can-I-change-my-Privacy-Settings-on-BandLab"
+    },
+    {
+      "claim": "An Unlisted revision is kept out of feeds, profiles and search but opens from a direct link.",
+      "quote": "Unlisted revisions will not appear in public feeds",
+      "url": "https://help.bandlab.com/hc/en-us/articles/360007819853-Unlisting-a-Revision"
+    },
+    {
+      "claim": "SongStarter is BandLab's AI idea generator and is described as free.",
+      "quote": "Your Free AI Music Idea Generator",
+      "url": "https://www.bandlab.com/songstarter"
+    },
+    {
+      "claim": "The user does not own a SongStarter idea, though it can be used without fees or royalties.",
+      "quote": "you won't own the rights to the generated track",
+      "url": "https://help.bandlab.com/hc/en-us/articles/24226593087001-Generate-Ideas-with-SongStarter-AI"
+    },
+    {
+      "claim": "A mixdown can be downloaded from the Library with the Download button, or in the Studio from Project, Download, Mixdown As.",
+      "quote": "Select your preferred format",
+      "url": "https://help.bandlab.com/hc/en-us/articles/115002959774-How-do-I-download-tracks"
+    }
+  ],
+  "toVerify": true
+}

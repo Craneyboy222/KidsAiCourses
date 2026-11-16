@@ -3,20 +3,73 @@
   "name": "CapCut",
   "vendorDomain": "capcut.com",
   "officialUrl": "https://www.capcut.com/",
-  "allowedUrlPrefixes": [
-    "https://www.capcut.com/",
-    "https://capcut.com/"
-  ],
+  "allowedUrlPrefixes": ["https://www.capcut.com/", "https://capcut.com/"],
   "cost": {
-    "freeTier": null,
-    "paidNote": null
+    "freeTier": "A Free plan is listed at USD 0 with free templates and basic editing tools (pricing page as served to a US address, which says displayed pricing is for reference only). Which export options and AI features are free was not stated on the pages read.",
+    "paidNote": "CapCut Pro is shown at USD 19.99 a month or USD 179.99 a year on the pricing page as served to a US address; the page says to sign in for final pricing. Prices in pounds were not seen. The page offers new users a 7-day free trial of Pro. No paid plan is needed for our courses."
   },
   "minAge": null,
-  "consentRule": null,
+  "consentRule": "Not confirmed for the UK. The Terms of Service served to our request (last updated 15 April 2026) are headed for United States users: they say the services are only intended for people aged 13 and over, and that anyone under 18 may use them only with the consent of a parent or legal guardian. CapCut's help centre says there is no single age limit and that the age is set by region: typically 13, or 16+ in certain regions, giving the EU and South Korea as examples. It does not name the UK.",
   "under18Policy": null,
-  "notes": "Seed entry. Terms, age rules and prices are not verified: a human must check the vendor's live pages before this tool is approved.",
+  "notes": "To verify before publish. Facts below were read from CapCut's own pages on 16 November 2026 and each has an evidence entry. The minimum age is left empty on purpose: CapCut serves its terms by the visitor's location, our requests were served the United States terms, and CapCut's help pages say the age limit differs by region (13 typically, 16+ in some). No CapCut page read states the age for UK users. A reviewer in the UK must open the Terms of Service from a UK connection and record the age and consent rule that apply there. If the UK age is above 13, the two courses that need CapCut (Make Your Own AI Music Video and Shoot a Promo Advert in an Afternoon, both open from 13) cannot be published as written. Also not verified: which features are free in the browser editor (auto captions, 1080p export, export without a watermark). The US privacy policy lists training machine-learning models among the uses of the information CapCut collects, and no opt-out switch was found on the pages read. The under-18 policy is left for a reviewer to decide.",
   "seedStatus": "pending_verification",
-  "lastCheckedAt": null,
-  "evidence": [],
+  "lastCheckedAt": "2026-11-16",
+  "evidence": [
+    {
+      "claim": "The Terms of Service served to our request are the general terms for United States users, not the UK terms.",
+      "quote": "apply to United States users",
+      "url": "https://www.capcut.com/clause/terms-of-service"
+    },
+    {
+      "claim": "Minimum age in those (United States) terms.",
+      "quote": "The Services are only intended for individuals 13 years old and older.",
+      "url": "https://www.capcut.com/clause/terms-of-service"
+    },
+    {
+      "claim": "Under-18s need a parent or legal guardian's consent in those (United States) terms.",
+      "quote": "with the consent of your parent or legal guardian",
+      "url": "https://www.capcut.com/clause/terms-of-service"
+    },
+    {
+      "claim": "Date of the Terms of Service that were read.",
+      "quote": "Last updated: April 15, 2026",
+      "url": "https://www.capcut.com/clause/terms-of-service"
+    },
+    {
+      "claim": "CapCut's help centre says the age limit is set by country or region (page dated 12 January 2026).",
+      "quote": "There is no single, universal age limit for using CapCut",
+      "url": "https://www.capcut.com/help/age-restriction"
+    },
+    {
+      "claim": "CapCut's help centre gives the usual ages and says some regions are 16+. The UK is not named.",
+      "quote": "typically 13 years old, or 16+ in certain regions (e.g., EU, South Korea)",
+      "url": "https://www.capcut.com/help/fail-to-log-in-due-to-age-required"
+    },
+    {
+      "claim": "The US privacy policy (last updated 15 April 2026) says CapCut is not for children under 13.",
+      "quote": "is not intended for children under the age of 13",
+      "url": "https://www.capcut.com/clause/privacy"
+    },
+    {
+      "claim": "The US privacy policy lists training models among the uses of collected information, which includes user content.",
+      "quote": "train, test, and improve technology, such as machine learning models and algorithms",
+      "url": "https://www.capcut.com/clause/privacy"
+    },
+    {
+      "claim": "A Free plan is listed at USD 0 (pricing page as served to a US address).",
+      "quote": "Start for free with the basics you need to create.",
+      "url": "https://www.capcut.com/pricing"
+    },
+    {
+      "claim": "Prices on the pricing page are indicative; CapCut Pro is shown at USD 19.99 a month or USD 179.99 a year.",
+      "quote": "Displayed pricing is for reference only.",
+      "url": "https://www.capcut.com/pricing"
+    },
+    {
+      "claim": "CapCut offers a free trial of its paid plan, which learners should decline.",
+      "quote": "new users can start a 7-day free trial of CapCut Pro",
+      "url": "https://www.capcut.com/pricing"
+    }
+  ],
   "toVerify": true
 }

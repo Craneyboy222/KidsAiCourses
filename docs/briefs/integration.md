@@ -17,7 +17,11 @@ Run after the learner-facing slices have landed. You may edit any slice's files,
 - An adult learner's settings page links to `/settings/billing`; account deletion calls `cancelFamilySubscriptions`.
 - Do not use `instanceof` on error classes across route handlers and services (separate bundles): check by name or code.
 - The learner settings page links adults to `/settings/privacy`.
-- Public course pages need the marketing layout's `<main>` and frame.
+- **Launch gate must not pass on unreviewed legal drafts.** `legal_pages_published` currently passes when a legal draft is merely published with its "Draft — not yet reviewed by a lawyer" banner. Make it require every D16 legal page to be published AND marked reviewed (see `listReviewedLegalSlugs` in `src/server/services/pages.ts`). `markLaunchReadyForDev` may still open local development, and must still refuse outside local and test.
+- The `/radar` page promises the crawler obeys robots.txt under the name `PlatformRadar`; set a sensible `RADAR_USER_AGENT` default derived from `NEXT_PUBLIC_APP_URL` rather than localhost.
+- `content/pages/**` and `content/prompts/**` are read from disk at run time: make sure a production build includes them (`outputFileTracingIncludes`), and check with `pnpm build`.
+- Production bootstrap: there is no way to create the first staff account in production. Add a one-time, audited bootstrap for `OWNER_BOOTSTRAP_EMAIL` (an emailed set-password link, forced two-factor enrolment, refuses once any `super_admin` exists) and document it in docs/DEPLOYMENT.md.
+- Encryption key rotation: support a key id on new ciphertext and decrypting with previous keys (`*_ENCRYPTION_KEY_PREVIOUS`), with a documented re-encryption job, so the two keys can be rotated.
 - Parent pages use `requireParentPage()`.
 - Sign-in copies saved accessibility preferences into the cookie; settings saves them back to the profile.
 - Take-down notifies enrolled learners and their parents.

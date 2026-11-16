@@ -3,20 +3,58 @@
   "name": "ChatGPT",
   "vendorDomain": "chatgpt.com",
   "officialUrl": "https://chatgpt.com/",
-  "allowedUrlPrefixes": [
-    "https://www.chatgpt.com/",
-    "https://chatgpt.com/"
-  ],
+  "allowedUrlPrefixes": ["https://www.chatgpt.com/", "https://chatgpt.com/"],
   "cost": {
-    "freeTier": null,
-    "paidNote": null
+    "freeTier": "A Free plan is listed on the pricing page. Its feature lines include unlimited text chats with the current model and limited uploads, image creation, voice chats, deep research and memory.",
+    "paidNote": "Paid plans named on the pricing page are Go, Plus, Pro, Business and Enterprise. No prices appeared in the page as it was fetched, so none is recorded. No paid plan is needed for our courses."
   },
-  "minAge": null,
-  "consentRule": null,
+  "minAge": 13,
+  "consentRule": "Under-18s need a parent or legal guardian's permission. OpenAI's Europe Terms of Use, which apply to people living in the EEA, Switzerland or the UK, say a user must be at least 13 (or the minimum age required in their country to consent to use the services), and that anyone under 18 must have a parent or legal guardian's permission.",
   "under18Policy": null,
-  "notes": "Seed entry. Terms, age rules and prices are not verified: a human must check the vendor's live pages before this tool is approved.",
+  "notes": "To verify before publish. Facts below were read from OpenAI's own pages on 16 November 2026 and each has an evidence entry. openai.com refuses direct automated requests (HTTP 403), so the pages were read through a fetch tool that returns extracted quotes: a reviewer should check each quote against the live page. No effective date was visible on the Europe Terms of Use as fetched. Because the vendor requires a parent's permission for under-18s, a reviewer will probably want the under-18 policy to be parent_consent_required; that decision is left to them. OpenAI's announcement of parental controls (29 September 2025) says a parent can link to a teen's account by invitation and can then opt the teen out of model training, among other controls. NOT verified: the help centre could not be read, so the current names and places of the data-control settings, the Free plan's message limits, and whether the Free plan still needs an account are not recorded.",
   "seedStatus": "pending_verification",
-  "lastCheckedAt": null,
-  "evidence": [],
+  "lastCheckedAt": "2026-11-16",
+  "evidence": [
+    {
+      "claim": "OpenAI's Europe Terms of Use are the terms that apply to UK users.",
+      "quote": "if you reside in the European Economic Area (EEA), Switzerland, or UK",
+      "url": "https://openai.com/policies/eu-terms-of-use/"
+    },
+    {
+      "claim": "Minimum age in the Europe Terms of Use. The sentence continues: or the minimum age required in your country to consent to use the Services.",
+      "quote": "You must be at least 13 years old",
+      "url": "https://openai.com/policies/eu-terms-of-use/"
+    },
+    {
+      "claim": "Under-18s need a parent or legal guardian's permission (Europe Terms of Use).",
+      "quote": "If you are under 18, you must have your parent or legal guardian's permission",
+      "url": "https://openai.com/policies/eu-terms-of-use/"
+    },
+    {
+      "claim": "A Free plan is listed, with text chat included.",
+      "quote": "Unlimited text chats with GPT-6",
+      "url": "https://chatgpt.com/pricing/"
+    },
+    {
+      "claim": "Some Free plan features are limited.",
+      "quote": "Limited messages with uploads",
+      "url": "https://chatgpt.com/pricing/"
+    },
+    {
+      "claim": "Parental controls exist for every plan (announcement dated 29 September 2025).",
+      "quote": "Available to all ChatGPT users starting today.",
+      "url": "https://openai.com/index/introducing-parental-controls/"
+    },
+    {
+      "claim": "A parent links to a teen's account by invitation.",
+      "quote": "sends an invite to their teen to connect accounts",
+      "url": "https://openai.com/index/introducing-parental-controls/"
+    },
+    {
+      "claim": "A linked parent can opt the teen's chats out of model training.",
+      "quote": "Opt out of model training",
+      "url": "https://openai.com/index/introducing-parental-controls/"
+    }
+  ],
   "toVerify": true
 }

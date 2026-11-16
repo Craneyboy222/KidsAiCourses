@@ -38,6 +38,13 @@ What already exists, so you can call it without opening the files. `Ctx` is `{ d
 - `@/server/services/assets`: `upsertAssetsFromManifest`, `getAssetsByKeys`, `listAssets`.
 - Scripts: `importContent(ctx, { publishAsSeed? })` in `scripts/import-courses.ts`; `importIdeas(ctx)` in `scripts/import-ideas.ts`.
 
+## Site pages (marketing, help, legal)
+- `@/server/services/pages`: `getSitePage(ctx, "marketing" | "help", slug)`, `listHelpArticles(ctx)`, `getLegalPage(ctx, slug)` → `{ state: "published", page, draft } | { state: "unpublished" } | null`, `listReviewedLegalSlugs(ctx)`, `upsertPagesFromFiles(ctx, files, { publishDrafts? })`. A `page` row wins; marketing and help fall back to `content/pages/**` when there is no row; legal never does. `page_version.body` may start with a front-matter block holding `summary` and `topic` (`@/lib/marketing/page-file`).
+- `@/server/services/marketing`: `getPricingView(ctx)` (no plans at all for a learner under 18), `getHomeCourses(ctx)`, `listPublicCourseEntries(ctx)`.
+- `@/lib/marketing/site`: `LEGAL_PAGES` (D16 slugs), `PUBLIC_ROUTES`, `PRIVATE_SEGMENTS`, `isPrivatePath`, `isIndexablePath`, `homeLinkFor(actor)`, `isUnder18Learner(actor)`. `@/lib/marketing/metadata`: `publicPageMetadata({ title, description, path, index? })` for any public page.
+- `@/lib/marketing/service-worker-client`: `clearServiceWorkerCaches()` — call it from anything that signs a person out.
+- Script: `importPages(ctx, { publishDrafts? })` in `scripts/import-pages.ts` (legal pages stay drafts unless `publishDrafts`, which is local and test only).
+
 ## Contracts between slices
 Files in `src/server/services` whose first line says `CONTRACT` are fixed signatures: the owning slice fills in the body; everyone else may call them. Component contracts: `src/components/course/{types,Editable,ToolsYouNeed}.tsx`, `src/components/coach/CoachPanel.tsx`, `src/components/submissions/EvidenceSteps.tsx`, `src/components/safety/ReportControl.tsx`.
 

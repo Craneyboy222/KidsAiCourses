@@ -1,0 +1,65 @@
+{
+  "slug": "teachable-machine",
+  "name": "Teachable Machine",
+  "vendorDomain": "teachablemachine.withgoogle.com",
+  "officialUrl": "https://teachablemachine.withgoogle.com/",
+  "allowedUrlPrefixes": ["https://teachablemachine.withgoogle.com/"],
+  "cost": {
+    "freeTier": "No account or log-in is needed, and the site shows no price, plan or payment step. (The pages read do not use the word free; they simply ask for nothing.)",
+    "paidNote": null
+  },
+  "minAge": null,
+  "consentRule": "Teachable Machine's own pages state no age or parental-consent rule. Its footer links to Google's Privacy & Terms. Google's Terms of Service (effective 30 July 2026) say a person under the age required to manage their own Google Account needs a parent or legal guardian's permission to use a Google Account; Google's help page gives that age as 13 for countries it does not list, and the UK is not listed. A Google Account is only needed for the optional Save to Drive, which our course does not use.",
+  "under18Policy": null,
+  "notes": "To verify before publish. Facts below were read from the vendor's own pages on 16 November 2026 and each has an evidence entry. The FAQ page is drawn by script, so its wording was read from the text file the page loads (https://teachablemachine.withgoogle.com/assets/i18n/en.json); a reviewer can see the same sentences on the FAQ page. The minimum age is left empty because no Teachable Machine page states one. What matters for children: training runs in the browser tab; samples from the webcam or from files are not sent to any server unless the project is saved to Google Drive; choosing 'Upload my model' publishes the trained model (not the samples) to Google's servers at a link that anyone holding it can use. The vendor domain is recorded as the tool's own address rather than withgoogle.com, so that links to other Google experiments are not allowed by this entry. NOT verified by a walk-through: the button names in the training screen. The under-18 policy is left for a reviewer to decide.",
+  "seedStatus": "pending_verification",
+  "lastCheckedAt": "2026-11-16",
+  "evidence": [
+    {
+      "claim": "No account is needed to use the tool (FAQ, 'How do I start?').",
+      "quote": "No need to make an account or log in.",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "Training happens in the browser, not on a server (FAQ, 'Who can access my samples?').",
+      "quote": "it trains in your browser tab without sending anything to any servers",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "Samples stay on the device unless the project is saved to Google Drive. The sentence continues: unless you save your project to Google Drive.",
+      "quote": "Your samples aren’t sent to any servers",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "'Upload my model' publishes the model, not the examples. The sentence continues: but the examples you used to make the model are not.",
+      "quote": "Your model is published to Google servers",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "A published model link works for anyone who has it.",
+      "quote": "anyone who has that link can use your model in their projects",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "If nothing is saved or exported, nothing is kept.",
+      "quote": "nothing is saved in your browser or on any servers",
+      "url": "https://teachablemachine.withgoogle.com/faq"
+    },
+    {
+      "claim": "The home page says the tool can be used wholly on the device.",
+      "quote": "without any webcam or microphone data leaving your computer",
+      "url": "https://teachablemachine.withgoogle.com/"
+    },
+    {
+      "claim": "Google's Terms of Service (effective 30 July 2026) tie parental permission to the age for managing a Google Account.",
+      "quote": "you must have your parent or legal guardian’s permission to use a Google Account",
+      "url": "https://policies.google.com/terms?hl=en-GB&gl=GB"
+    },
+    {
+      "claim": "Google's age to manage your own account is 13 in countries it does not list; the UK is not listed.",
+      "quote": "For all countries not listed below, 13 is the minimum age",
+      "url": "https://support.google.com/accounts/answer/1350409?hl=en-GB"
+    }
+  ],
+  "toVerify": true
+}

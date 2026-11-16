@@ -76,7 +76,8 @@ export default async function LegalPage({ params }: { params: Params }) {
   }
 
   const { page, draft } = found;
-  const open = countToConfirm(page.body);
+  // Counted without the banner line, which mentions the marker itself.
+  const open = countToConfirm(stripDraftBannerLine(page.body));
   return (
     <ProsePage
       title={page.title}

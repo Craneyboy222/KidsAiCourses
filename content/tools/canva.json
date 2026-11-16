@@ -3,20 +3,68 @@
   "name": "Canva",
   "vendorDomain": "canva.com",
   "officialUrl": "https://www.canva.com/",
-  "allowedUrlPrefixes": [
-    "https://www.canva.com/",
-    "https://canva.com/"
-  ],
+  "allowedUrlPrefixes": ["https://www.canva.com/", "https://canva.com/"],
   "cost": {
-    "freeTier": null,
-    "paidNote": null
+    "freeTier": "Canva Free is listed at US$0 for one person. The pricing page lists 1.6M+ templates, 5GB of cloud storage and up to 20 Standard or Premium AI uses (that line carries a footnote which was not read, so the period the 20 uses cover is unknown).",
+    "paidNote": "Canva Pro is shown at US$144 a year for one person and Canva Business at US$250 a year per person, before tax, on the pricing page as served to a US address. Prices in pounds were not seen. No paid plan is needed for our courses."
   },
-  "minAge": null,
-  "consentRule": null,
+  "minAge": 13,
+  "consentRule": "The Terms of Use (effective 19 August 2026) bar children from the service except through Canva Education, and define a child as a person under 13, or under the minimum legal age to consent to data processing in the child's country. No separate parental-consent rule for 13 to 17 year olds was found in the Terms of Use as read; a reviewer should confirm that by reading the full terms.",
   "under18Policy": null,
-  "notes": "Seed entry. Terms, age rules and prices are not verified: a human must check the vendor's live pages before this tool is approved.",
+  "notes": "To verify before publish. Facts below were read from Canva's own pages on 16 November 2026 and each has an evidence entry. www.canva.com refuses automated requests (HTTP 403), so the pages were read at canva.com (no www) through a fetch tool that returns extracted quotes: a reviewer should check each quote against the live page. Minimum age 13 is the figure the terms give; the terms add that a higher age applies where a country's data-consent age is higher, and Canva does not name the UK figure. NOT verified: Canva's help centre could not be read (every help page returned an error), so nothing is recorded about the Mockups app, where the AI image tools sit, whether under-18s on a personal account may use the AI features, the exact names of the privacy switches, or which downloads are free. The AI Product Terms (effective 26 June 2026) were read and no age rule was found in them. The under-18 policy is left for a reviewer to decide.",
   "seedStatus": "pending_verification",
-  "lastCheckedAt": null,
-  "evidence": [],
+  "lastCheckedAt": "2026-11-16",
+  "evidence": [
+    {
+      "claim": "Children may not use Canva except through Canva Education (Terms of Use, section 2).",
+      "quote": "Children may not access or use the Service, other than through Canva Education.",
+      "url": "https://canva.com/policies/terms-of-use/"
+    },
+    {
+      "claim": "A child is defined as a person under 13. The same sentence adds: or under the minimum legal age to consent to data processing in the child's country.",
+      "quote": "a child is a person under the age of 13",
+      "url": "https://canva.com/policies/terms-of-use/"
+    },
+    {
+      "claim": "Date of the Terms of Use that were read.",
+      "quote": "These Terms of Use are effective as of 19 August 2026.",
+      "url": "https://canva.com/policies/terms-of-use/"
+    },
+    {
+      "claim": "A free plan exists and costs nothing (pricing page as served to a US address; price shown as US$0).",
+      "quote": "Design anything and bring your ideas to life. No cost, just creativity.",
+      "url": "https://canva.com/pricing/"
+    },
+    {
+      "claim": "The free plan includes a limited number of AI uses. The line is marked with a footnote that was not read.",
+      "quote": "Up to 20 Standard or Premium AI uses",
+      "url": "https://canva.com/pricing/"
+    },
+    {
+      "claim": "The free plan includes storage.",
+      "quote": "5GB of cloud storage",
+      "url": "https://canva.com/pricing/"
+    },
+    {
+      "claim": "Canva Pro is a paid plan, shown at US$144 a year for one person before tax (US-served page).",
+      "quote": "Unlock premium content, more powerful design tools, and AI features.",
+      "url": "https://canva.com/pricing/"
+    },
+    {
+      "claim": "Designs are private by default.",
+      "quote": "Your designs are set to our highest privacy setting by default.",
+      "url": "https://canva.com/trust/privacy/"
+    },
+    {
+      "claim": "Whether Canva uses a person's content to improve its AI features depends on that person's Privacy Settings, which they can change.",
+      "quote": "unless this is consistent with your Privacy Settings",
+      "url": "https://canva.com/trust/privacy/"
+    },
+    {
+      "claim": "AI features are covered by separate AI Product Terms. No age rule for AI features was found in them as read.",
+      "quote": "These AI Product Terms are effective as of 26 June 2026.",
+      "url": "https://canva.com/policies/ai-product-terms/"
+    }
+  ],
   "toVerify": true
 }
